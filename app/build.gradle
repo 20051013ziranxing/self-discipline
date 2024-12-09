@@ -1,0 +1,22 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+def cfg = rootProject.ext
+apply from: "${rootProject.rootDir}/config_build.gradle"
+
+android {
+    namespace cfg.applicationId.app
+
+    defaultConfig {
+        applicationId cfg.applicationId.app
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
