@@ -1,8 +1,8 @@
 android {
     defaultConfig {
-        compileSdk rootProject.ext.android.compileSdk
-        minSdk rootProject.ext.android.minSdk
-        targetSdk rootProject.ext.android.targetSdk
+        compileSdkVersion rootProject.ext.android.compileSdkVersion
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
 

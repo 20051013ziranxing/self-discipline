@@ -5,10 +5,10 @@ def cfg = rootProject.ext
 
 android {
     namespace cfg.applicationId.eventBus
-    compileSdk cfg.android.compileSdk
+    compileSdkVersion cfg.android.compileSdkVersion
 
     defaultConfig {
-        minSdk cfg.android.minSdk
+        minSdkVersion cfg.android.minSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
