@@ -23,3 +23,7 @@ rootProject.name = "Self Discipline"
 include ':app'
 include ':modulesCore:login'
 include ':modulesBase:eventBus'
+include ':modulesBase:sendemail'
+include ':modulesCore:thematicsection'
+include ':modulesCore:myFragment'
+include ':modulesCore:findPassword'

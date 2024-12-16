@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textView_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="邮箱地址"/>
+
+    <EditText
+        android:id="@+id/editText_emailNumber_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView_number"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
+        android:padding="7dp"
+        android:background="@drawable/background_1"/>
+
+    <TextView
+        android:id="@+id/textView_Password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="密码"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText_emailNumber_up"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:id="@+id/editText_password_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_Password"
+        android:textSize="14sp"
+        android:padding="7dp"
+        android:background="@drawable/background_1"/>
+
+    <Button
+        android:id="@+id/button_forgetPassword_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        android:text="忘记密码"
+        android:textColor="#55AC6F6F"
+        app:layout_constraintBottom_toBottomOf="@id/editText_password_up"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBox_keepSignUp_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText_password_up"
+        android:layout_marginTop="5dp"
+        android:text="保持登陆状态"/>
+
+    <Button
+        android:id="@+id/button_loginUp1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_keepSignUp_up"
+        android:background="@drawable/background_orange"
+        android:text="登录"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

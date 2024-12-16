@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textView_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="用户名"/>
+
+    <EditText
+        android:id="@+id/editText_userName_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:padding="7dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_number"
+        android:background="@drawable/background_1" />
+
+    <TextView
+        android:id="@+id/textView_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/editText_userName_in"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="5dp"
+        android:text="密码"/>
+
+    <EditText
+        android:id="@+id/editText_password_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_password"
+        android:background="@drawable/background_1"
+        android:textSize="14sp"
+        android:padding="7dp"/>
+
+    <!--<TextView
+        android:id="@+id/textView_password2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确认密码"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText_password1_in"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:id="@+id/editText_password2_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_password2"
+        android:background="@drawable/background_1"
+        android:textSize="14sp"
+        android:padding="7dp"/>-->
+
+    <TextView
+        android:id="@+id/textView_emailNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText_password_in"
+        android:text="邮件地址"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:id="@+id/editText_emailNumber_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_emailNumber"
+        android:background="@drawable/background_1"
+        android:textSize="14sp"
+        android:padding="7dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBox_keepSignUp_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/editText_emailNumber_in"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="5dp"
+        android:text="保持登陆状态"/>
+
+    <Button
+        android:id="@+id/button_signIn1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注册"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_keepSignUp_in"
+        android:background="@drawable/background_orange"
+        android:textColor="@color/white"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 
 ext {
-    isDebug = false
+    isDebug = true
 
     android = [
             compileSdkVersion: 34,
@@ -13,7 +13,11 @@ ext {
     applicationId = [
             "app" : "com.example.selfdiscipline",
             "login" : "com.example.login",
-            "eventBus" : "com.example.eventbus"
+            "eventBus" : "com.example.eventbus",
+            "sendEmail" : "com.example.sendEmail",
+            "thematicSection" : "com.example.thematicSection",
+            "myfragment" : "com.example.myfragment",
+            "findpassword" : "com.example.findpassword"
     ]
 
     //定义了一些常见的 Android 库的依赖项，包括 AppCompat 库、Material Design 库和 ConstraintLayout 库。
