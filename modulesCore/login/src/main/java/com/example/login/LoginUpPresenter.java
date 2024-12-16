@@ -18,7 +18,7 @@ public class LoginUpPresenter {
     public void signIn(String userName, String userPassword, String userEmail) {
         boolean insert = true;
         Log.d(TAG, String.valueOf(userEmail == null));
-        if (userName == null || userPassword == null || userEmail == null ||
+        if (userName.isEmpty() || userPassword.isEmpty() || userEmail.isEmpty() ||
                 userName.matches(".*\\s+.*") || userPassword.matches(".*\\s+.*") || userEmail.matches(".*\\s+.*")) {
             insert = false;
             loginUpActivity.shouTips("注册信息的输入不规范");

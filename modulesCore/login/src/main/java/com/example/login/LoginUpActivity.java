@@ -71,6 +71,8 @@ public class LoginUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loginUpPresenter.signIn(editText_userName_in.getText().toString(), editText_password_in.getText().toString(), editText_emailNumber_in.getText().toString());
+                editText_emailNumber_in.getText().toString();
+                Log.d("TAG", editText_emailNumber_in.getText().toString());
             }
         });
         //获取登陆界面的控件以及控件的点击事件的逻辑
