@@ -7,6 +7,14 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.login">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-12-17T11:53:46.627555600Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=DEBYLBCUSWLZEQ8T" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="function.home">
         <option name="selectionMode" value="DROPDOWN" />
@@ -19,6 +27,20 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.myFragment">
         <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="modulesCore.findPassword">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="modulesCore.todofragment">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-12-18T14:09:40.337549200Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=DEBYLBCUSWLZEQ8T" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>

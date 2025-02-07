@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background"
+    tools:context=".MyFragment_1">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView_headPicture"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        app:cardCornerRadius="10dp"
+        android:src="@drawable/draw1"
+        android:layout_marginStart="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
+        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"
+        android:layout_marginStart="15dp"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:text="登录或注册"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+        app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
+        android:layout_marginStart="15dp"
+        android:text="睡到自然醒"
+        android:textSize="15sp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img"
+        android:background="#00ffffff"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

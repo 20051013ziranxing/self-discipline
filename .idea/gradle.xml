@@ -12,11 +12,14 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/modulesBase" />
             <option value="$PROJECT_DIR$/modulesBase/eventBus" />
+            <option value="$PROJECT_DIR$/modulesBase/localDatabase" />
             <option value="$PROJECT_DIR$/modulesBase/sendemail" />
             <option value="$PROJECT_DIR$/modulesCore" />
+            <option value="$PROJECT_DIR$/modulesCore/findPassword" />
             <option value="$PROJECT_DIR$/modulesCore/login" />
             <option value="$PROJECT_DIR$/modulesCore/myFragment" />
             <option value="$PROJECT_DIR$/modulesCore/thematicsection" />
+            <option value="$PROJECT_DIR$/modulesCore/todofragment" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

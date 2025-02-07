@@ -2,9 +2,12 @@ package com.example.login;
 
 import static android.app.ProgressDialog.show;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -70,9 +73,13 @@ public class LoginUpActivity extends AppCompatActivity {
         button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUpPresenter.signIn(editText_userName_in.getText().toString(), editText_password_in.getText().toString(), editText_emailNumber_in.getText().toString());
-                editText_emailNumber_in.getText().toString();
-                Log.d("TAG", editText_emailNumber_in.getText().toString());
+                boolean b = loginUpPresenter.checkIsRegistered(editText_emailNumber_in.getText().toString());
+                if(b && loginUpPresenter.checkIsSpecification(editText_userName_in.getText().toString(), editText_password_in.getText().toString(),
+                        editText_emailNumber_in.getText().toString())) {
+                    shouDialog();
+                } else {
+                    Toast.makeText(LoginUpActivity.this, "该Email账号已经注册过了",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //获取登陆界面的控件以及控件的点击事件的逻辑
@@ -93,7 +100,8 @@ public class LoginUpActivity extends AppCompatActivity {
                 loginUpPresenter.forgetPassword(editText_emailNumber_up.getText().toString());
             }
         });
-        //选择登录还是注册
+
+        //选择登录还是注册带来的页面的变化
         textView_loginUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,11 +121,41 @@ public class LoginUpActivity extends AppCompatActivity {
             }
         });
     }
+
+    //到达首页面
     public void goToThematicSection() {
         ARouter.getInstance().build("/thematicsection/MainActivity1").navigation();
     }
 
+    //进行短暂提示的语言输入
     public void shouTips(String tips) {
         Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
+    }
+    //进行注册的时候弹出对话框，使用户进行信息的确认
+    public void shouDialog() {
+        LayoutInflater inflater = LayoutInflater.from(LoginUpActivity.this);
+        View layout = inflater.inflate(R.layout.custon_dialog, null);
+        TextView textView = layout.findViewById(R.id.dialog_emailNumber);
+        textView.setText("邮箱账号：" + editText_emailNumber_in.getText().toString());
+        TextView textView1 = layout.findViewById(R.id.dialog_password);
+        textView1.setText("密码：" + editText_password_in.getText().toString());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(LoginUpActivity.this);
+        dialog.setView(layout);
+        dialog.setNegativeButton("重新输入", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.setPositiveButton("注册并登录", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                loginUpPresenter.signIn(editText_userName_in.getText().toString(), editText_password_in.getText().toString(),
+                        editText_emailNumber_in.getText().toString());
+                editText_emailNumber_in.getText().toString();
+                Log.d("TAG", editText_emailNumber_in.getText().toString());
+            }
+        });
+        dialog.show();
     }
 }

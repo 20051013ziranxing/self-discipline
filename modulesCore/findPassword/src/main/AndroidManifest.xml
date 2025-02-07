@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".MainActivityFindPassword"
+            android:name=".FindPasswordActivity"
             android:exported="true">
         </activity>
     </application>

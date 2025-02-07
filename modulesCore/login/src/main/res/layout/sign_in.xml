@@ -2,91 +2,81 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#00ffffff"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <TextView
-        android:id="@+id/textView_number"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/textInputLayout_userName_in"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="用户名"/>
+        android:layout_margin="5dp"
+        tools:ignore="MissingConstraints">
 
-    <EditText
-        android:id="@+id/editText_userName_in"
+        <EditText
+            android:id="@+id/editText_userName_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/editText_size1"
+            android:maxLength="20"
+            android:padding="@dimen/text_padding"
+            android:background="@drawable/background_1"
+            android:hint="用户名"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:padding="7dp"
+        android:id="@+id/textInputLayout_emailNumber_in"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_userName_in"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_number"
-        android:background="@drawable/background_1" />
+        android:layout_margin="5dp"
+        tools:ignore="MissingConstraints">
 
-    <TextView
-        android:id="@+id/textView_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/editText_userName_in"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="5dp"
-        android:text="密码"/>
+        <EditText
+            android:id="@+id/editText_emailNumber_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/editText_size1"
+            android:maxLength="20"
+            android:padding="@dimen/text_padding"
+            android:background="@drawable/background_1"
+            android:hint="邮箱地址"/>
 
-    <EditText
-        android:id="@+id/editText_password_in"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/textInputLayout_password_in"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_emailNumber_in"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_password"
-        android:background="@drawable/background_1"
-        android:textSize="14sp"
-        android:padding="7dp"/>
+        android:layout_margin="5dp"
+        app:passwordToggleEnabled="true"
+        tools:ignore="MissingConstraints">
 
-    <!--<TextView
-        android:id="@+id/textView_password2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="确认密码"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText_password1_in"
-        android:layout_marginTop="5dp"/>
+        <EditText
+            android:id="@+id/editText_password_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/editText_size1"
+            android:maxLength="20"
+            android:padding="5dp"
+            android:background="@drawable/background_1"
+            android:hint="密码"/>
 
-    <EditText
-        android:id="@+id/editText_password2_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_password2"
-        android:background="@drawable/background_1"
-        android:textSize="14sp"
-        android:padding="7dp"/>-->
-
-    <TextView
-        android:id="@+id/textView_emailNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText_password_in"
-        android:text="邮件地址"
-        android:layout_marginTop="5dp"/>
-
-    <EditText
-        android:id="@+id/editText_emailNumber_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_emailNumber"
-        android:background="@drawable/background_1"
-        android:textSize="14sp"
-        android:padding="7dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <CheckBox
         android:id="@+id/checkBox_keepSignUp_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/editText_emailNumber_in"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_password_in"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="5dp"
-        android:text="保持登陆状态"/>
+        android:text="注册并保持登陆状态"/>
 
     <Button
         android:id="@+id/button_signIn1"
@@ -94,7 +84,7 @@
         android:layout_height="wrap_content"
         android:text="注册"
         app:layout_constraintTop_toBottomOf="@id/checkBox_keepSignUp_in"
-        android:background="@drawable/background_orange"
+        android:background="@drawable/background_button"
         android:textColor="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

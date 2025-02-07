@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#3CB4D1"
+        android:id="@+id/dialog_emailNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="邮箱账号："/>
+
+    <TextView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#3CB4D1"
+        android:id="@+id/dialog_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dialog_emailNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="密码："/>
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dialog_password"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="该账号尚未注册，是否直接快速注册并登录？"/>
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="请牢记账号信息，并确保是一个正确的邮箱地址。"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

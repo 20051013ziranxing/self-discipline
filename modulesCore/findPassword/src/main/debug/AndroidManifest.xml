@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SelfDiscipline">
         <activity
-            android:name=".MainActivityFindPassword"
+            android:name=".FindPasswordActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

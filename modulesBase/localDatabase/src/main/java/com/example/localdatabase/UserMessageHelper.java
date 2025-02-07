@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.localdatabase;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;

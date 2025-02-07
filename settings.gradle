@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -27,3 +28,5 @@ include ':modulesBase:sendemail'
 include ':modulesCore:thematicsection'
 include ':modulesCore:myFragment'
 include ':modulesCore:findPassword'
+include ':modulesBase:localDatabase'
+include ':modulesCore:todofragment'

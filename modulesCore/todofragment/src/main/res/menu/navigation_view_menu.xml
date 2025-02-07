@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="本日待办"
+        android:icon="@drawable/day_todo_navigation_menu"
+        android:id="@+id/navigation_menu_dayToDo"/>
+
+    <item
+        android:title="已完成"
+        android:icon="@drawable/done_navigation_menu"
+        android:id="@+id/navigation_menu_Done"/>
+
+    <item
+        android:title="回收站"
+        android:icon="@drawable/recyclebin_navigation_menu"
+        android:id="@+id/navigation_menu_recycleBin"/>
+
+    <item
+        android:title="帮助中心"
+        android:icon="@drawable/help_center_navigation_menu"
+        android:id="@+id/navigation_menu_helpCenter"/>
+
+</menu>

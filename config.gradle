@@ -17,7 +17,9 @@ ext {
             "sendEmail" : "com.example.sendEmail",
             "thematicSection" : "com.example.thematicSection",
             "myfragment" : "com.example.myfragment",
-            "findpassword" : "com.example.findpassword"
+            "findpassword" : "com.example.findpassword",
+            "localdatabase" : "com.example.localdatabase",
+            "todofragment" : "com.example.todofragment"
     ]
 
     //定义了一些常见的 Android 库的依赖项，包括 AppCompat 库、Material Design 库和 ConstraintLayout 库。

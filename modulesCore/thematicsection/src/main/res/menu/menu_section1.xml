@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="待办"
+        android:icon="@drawable/img"
+        android:id="@+id/toDo"/>
+
+    <item
+        android:title="打卡"
+        android:icon="@drawable/img"
+        android:id="@+id/clock"/>
+
+    <item
+        android:title="社区"
+        android:icon="@drawable/img"
+        android:id="@+id/community"/>
+
+    <item
+        android:title="我的"
+        android:icon="@drawable/img"
+        android:id="@+id/my"/>
+
+</menu>

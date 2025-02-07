@@ -17,14 +17,14 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 
-import org.w3c.dom.Text;
-
 @Route(path = "/findPassword/MainActivityFindPassword")
-public class MainActivityFindPassword extends AppCompatActivity {
+public class FindPasswordActivity extends AppCompatActivity {
     @Autowired(name = "emailNumber")
     public String emailNumber;
     Toolbar toolbar;
     TextView textView;
+    TextView textView_textView_getCaptcha;
+    TextView textView_countdownTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
