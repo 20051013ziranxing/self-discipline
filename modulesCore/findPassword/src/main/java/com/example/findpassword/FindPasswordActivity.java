@@ -2,6 +2,9 @@ package com.example.findpassword;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,8 +26,9 @@ public class FindPasswordActivity extends AppCompatActivity {
     public String emailNumber;
     Toolbar toolbar;
     TextView textView;
-    TextView textView_textView_getCaptcha;
-    TextView textView_countdownTextView;
+    EditText editText_captcha;
+    EditText editText_newPassword;
+    Button button_setNewPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class FindPasswordActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        button_setNewPassword = findViewById(R.id.button_setNewPassword);
         textView = findViewById(R.id.textView_EmailNumber);
         ARouter.getInstance().inject(this);
         textView.setText(emailNumber);
@@ -45,6 +50,12 @@ public class FindPasswordActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        button_setNewPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import static android.app.ProgressDialog.show;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -47,6 +48,10 @@ public class LoginUpActivity extends AppCompatActivity {
     EditText editText_password_in;
     EditText editText_emailNumber_in;
     CheckBox checkBox_keepSignUp_in;
+
+    private Button btnGetCode;
+    private TextView tvCountdown;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +125,41 @@ public class LoginUpActivity extends AppCompatActivity {
                 view_signIn.setVisibility(View.VISIBLE);
             }
         });
+
+        btnGetCode = findViewById(R.id.btn_get_code);
+        tvCountdown = findViewById(R.id.tv_countdown);
+
+        btnGetCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCountdown();
+            }
+        });
     }
+
+    private void startCountdown() {
+        // 隐藏按钮，显示倒计时
+        btnGetCode.setVisibility(View.GONE);
+        tvCountdown.setVisibility(View.VISIBLE);
+
+        // 初始化倒计时
+        countDownTimer = new CountDownTimer(60000, 1000) { // 60秒倒计时，每秒更新一次
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // 更新倒计时显示
+                tvCountdown.setText(String.format("%d秒后重新获取", millisUntilFinished / 1000));
+            }
+
+            @Override
+            public void onFinish() {
+                // 倒计时结束，恢复按钮
+                btnGetCode.setVisibility(View.VISIBLE);
+                tvCountdown.setVisibility(View.GONE);
+                tvCountdown.setText("60秒后重新获取");
+            }
+        }.start();
+    }
+
 
     //到达首页面
     public void goToThematicSection() {
@@ -157,5 +196,13 @@ public class LoginUpActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }

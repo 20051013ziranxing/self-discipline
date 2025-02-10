@@ -47,11 +47,71 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!--<Button
+        android:id="@+id/btn_get_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout_emailNumberCaptcha_in"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayout_emailNumberCaptcha_in"
+        android:text="获取验证码" />
+
+    <TextView
+        android:id="@+id/tv_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout_emailNumberCaptcha_in"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayout_emailNumberCaptcha_in"
+        android:text="60秒后重新获取"
+        android:visibility="visible" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textInputLayout_emailNumberCaptcha_in"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_emailNumber_in"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="5dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/editText_emailNumberCaptcha_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/editText_size1"
+            android:maxLength="20"
+            android:padding="@dimen/text_padding"
+            android:background="@drawable/background_1"
+            android:hint="邮箱验证码"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_get_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout_emailNumberCaptcha_in"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayout_emailNumberCaptcha_in"
+        android:text="获取验证码" />
+
+    <TextView
+        android:id="@+id/tv_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout_emailNumberCaptcha_in"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayout_emailNumberCaptcha_in"
+        android:text="60秒后重新获取"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textInputLayout_password_in"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout_emailNumber_in"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_emailNumberCaptcha_in"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="5dp"
         app:passwordToggleEnabled="true"

@@ -4,51 +4,145 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background"
+    android:background="@drawable/background_2"
     tools:context=".MyFragment_1">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView_headPicture"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp"
-        android:src="@drawable/draw1"
-        android:layout_marginStart="15dp"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
-        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
-        app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"
-        android:layout_marginStart="15dp"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:text="登录或注册"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
-        app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
-        android:layout_marginStart="15dp"
-        android:text="睡到自然醒"
-        android:textSize="15sp"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView_headPicture"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="25dp"
+                app:cardCornerRadius="10dp"
+                android:src="@drawable/draw1"
+                android:layout_marginStart="15dp"/>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img"
-        android:background="#00ffffff"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
-        app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
+                app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+                app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"
+                android:layout_marginStart="15dp"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:text="登录或注册"/>
 
+            <TextView
+                android:id="@+id/textView_UserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+                app:layout_constraintStart_toEndOf="@id/imageView_headPicture"
+                android:layout_marginStart="15dp"
+                android:text="睡到自然醒"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img"
+                android:background="#00ffffff"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imageView_headPicture"
+                app:layout_constraintBottom_toBottomOf="@id/imageView_headPicture"/>
+
+            <TextView
+                android:id="@+id/textView_UserGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textView_UserName"
+                app:layout_constraintStart_toStartOf="@id/textView_UserName"
+                android:text="考研"
+                android:layout_marginTop="8dp"
+                android:textSize="15sp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView_headPicture"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="8dp"
+                app:cardBackgroundColor="@color/white">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:text="更多应用"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textSize="10sp"
+                        app:layout_constraintTop_toTopOf="@id/textView_1"
+                        app:layout_constraintBottom_toBottomOf="@id/textView_1"
+                        android:text="更多应用持续开发中"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_AddFunction"
+                        app:layout_constraintTop_toBottomOf="@id/textView_1"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/cardView_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="8dp"
+                app:cardBackgroundColor="@color/white">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_Function"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

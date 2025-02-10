@@ -1,6 +1,6 @@
 
 ext {
-    isDebug = false
+    isDebug = true
 
     android = [
             compileSdkVersion: 34,
@@ -19,7 +19,10 @@ ext {
             "myfragment" : "com.example.myfragment",
             "findpassword" : "com.example.findpassword",
             "localdatabase" : "com.example.localdatabase",
-            "todofragment" : "com.example.todofragment"
+            "todofragment" : "com.example.todofragment",
+            "clockinfragment" : "com.example.clockinfragment",
+            "communityfragment" : "com.example.communityfragment",
+            "pomodorotechnique" : "com.example.pomodorotechnique"
     ]
 
     //定义了一些常见的 Android 库的依赖项，包括 AppCompat 库、Material Design 库和 ConstraintLayout 库。
