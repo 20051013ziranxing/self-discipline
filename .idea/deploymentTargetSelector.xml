@@ -51,6 +51,9 @@
       <SelectionState runConfigName="modulesCore.pomodorotechnique">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="modulesCore.accountsecurity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

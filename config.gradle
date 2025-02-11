@@ -22,7 +22,9 @@ ext {
             "todofragment" : "com.example.todofragment",
             "clockinfragment" : "com.example.clockinfragment",
             "communityfragment" : "com.example.communityfragment",
-            "pomodorotechnique" : "com.example.pomodorotechnique"
+            "pomodorotechnique" : "com.example.pomodorotechnique",
+            "accountsecurity" : "com.example.accountsecurity",
+            "selectanimage" : "com.example.selectanimage"
     ]
 
     //定义了一些常见的 Android 库的依赖项，包括 AppCompat 库、Material Design 库和 ConstraintLayout 库。
