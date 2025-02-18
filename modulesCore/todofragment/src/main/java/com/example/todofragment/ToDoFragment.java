@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,6 +107,25 @@ public class ToDoFragment extends Fragment {
                 miui10Calendar.toToday();
             }
         });
+
+        //动画，对完成的事情进行化纤操作
+        /*TextView textView = view.findViewById(R.id.textView);
+        LineView lineView = view.findViewById(R.id.lineView);
+
+        // 设置动画
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                super.applyTransformation(interpolatedTime, t);
+                // 动态设置线条长度
+                lineView.setLineLength(interpolatedTime * textView.getWidth());
+            }
+        };
+        animation.setDuration(1000); // 设置动画时长为 1000 毫秒
+
+        // 开始动画
+        lineView.startAnimation(animation);*/
+
         return view;
     }
 }

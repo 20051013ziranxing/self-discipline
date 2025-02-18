@@ -34,14 +34,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.activitymanager.ActivityManager;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+@Route(path = "/accountsecurity/AccountSecurityActivity")
 public class AccountSecurityActivity extends AppCompatActivity {
     private static String TAG = "TestTT_AccountSecurityActivity";
+    ConstraintLayout constraintLayout;
     Toolbar toolbar;
     TextView textView;
     EditText editText;
@@ -60,6 +65,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        ActivityManager.getInstance().addActivity(this);
         //此处的邮箱地址应该根据数据进行进行改变
         accountSecurityPresenter = new AccountSecurityPresenter(this, "2858678706");
         constraintLayout_change_Icon = findViewById(R.id.change_Icon);
@@ -157,7 +163,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             imagepath = uri.getPath();
         }
-        Log.d(TAG, String.valueOf(uri));
+        Log.d(TAG, String.valueOf(uri) + "  url");
         accountSecurityPresenter.changeIcon(String.valueOf(uri));
         displayImage1(imagepath);
     }

@@ -11,8 +11,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/modulesBase" />
+            <option value="$PROJECT_DIR$/modulesBase/activityManager" />
             <option value="$PROJECT_DIR$/modulesBase/eventBus" />
             <option value="$PROJECT_DIR$/modulesBase/localDatabase" />
+            <option value="$PROJECT_DIR$/modulesBase/networkRequests" />
             <option value="$PROJECT_DIR$/modulesBase/selectAnImage" />
             <option value="$PROJECT_DIR$/modulesBase/sendemail" />
             <option value="$PROJECT_DIR$/modulesCore" />

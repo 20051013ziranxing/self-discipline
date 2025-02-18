@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.activitymanager.ActivityManager;
 
 @Route(path = "/findPassword/MainActivityFindPassword")
 public class FindPasswordActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class FindPasswordActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        ActivityManager.getInstance().addActivity(this);
         button_setNewPassword = findViewById(R.id.button_setNewPassword);
         textView = findViewById(R.id.textView_EmailNumber);
         ARouter.getInstance().inject(this);
@@ -65,5 +67,11 @@ public class FindPasswordActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityManager.getInstance().removeActivity(this);
     }
 }

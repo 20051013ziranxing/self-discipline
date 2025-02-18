@@ -1,7 +1,12 @@
 package com.example.myfragment;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.myfragment.adapter.AddFounctionAdapter;
 import com.example.myfragment.adapter.FunctionAdapter;
 import com.example.myfragment.bean.Function;
@@ -26,6 +33,7 @@ import java.util.List;
  */
 public class MyFragment_1 extends Fragment {
     MyFragmentPresenter presenter;
+    ConstraintLayout constraintLayout;
     RecyclerView recyclerView;
     RecyclerView recyclerView_function;
     List<NewFunction> newFunctionList;
@@ -77,6 +85,13 @@ public class MyFragment_1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_1, container, false);
         //进行数据的初始化
         initData();
+        constraintLayout = view.findViewById(R.id.constraint);
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build("/accountsecurity/AccountSecurityActivity").navigation();
+            }
+        });
         //新增功能的展示
         recyclerView = view.findViewById(R.id.recyclerView_AddFunction);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

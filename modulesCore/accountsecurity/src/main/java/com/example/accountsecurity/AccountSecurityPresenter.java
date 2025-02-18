@@ -14,7 +14,7 @@ public class AccountSecurityPresenter {
     }
 
     public void saveMessage() {
-        //此时获取到了用户名
+        //此时获取到了用户名与头像对数据库进行修改
         String userName = accountSecurityActivity.editText.getText().toString();
         String userIcon = iconsave.getMyString();
         Log.d(TAG, userName + "UserIcon" + userIcon);

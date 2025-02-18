@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/clock_in_recycler_iconSize"
+    android:height="@dimen/clock_in_recycler_iconSize"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#E6E6FA"
+    android:strokeColor="#000000"
+    android:strokeWidth="1"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round"
+    android:pathData="M38.066 5.5h-29a4 4 0 0 0-4 4v29a4 4 0 0 0 4 4h29a4 4 0 0 0 4-4v-29a4 4 0 0 0-4-4"/>
+    <path
+        android:fillColor="#E6E6FA"
+    android:strokeColor="#000000"
+    android:strokeWidth="1"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round"
+    android:pathData="M27.297 5.5v16.328l5.321-2.661l5.321 2.661V5.5"/>
+    <path
+        android:fillColor="#E6E6FA"
+    android:strokeColor="#000000"
+    android:strokeWidth="1"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round"
+    android:pathData="M11.075 22.56c0-5.29 11.75-5.69 11.75.799v11.963a2.287 2.287 0 0 0 2.287 2.287h0"/>
+    <path
+        android:fillColor="#E6E6FA"
+    android:strokeColor="#000000"
+    android:strokeWidth="1"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round"
+    android:pathData="M22.825 26.953c-23.963-1.198-9.816 19.567 0 6.09"/>
+
+    </vector>

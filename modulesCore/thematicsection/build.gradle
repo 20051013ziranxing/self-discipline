@@ -31,6 +31,9 @@ android {
 
 dependencies {
 
+    implementation project(':modulesCore:myFragment')
+    implementation project(':modulesCore:todofragment')
+    implementation project(':modulesCore:clockinfragment')
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity

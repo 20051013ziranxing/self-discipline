@@ -22,6 +22,7 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation project(':modulesCore:login')
+    implementation project(':modulesCore:accountsecurity')
     implementation project(':modulesCore:thematicsection')
     implementation project(':modulesCore:findPassword')
     testImplementation libs.junit

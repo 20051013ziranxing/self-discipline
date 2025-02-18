@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="40dp"
+    android:layout_margin="10dp"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="false"
+    android:id="@+id/recycler_AddHabit_IconAll_item_cardView1"
+    android:layout_height="40dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="40dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="80dp"
+        android:layout_margin="10dp"
+        android:id="@+id/recycler_AddHabit_IconAll_item_cardView"
+        android:layout_height="40dp"
+        tools:ignore="MissingConstraints">
+
+    <ImageButton
+        android:id="@+id/recycler_AddHabit_IconAll_item_ImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#ADD8E6"
+        android:src="@drawable/walter"
+        tools:ignore="MissingConstraints" />
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

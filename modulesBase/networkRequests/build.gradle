@@ -1,0 +1,39 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+def cfg = rootProject.ext
+
+android {
+    namespace cfg.applicationId.networkrequests
+    compileSdkVersion cfg.android.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion cfg.android.minSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation("com.google.code.gson:gson:2.6.2")
+    implementation("com.squareup.okhttp3:okhttp:4.2.2")
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}

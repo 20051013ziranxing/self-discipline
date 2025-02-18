@@ -37,6 +37,11 @@ android {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.6.2")
+    implementation("com.squareup.okhttp3:okhttp:4.2.2")
+    implementation project(':modulesBase:activityManager')
+    implementation project(':modulesBase:networkRequests')
+    implementation("org.greenrobot:eventbus:3.3.1")
     implementation project(':modulesBase:localDatabase')
     implementation("com.alibaba:arouter-api:1.5.2")
     annotationProcessor("com.alibaba:arouter-compiler:1.5.2")

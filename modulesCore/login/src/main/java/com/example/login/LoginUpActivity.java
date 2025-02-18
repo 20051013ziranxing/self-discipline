@@ -24,13 +24,23 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.activitymanager.ActivityManager;
+import com.example.networkrequests.NetworkClient;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @Route(path = "/login/LoginUpActivity")
 public class LoginUpActivity extends AppCompatActivity {
+    private static final String TAG = "TestTT_LoginUpActivity";
     TextView textView_loginUp;
     TextView textView_signIn;
     View view_loginUp;
@@ -63,6 +73,8 @@ public class LoginUpActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //进行活动的添加
+        ActivityManager.getInstance().addActivity(this);
         textView_loginUp = findViewById(R.id.button_loginUp);
         textView_signIn = findViewById(R.id.button_registered);
         view_signIn = findViewById(R.id.include_sign_in);
@@ -75,6 +87,7 @@ public class LoginUpActivity extends AppCompatActivity {
         editText_password_in = findViewById(R.id.editText_password_in);
         editText_emailNumber_in = findViewById(R.id.editText_emailNumber_in);
         checkBox_keepSignUp_in = findViewById(R.id.checkBox_keepSignUp_in);
+
         button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +100,7 @@ public class LoginUpActivity extends AppCompatActivity {
                 }
             }
         });
+
         //获取登陆界面的控件以及控件的点击事件的逻辑
         button_loginUp = findViewById(R.id.button_loginUp1);
         editText_emailNumber_up = findViewById(R.id.editText_emailNumber_up);
@@ -132,30 +146,40 @@ public class LoginUpActivity extends AppCompatActivity {
         btnGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*NetworkClient networkClient = new NetworkClient();
+                String url = "127.0.0.1:8080/register-email"*//* + editText_emailNumber_in.getText().toString()*//*;
+                Log.d(TAG, editText_emailNumber_in.getText().toString());
+                networkClient.get(url, new NetworkClient.NetworkCallback() {
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.d(TAG, response);
+                    }
+
+                    @Override
+                    public void onFailure(IOException e) {
+                        Log.d(TAG, "失败");
+                        e.printStackTrace();
+                    }
+                });*/
                 startCountdown();
             }
         });
     }
 
     private void startCountdown() {
-        // 隐藏按钮，显示倒计时
         btnGetCode.setVisibility(View.GONE);
         tvCountdown.setVisibility(View.VISIBLE);
-
-        // 初始化倒计时
-        countDownTimer = new CountDownTimer(60000, 1000) { // 60秒倒计时，每秒更新一次
+        countDownTimer = new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                // 更新倒计时显示
-                tvCountdown.setText(String.format("%d秒后重新获取", millisUntilFinished / 1000));
+                tvCountdown.setText(String.format("%d秒", millisUntilFinished / 1000));
             }
 
             @Override
             public void onFinish() {
-                // 倒计时结束，恢复按钮
                 btnGetCode.setVisibility(View.VISIBLE);
                 tvCountdown.setVisibility(View.GONE);
-                tvCountdown.setText("60秒后重新获取");
+                tvCountdown.setText("60秒");
             }
         }.start();
     }
