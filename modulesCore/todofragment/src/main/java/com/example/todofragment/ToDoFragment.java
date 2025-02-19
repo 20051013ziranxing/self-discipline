@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.animation.Transformation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.todofragment.fragment.AddToDoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.necer.calendar.NCalendar;
 import com.necer.enumeration.CalendarState;
@@ -39,7 +42,9 @@ import java.util.Map;
 public class ToDoFragment extends Fragment {
     Toolbar toolbar;
     TextView textView;
+    View view_gray;
     FloatingActionButton floatingActionButton_backDay;
+    FloatingActionButton floatingActionButton_add;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -84,6 +89,19 @@ public class ToDoFragment extends Fragment {
         textView = view.findViewById(R.id.data);
         NCalendar miui10Calendar = view.findViewById(R.id.miui10Calendar);
         floatingActionButton_backDay = view.findViewById(R.id.floatingButton_backNowDay);
+        floatingActionButton_add = view.findViewById(R.id.floatingButton_add);
+        view_gray = view.findViewById(R.id.gray_overlay);
+        floatingActionButton_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*view_gray.setVisibility(View.VISIBLE);
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.fragment_addNewToDo, new AddToDoFragment()).commit();*/
+                MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment();
+                bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+            }
+        });
         miui10Calendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
             @Override
             public void onCalendarChange(int year, int month, LocalDate localDate, DateChangeBehavior dateChangeBehavior) {
