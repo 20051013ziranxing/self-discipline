@@ -4,9 +4,13 @@ import android.app.ActionBar;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
+import com.example.todofragment.bean.ToDoThing;
 import com.example.todofragment.fragment.AddToDoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.necer.calendar.NCalendar;
 import com.necer.enumeration.CalendarState;
 import com.necer.enumeration.CheckModel;
@@ -29,7 +37,10 @@ import com.necer.painter.InnerPainter;
 import com.necer.utils.hutool.ChineseDate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +51,16 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class ToDoFragment extends Fragment {
+    TextView textView_data;
+    ImageButton imageButton;
+    List<ToDoThing> toDoThings;
+    NavigationView navigationView;
     Toolbar toolbar;
     TextView textView;
-    View view_gray;
+    RecyclerView recyclerView_ToDoFragment_show;
     FloatingActionButton floatingActionButton_backDay;
     FloatingActionButton floatingActionButton_add;
+    DrawerLayout drawerLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -85,19 +101,16 @@ public class ToDoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        initData();
+        recyclerView_ToDoFragment_show = view.findViewById(R.id.recyclerView_ToDoFragment_show);
         toolbar = view.findViewById(R.id.toolbar);
         textView = view.findViewById(R.id.data);
         NCalendar miui10Calendar = view.findViewById(R.id.miui10Calendar);
         floatingActionButton_backDay = view.findViewById(R.id.floatingButton_backNowDay);
         floatingActionButton_add = view.findViewById(R.id.floatingButton_add);
-        view_gray = view.findViewById(R.id.gray_overlay);
         floatingActionButton_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*view_gray.setVisibility(View.VISIBLE);
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.fragment_addNewToDo, new AddToDoFragment()).commit();*/
                 MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment();
                 bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
             }
@@ -125,25 +138,35 @@ public class ToDoFragment extends Fragment {
                 miui10Calendar.toToday();
             }
         });
-
-        //动画，对完成的事情进行化纤操作
-        /*TextView textView = view.findViewById(R.id.textView);
-        LineView lineView = view.findViewById(R.id.lineView);
-
-        // 设置动画
-        Animation animation = new Animation() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView_ToDoFragment_show.setLayoutManager(linearLayoutManager);
+        RecyclerViewToDoAdapter recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoThings);
+        recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
+        textView_data = view.findViewById(R.id.data);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        textView_data.setText(year + "-" + month + "-" + day);
+        drawerLayout = view.findViewById(R.id.DrawableLayout);
+        imageButton = view.findViewById(R.id.showNestedScrollView);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                super.applyTransformation(interpolatedTime, t);
-                // 动态设置线条长度
-                lineView.setLineLength(interpolatedTime * textView.getWidth());
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
             }
-        };
-        animation.setDuration(1000); // 设置动画时长为 1000 毫秒
-
-        // 开始动画
-        lineView.startAnimation(animation);*/
-
+        });
         return view;
+    }
+    public void initData() {
+        toDoThings = new ArrayList<>();
+        ToDoThing toDoThing = new ToDoThing("喝水", "一级", "不计时", true);
+        toDoThings.add(toDoThing);
+        ToDoThing toDoThing1 = new ToDoThing("喝水", "三级", "倒计时", false);
+        toDoThings.add(toDoThing1);
+        ToDoThing toDoThing2 = new ToDoThing("喝水", "一级", "不计时", false);
+        toDoThings.add(toDoThing2);
+        Collections.sort(toDoThings, new ToDoThingComparator());
     }
 }

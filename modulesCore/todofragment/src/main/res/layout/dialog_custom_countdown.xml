@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#00ffffff"
+    android:layout_height="180dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_white_1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/TextView_customize_the_pomodoro_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义番茄钟时间"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/TextView_customize_the_pomodoro_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="30dp"
+            app:hintTextColor="@color/blue"
+            app:boxStrokeColor="@color/blue"
+            android:layout_marginEnd="30dp">
+
+            <EditText
+                android:id="@+id/dialog_custom_countdown_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/blue"
+                android:hint="输入倒计时分钟数"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/dialog_custom_countdown_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="确定"
+            android:textColor="@color/blue"
+            android:background="#00ffffff"
+            android:textSize="15sp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBox
+        android:id="@+id/recyclerView_ToDoFragment_show_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="5dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/background_blue_122"
+        app:layout_constraintStart_toEndOf="@id/recyclerView_ToDoFragment_show_checkBox"
+        android:layout_marginStart="5dp">
+
+        <TextView
+            android:id="@+id/TextView_ToDoFragment_show_ThingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="写完作业"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="17sp"/>
+
+        <com.example.todofragment.LineView
+            android:id="@+id/lineView"
+            android:layout_width="0dp"
+            app:layout_constraintTop_toTopOf="@id/TextView_ToDoFragment_show_ThingName"
+            app:layout_constraintBottom_toBottomOf="@id/TextView_ToDoFragment_show_ThingName"
+            app:layout_constraintStart_toStartOf="@id/TextView_ToDoFragment_show_ThingName"
+            app:layout_constraintEnd_toEndOf="@id/TextView_ToDoFragment_show_ThingName"
+            android:layout_height="4dp" />
+
+        <ImageView
+            android:id="@+id/imageView_ToDoFragment_show_ThingGradle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toBottomOf="@id/TextView_ToDoFragment_show_ThingName"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/one_1"/>
+
+        <ImageButton
+            android:id="@+id/imageView_ToDoFragment_show_ThingIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/fanqie"
+            android:background="#00ffffff"/>
+
+        <TextView
+            android:id="@+id/TextView_ToDoFragment_show_ThingTimes_daoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/imageView_ToDoFragment_show_ThingGradle"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_ToDoFragment_show_ThingGradle"
+            android:text="倒计时：30分钟"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

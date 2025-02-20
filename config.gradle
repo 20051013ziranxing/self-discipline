@@ -1,6 +1,6 @@
 
 ext {
-    isDebug = true
+    isDebug = false
 
     android = [
             compileSdkVersion: 34,
@@ -29,14 +29,12 @@ ext {
             "networkrequests" : "com.example.networkrequests"
     ]
 
-    //定义了一些常见的 Android 库的依赖项，包括 AppCompat 库、Material Design 库和 ConstraintLayout 库。
     library = [
             "appcompat"       : "androidx.appcompat:appcompat:1.6.1",
             "material"        : "com.google.android.material:material:1.5.0",
             "constraintlayout": "androidx.constraintlayout:constraintlayout:2.1.4"
     ]
-
-    //第三方库单独放置
+    
     libGson = "com.google.code.gson:gson:2.8.6"
     libARouter = "com.alibaba:arouter-api:1.5.2"
     libARouterCompiler = "com.alibaba:arouter-compiler:1.5.2"
