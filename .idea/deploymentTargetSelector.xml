@@ -16,12 +16,6 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="function.home">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="modulesFunction.home">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="modulesCore.thematicsection">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -47,6 +41,14 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.communityfragment">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-02-22T15:36:57.911692700Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=9b4674a0" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="modulesCore.pomodorotechnique">
         <option name="selectionMode" value="DROPDOWN" />
