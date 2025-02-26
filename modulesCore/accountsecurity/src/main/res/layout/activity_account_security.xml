@@ -105,6 +105,17 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/textView_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="保存"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        android:layout_marginEnd="20dp"
+        android:textSize="18sp"
+        android:textColor="#03AEFB"/>
+    <TextView
         android:id="@+id/sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,17 +135,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="50dp"
         android:text="注销账户"/>
-
-    <TextView
-        android:id="@+id/textView_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="保存"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        android:layout_marginEnd="20dp"
-        android:textSize="18sp"
-        android:textColor="#03AEFB"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

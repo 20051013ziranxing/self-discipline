@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textView_noise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="白燥音选择"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/button_CancelTheWhiteNoiseSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        android:text="取消"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textView_noise"
+        app:layout_constraintBottom_toBottomOf="@id/textView_noise"/>
+
+    <Button
+        android:id="@+id/button_SureTheWhiteNoiseSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/textView_noise"
+        app:layout_constraintBottom_toBottomOf="@id/textView_noise"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#00ffffff"
+        android:text="确认"
+        android:textColor="#94C9E1"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup_aToggleCollectionOfMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_noise"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/radio_silent"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="静音"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+        <RadioButton
+            android:id="@+id/radio_insectsChirpOnSummerNights"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="夏夜虫鸣"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+        <RadioButton
+            android:id="@+id/radio_summerRains"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="夏雨"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,8 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             + "id integer primary key autoincrement, "
             + "userName text, "
             + "userPassword text, "
-            + "userEmail text )";
+            + "userEmail text ,"
+            + "isActive integer default 1 )";
     private Context mcontext;
     public UserMessageHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, null, 1);
@@ -37,7 +38,7 @@ public class UserMessageHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insert(String userName, String userPassword, String userEmail) {
+    public boolean insert(String userName, String userPassword, String userEmail,boolean isActive) {
         /*queryAllUser();*/
         Log.d(TAG, "我进行了添加");
         SQLiteDatabase db;
@@ -49,11 +50,13 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             contentValues.put("userName", userName);
             contentValues.put("userPassword", userPassword);
             contentValues.put("userEmail", userEmail);
+            contentValues.put("isActive", isActive ? 1 : 0);
+            db.delete("users", null, null);
             Log.d(TAG, userEmail + "ppp");
             long result = db.insert("users", null, contentValues);
             if (result != -1) {
                 Log.d(TAG, "我添加成功了");
-                /*queryAllUser();*/
+                queryAllUser();
             } else {
                 Log.d(TAG, "我添加失败了");
             }
@@ -62,6 +65,12 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             Log.e(TAG, String.valueOf(e)+"我添加失败了");
             return false;
         }
+    }
+    //清空表的操作
+    public void clearUsersTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from users");
+        db.close();
     }
     public void queryAllUser() {
         Log.d(TAG, "我要开始查询所有的用户信息了");
@@ -87,6 +96,20 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             return cursor.getString(cursor.getColumnIndex("userPassword"));
         } else {
             return null;
+        }
+    }
+    @SuppressLint("Range")
+    public boolean checkUserActiveStatus() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("users", null, null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+            cursor.close();
+            return isActive == 1; // 如果 isActive 为 1，返回 true
+        } else {
+            cursor.close();
+            return false; // 表为空或没有找到记录
         }
     }
 }

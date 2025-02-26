@@ -42,7 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/editText_size1"
-            android:maxLength="20"
             android:padding="5dp"
             android:background="@drawable/background_1"
             android:hint="密码"/>

@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -18,10 +20,10 @@ public class NetworkClient {
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
-    public void get(String url, final NetworkCallback callback) {
+    public void get(String url,String Json, final NetworkCallback callback) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
-                JSON, "{\"param1\":\"2858678706@qq.com\"}");
+                JSON, Json);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
@@ -31,6 +33,15 @@ public class NetworkClient {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(e);
+                if (e instanceof SocketTimeoutException) {
+                    Log.e(TAG, "请求超时: " + e.getMessage());
+                } else if (e instanceof UnknownHostException) {
+                    Log.e(TAG, "无法解析主机名: " + e.getMessage());
+                } else {
+                    Log.e(TAG, "其他网络错误: " + e.getMessage());
+                }
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
             }
 
             @Override
@@ -40,6 +51,8 @@ public class NetworkClient {
                     callback.onSuccess(responseData);
                     Log.d(TAG, "成功");
                 } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.d(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
                     callback.onFailure(new IOException("Unexpected code " + response));
                 }
             }

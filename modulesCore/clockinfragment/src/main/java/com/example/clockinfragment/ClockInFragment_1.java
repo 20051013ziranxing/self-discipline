@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
@@ -27,7 +28,7 @@ import java.util.List;
  * Use the {@link ClockInFragment_1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClockInFragment_1 extends Fragment {
+public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapter.OnItemClickListener{
     private static final String TAG = "TestTT_ClockInFragment_1";
     RecyclerView recyclerView;
     List<TestBead> testBeads;
@@ -85,7 +86,7 @@ public class ClockInFragment_1 extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads);
+        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads, (ClockInRecyclerAdapter.OnItemClickListener) this);
         FrameLayout childFragmentContainer = view.findViewById(R.id.fragment_addPunchShards);
         recyclerView.setAdapter(addFounctionAdapter);
         floatingActionButton_floatingButton_add_clockIn.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +103,7 @@ public class ClockInFragment_1 extends Fragment {
     }
     public void initData() {
         testBeads = new ArrayList<>();
-        TestBead testBead = new TestBead("喝水", "8", "3", R.drawable.walter, 3);
+        TestBead testBead = new TestBead("喝水", "8", "8", R.drawable.walter, 3);
         testBeads.add(testBead);
         TestBead testBead1 = new TestBead("早起", "6", "3", R.drawable.morning, 3);
         testBeads.add(testBead1);
@@ -117,5 +118,10 @@ public class ClockInFragment_1 extends Fragment {
     }
     public void setClockInFragmentPresenter(ClockInFragmentPresenter clockInFragmentPresenter) {
         this.clockInFragmentPresenter = clockInFragmentPresenter;
+    }
+    @Override
+    public void onItemClick() {
+        // 点击子项后重新加载数据
+
     }
 }

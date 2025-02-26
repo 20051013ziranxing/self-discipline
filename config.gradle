@@ -1,6 +1,6 @@
 
 ext {
-    isDebug = false
+    isDebug = true
 
     android = [
             compileSdkVersion: 34,
@@ -26,7 +26,8 @@ ext {
             "accountsecurity" : "com.example.accountsecurity",
             "selectanimage" : "com.example.selectanimage",
             "activitymanager" : "com.example.activitymanager",
-            "networkrequests" : "com.example.networkrequests"
+            "networkrequests" : "com.example.networkrequests",
+            "music" : "com.example.music"
     ]
 
     library = [
