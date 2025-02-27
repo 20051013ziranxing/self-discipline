@@ -19,7 +19,12 @@ import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.necer.calendar.NCalendar;
+import com.necer.enumeration.DateChangeBehavior;
+import com.necer.listener.OnCalendarChangedListener;
+import com.necer.utils.hutool.ChineseDate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +39,8 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     List<TestBead> testBeads;
     ClockInFragmentPresenter clockInFragmentPresenter;
     FloatingActionButton floatingActionButton_floatingButton_add_clockIn;
+    NCalendar nCalendar;
+    FloatingActionButton floatingButton_backNowDay;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -81,6 +88,30 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clock_in_1, container, false);
         initData();
+        nCalendar = view.findViewById(R.id.weekCalendar);
+        floatingButton_backNowDay = view.findViewById(R.id.floatingButton_backNowDay);
+        floatingButton_backNowDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nCalendar.toToday();
+            }
+        });
+        nCalendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
+            @Override
+            public void onCalendarChange(int i, int i1, LocalDate localDate, DateChangeBehavior dateChangeBehavior) {
+                if (localDate != null) {
+                    ChineseDate chineseDate = new ChineseDate(localDate);
+                    String s = localDate.toString();
+                    String s2 = LocalDate.now().toString();
+                    if (! s.equals(s2)){
+                        Log.d("nvjbifgj", localDate.toString() + "pppppp" + LocalDate.now().toString());
+                        floatingButton_backNowDay.setVisibility(View.VISIBLE);
+                    } else {
+                        floatingButton_backNowDay.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
         floatingActionButton_floatingButton_add_clockIn = view.findViewById(R.id.floatingButton_add_clockIn);
         recyclerView = view.findViewById(R.id.clockIn_recycler_View);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -121,7 +152,7 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     }
     @Override
     public void onItemClick() {
-        // 点击子项后重新加载数据
+
 
     }
 }

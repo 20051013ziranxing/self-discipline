@@ -1,5 +1,6 @@
 package com.example.pomodorotechnique;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,10 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -19,12 +22,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.pomodorotechnique.MusicService;
 import com.example.pomodorotechnique.myView.CircleProgressBar;
 
 @Route(path = "/PomodoroTimerActivity/PomodoroTimerActivity")
 public class PomodoroTimerActivity extends AppCompatActivity implements SelectTheSongBottomSheetDialogFragment.OnSongSelectedListener{
+    @Autowired(name = "pomodoro")
+    public String pomodoro_requirements;
+    private static final int COUNTDOWN = 0;
+    private static final int FORWARD_TIMING = 1;
+    private static final int REST = 2;
+    private int state;
     private CountDownTimer countDownTimer;
     private long elapsedTime = 0;
     PomodoroTimerActivityPresenter pomodoroTimerActivityPresenter;
@@ -35,6 +46,7 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
     private final static String TAG = "TestTT_PomodoroTimerActivity";
     //时间的显示（倒计时与正向计时）
     private TextView timeTextView;
+    RadioGroup RadioGroup_TimingSelection;
     //计时
     private CircleProgressBar progressCircle;
     //专注的时候的开关
@@ -53,10 +65,105 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        state = 3;
+        ARouter.getInstance().inject(this);
+        Log.d(TAG, pomodoro_requirements);
         pomodoroTimerActivityPresenter = new PomodoroTimerActivityPresenter(this);
         imageButton_ASwitchThatControlsTheTiming = findViewById(R.id.imageButton_ASwitchThatControlsTheTiming);
         imageView_TheChoiceOfMusicWhenFocused = findViewById(R.id.imageView_TheChoiceOfMusicWhenFocused);
         imageView_SkipTheCurrentTimer = findViewById(R.id.imageView_SkipTheCurrentTimer);
+        RadioGroup_TimingSelection = findViewById(R.id.RadioGroup_TimingSelection);
+        RadioGroup_TimingSelection.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radioButton_countdown_11) {
+                    state = COUNTDOWN;
+                } else if (checkedId == R.id.radioButton_forwardTiming_11) {
+                    state = FORWARD_TIMING;
+                }
+            }
+        });
+        imageView_SkipTheCurrentTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (state == COUNTDOWN) {
+                    LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
+                    View layout = inflater.inflate(R.layout.skip_the_countdown, null);
+                    TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
+                    textView1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+                    TextView textView2 = layout.findViewById(R.id.textView_finishTheTimingAheadOfSchedule);
+                    textView2.setText("提前完成计时");
+                    textView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startTimer(5);
+                        }
+                    });
+                    TextView textView3 = layout.findViewById(R.id.textView_cancel);
+                    textView3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(PomodoroTimerActivity.this);
+                    dialog.setView(layout);
+                    dialog.show();
+                } else if (state == FORWARD_TIMING) {
+                    LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
+                    View layout = inflater.inflate(R.layout.skip_the_countdown, null);
+                    TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
+                    textView1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+                    TextView textView2 = layout.findViewById(R.id.textView_finishTheTimingAheadOfSchedule);
+                    textView2.setText("结束本次正向计时");
+                    textView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startTimer(5);
+                        }
+                    });
+                    TextView textView3 = layout.findViewById(R.id.textView_cancel);
+                    textView3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(PomodoroTimerActivity.this);
+                    dialog.setView(layout);
+                    dialog.show();
+                } else if (state == REST) {
+                    LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
+                    View layout = inflater.inflate(R.layout.skip_the_countdown, null);
+                    TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
+                    textView1.setVisibility(View.GONE);
+                    TextView textView2 = layout.findViewById(R.id.textView_finishTheTimingAheadOfSchedule);
+                    textView2.setText("跳过当前休息计时");
+                    textView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+                    TextView textView3 = layout.findViewById(R.id.textView_cancel);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(PomodoroTimerActivity.this);
+                    dialog.setView(layout);
+                    dialog.show();
+                } else {
+                    ;
+                }
+            }
+        });
         imageButton_ASwitchThatControlsTheTiming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +198,7 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
     }
     //开始倒计时
     private void startTimer(int min) {
-        progressCircle.startCountDown(min * 60000L, 1000); // 5分钟倒计时
+        progressCircle.startCountDown(min * 60000L, 1000);
         new CountDownTimer(min * 60000L, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

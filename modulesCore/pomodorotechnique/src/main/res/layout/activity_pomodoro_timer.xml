@@ -43,6 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <RadioButton
+            android:id="@+id/radioButton_countdown_11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="倒计时"
@@ -51,6 +52,7 @@
             android:textColor="@color/black"/>
 
         <RadioButton
+            android:id="@+id/radioButton_forwardTiming_11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="正计时"

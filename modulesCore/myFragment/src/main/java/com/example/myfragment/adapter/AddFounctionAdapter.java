@@ -38,7 +38,9 @@ public class AddFounctionAdapter extends RecyclerView.Adapter<AddFounctionAdapte
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build("/PomodoroTimerActivity/PomodoroTimerActivity").navigation();
+                ARouter.getInstance().build("/PomodoroTimerActivity/PomodoroTimerActivity")
+                        .withString("pomodoro", "0级，倒计时")
+                        .navigation();
             }
         });
     }
