@@ -46,7 +46,7 @@ public class SelectTheSongBottomSheetDialogFragment extends BottomSheetDialogFra
                     listener.onSongSelected(String.valueOf(R.raw.music1));
                     Log.d(TAG, "我点击了，并执行了");
                 } else if (ID == R.id.radio_summerRains) {
-                    listener.onSongSelected(String.valueOf(R.raw.music2));
+                    listener.onSongSelected(String.valueOf(R.raw.music1));
                     Log.d(TAG, "我点击了，并执行了");
                 } else {
                     listener.onSongSelected("123");

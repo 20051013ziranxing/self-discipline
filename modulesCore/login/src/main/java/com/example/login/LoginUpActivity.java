@@ -116,9 +116,9 @@ public class LoginUpActivity extends AppCompatActivity {
                     SendToast("邮箱输入格式错误");
                 } else if (!password){
                     SendToast("密码输入格式错误");
-                    loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(), editText_password_up.getText().toString());
+                    loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(), editText_password_up.getText().toString(), checkBox_keepSignUp_up.isChecked());
                 } else {
-                    loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(), editText_password_up.getText().toString());
+                    loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(), editText_password_up.getText().toString(), checkBox_keepSignUp_up.isChecked());
                 }
                 Log.d(TAG, editText_emailNumber_up.getText().toString() + editText_password_up.getText().toString());
             }

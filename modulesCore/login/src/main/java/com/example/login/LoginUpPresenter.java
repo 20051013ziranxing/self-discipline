@@ -38,12 +38,13 @@ public class LoginUpPresenter {
         });
     }
     //根据密码进行登录
-    public void loginUpByPassword(String userEmail, String userPassword) {
+    public void loginUpByPassword(String userEmail, String userPassword, Boolean ischeck) {
         Log.d(TAG, userEmail + "hh" + userPassword);
         userMessageModel.LogInWithYourPassword(userEmail, userPassword, new UserMessageModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "登录成功，收到的返回数据为：" + response);
+                userMessageModel.insert("睡到自然醒", userPassword, userEmail, ischeck);
                 loginUpActivity.goToThematicSection();
                 return null;
             }

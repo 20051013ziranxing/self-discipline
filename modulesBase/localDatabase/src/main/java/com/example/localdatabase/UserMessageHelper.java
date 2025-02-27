@@ -29,7 +29,7 @@ public class UserMessageHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USERS);
-        Toast.makeText(mcontext, "成功创建用户信息表", Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(mcontext, "成功创建用户信息表", Toast.LENGTH_SHORT).show();*/
     }
 
     @Override
@@ -53,12 +53,15 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             contentValues.put("isActive", isActive ? 1 : 0);
             db.delete("users", null, null);
             Log.d(TAG, userEmail + "ppp");
+            clearUsersTable();
             long result = db.insert("users", null, contentValues);
             if (result != -1) {
                 Log.d(TAG, "我添加成功了");
                 queryAllUser();
             } else {
                 Log.d(TAG, "我添加失败了");
+                Log.d(TAG, "ContentValues: " + contentValues.toString());
+                queryAllUser();
             }
             return result != -1;
         } catch (SQLiteException e) {
@@ -70,9 +73,8 @@ public class UserMessageHelper extends SQLiteOpenHelper {
     public void clearUsersTable() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from users");
-        db.close();
     }
-    public void queryAllUser() {
+    public int queryAllUser() {
         Log.d(TAG, "我要开始查询所有的用户信息了");
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "我查询到所有的用户信息了");
@@ -83,9 +85,12 @@ public class UserMessageHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String userName = cursor.getString(cursor.getColumnIndex("userName"));
                 @SuppressLint("Range") String userPassword = cursor.getString(cursor.getColumnIndex("userPassword"));
                 @SuppressLint("Range") String userEmail = cursor.getString(cursor.getColumnIndex("userEmail"));
+                @SuppressLint("Range") int userAction = cursor.getInt(cursor.getColumnIndex("isActive"));
                 Log.d(TAG, "userName:" + userName + ";userPassword:" + userPassword + ";userEmail:" + userEmail);
+                return userAction;
             } while (cursor.moveToNext());
         }
+        return 0;
     }
 
     @SuppressLint("Range")
@@ -106,10 +111,19 @@ public class UserMessageHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
             cursor.close();
-            return isActive == 1; // 如果 isActive 为 1，返回 true
+            return isActive == 1;
         } else {
             cursor.close();
-            return false; // 表为空或没有找到记录
+            return false;
         }
+    }
+
+    public boolean updateIsActiveToZero() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("isActive", 0);
+        int rowsAffected = db.update("users", values, null, null);
+        db.close();
+        return rowsAffected > 0;
     }
 }

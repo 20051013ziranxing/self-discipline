@@ -20,6 +20,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "TestMainActivity";
     Button button;
+    MainActivityPresenter mainActivityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        mainActivityPresenter = new MainActivityPresenter(this);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ARouter.getInstance().build("/login/LoginUpActivity").navigation();
+                mainActivityPresenter.come();
                 finish();
             }
         }, 200);
-
     }
 }

@@ -19,6 +19,8 @@
             android:usesCleartextTraffic="true"
             android:exported="true">
         </activity>
+        <activity android:name=".view.PublishActivity"
+            />
     </application>
 
 </manifest>
