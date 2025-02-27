@@ -8,12 +8,20 @@ public interface ICommunityContract {
     public interface View {
 
     }
+
     public interface Presenter {
         void getData();
 
         void onDataReceived(List<Post> postList);
     }
+
     public interface Model {
         void getData();
+    }
+
+    public interface MyCallback {
+        void onSucces();
+
+        void onFail();
     }
 }

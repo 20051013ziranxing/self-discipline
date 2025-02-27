@@ -86,11 +86,89 @@ public class CommunityModel implements ICommunityContract.Model {
 
     public void deletePost(int postId) {
 
+//        JSONObject object = new JSONObject();
+//        object.put("user_id", "2");
+//        object.put("post_id", postId);
+//        String json = object.toString();
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
+//        Request request = new Request.Builder()
+//                .url(POST_URL)
+//                .delete(requestBody)
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d(TAG, "onFailure: " + e.getMessage());
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                if (response.isSuccessful()) {
+//                }
+//            }
+//        });
     }
 
     public void unlikePost(int postId) {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("user_id", "2");
+            object.put("post_id", postId);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String json = object.toString();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
+        Request request = new Request.Builder()
+                .url(LIKE_URL)
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG, "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "删除成功: " + response.body().string());
+                }
+            }
+        });
     }
 
     public void likePost(int postId) {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("user_id", "2");
+            object.put("post_id", postId);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String json = object.toString();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
+        Request request = new Request.Builder()
+                .url(UNLIKE_URL)
+                .delete(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG, "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "删除成功: " + response.body().string());
+                }
+            }
+        });
     }
 }
