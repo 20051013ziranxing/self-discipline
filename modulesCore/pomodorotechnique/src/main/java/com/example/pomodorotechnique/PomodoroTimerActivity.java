@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -27,17 +28,19 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.pomodorotechnique.MusicService;
 import com.example.pomodorotechnique.myView.CircleProgressBar;
+import com.example.pomodorotechnique.myView.ReStartDialog;
 
 @Route(path = "/PomodoroTimerActivity/PomodoroTimerActivity")
 public class PomodoroTimerActivity extends AppCompatActivity implements SelectTheSongBottomSheetDialogFragment.OnSongSelectedListener{
     @Autowired(name = "pomodoro")
     public String pomodoro_requirements;
-    private static final int COUNTDOWN = 0;
-    private static final int FORWARD_TIMING = 1;
+    /*private static final int COUNTDOWN = 0;*/
+    /*private static final int FORWARD_TIMING = 1;*/
+    private static final int TIMING = 1;
     private static final int REST = 2;
-    private int state;
-    private CountDownTimer countDownTimer;
-    private long elapsedTime = 0;
+    public int state;
+    public CountDownTimer countDownTimer;
+    public long elapsedTime = 0;
     PomodoroTimerActivityPresenter pomodoroTimerActivityPresenter;
     TextView textView_PomodoroGreetings;
     //进行ImageView的切换
@@ -45,16 +48,19 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
     private int currentImageIndex = 0;
     private final static String TAG = "TestTT_PomodoroTimerActivity";
     //时间的显示（倒计时与正向计时）
-    private TextView timeTextView;
+    public TextView timeTextView;
     RadioGroup RadioGroup_TimingSelection;
     //计时
-    private CircleProgressBar progressCircle;
+    public CircleProgressBar progressCircle;
     //专注的时候的开关
     ImageView imageButton_ASwitchThatControlsTheTiming;
     //专注的时候背景音乐的选择按钮
     ImageButton imageView_TheChoiceOfMusicWhenFocused;
     //跳过当前计时
     ImageButton imageView_SkipTheCurrentTimer;
+    RadioButton radioButton_countdown_11;
+    RadioButton radioButton_forwardTiming_11;
+    TextView textView_StatusInformation_focus_or_rest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,26 +74,49 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
         state = 3;
         ARouter.getInstance().inject(this);
         Log.d(TAG, pomodoro_requirements);
+        pomodoro_requirements = "倒计时,25";
+        /*pomodoro_requirements = "正向计时";
+        pomodoro_requirements = "倒计时，-1";*/
+        String[] messagePomodoro = pomodoro_requirements.split(",");
+        for (String s : messagePomodoro) {
+            Log.d(TAG, s);
+        }
         pomodoroTimerActivityPresenter = new PomodoroTimerActivityPresenter(this);
         imageButton_ASwitchThatControlsTheTiming = findViewById(R.id.imageButton_ASwitchThatControlsTheTiming);
         imageView_TheChoiceOfMusicWhenFocused = findViewById(R.id.imageView_TheChoiceOfMusicWhenFocused);
         imageView_SkipTheCurrentTimer = findViewById(R.id.imageView_SkipTheCurrentTimer);
         RadioGroup_TimingSelection = findViewById(R.id.RadioGroup_TimingSelection);
+        radioButton_countdown_11 = findViewById(R.id.radioButton_countdown_11);
+        textView_StatusInformation_focus_or_rest = findViewById(R.id.textView_StatusInformation_focus_or_rest);
+        radioButton_forwardTiming_11 = findViewById(R.id.radioButton_forwardTiming_11);
+        if (messagePomodoro[0].equals("倒计时")) {
+            radioButton_countdown_11.setChecked(true);
+        } else {
+            radioButton_forwardTiming_11.setChecked(true);
+        }
         RadioGroup_TimingSelection.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.radioButton_countdown_11) {
-                    state = COUNTDOWN;
+                    state = TIMING;
                 } else if (checkedId == R.id.radioButton_forwardTiming_11) {
-                    state = FORWARD_TIMING;
+                    state = TIMING;
                 }
             }
         });
         imageView_SkipTheCurrentTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (state == COUNTDOWN) {
-                    LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
+                if (state == TIMING) {
+                    ReStartDialog reStartDialog = new ReStartDialog(PomodoroTimerActivity.this);
+                    reStartDialog.findViewById(R.id.textView_discardTheCurrentTimer).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+                    reStartDialog.show();
+                    /*LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
                     View layout = inflater.inflate(R.layout.skip_the_countdown, null);
                     TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
                     textView1.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +130,9 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
                     textView2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startTimer(5);
+                            pomodoroTimerActivityPresenter.startTimer(5);
+                            textView_StatusInformation_focus_or_rest.setText("休息中");
+                            state = REST;
                         }
                     });
                     TextView textView3 = layout.findViewById(R.id.textView_cancel);
@@ -113,8 +144,8 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
                     });
                     AlertDialog.Builder dialog = new AlertDialog.Builder(PomodoroTimerActivity.this);
                     dialog.setView(layout);
-                    dialog.show();
-                } else if (state == FORWARD_TIMING) {
+                    dialog.show();*/
+                }/* else if (state == FORWARD_TIMING) {
                     LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
                     View layout = inflater.inflate(R.layout.skip_the_countdown, null);
                     TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
@@ -142,7 +173,7 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
                     AlertDialog.Builder dialog = new AlertDialog.Builder(PomodoroTimerActivity.this);
                     dialog.setView(layout);
                     dialog.show();
-                } else if (state == REST) {
+                } */ else if (state == REST) {
                     LayoutInflater inflater = LayoutInflater.from(PomodoroTimerActivity.this);
                     View layout = inflater.inflate(R.layout.skip_the_countdown, null);
                     TextView textView1 = layout.findViewById(R.id.textView_discardTheCurrentTimer);
@@ -169,17 +200,22 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
             public void onClick(View v) {
                 currentImageIndex = (currentImageIndex + 1) % imageResources.length;
                 Log.d(TAG, String.valueOf(currentImageIndex));
-                imageButton_ASwitchThatControlsTheTiming.setImageResource(imageResources[currentImageIndex]);
+                imageButton_ASwitchThatControlsTheTiming.setImageResource(imageResources[1]);
                 Log.d(TAG, "进入了");
                 if (currentImageIndex == 1) {
-                    Intent intent = new Intent("PLAY");
+                    if (messagePomodoro[0].equals("倒计时") && Integer.parseInt(messagePomodoro[1]) != 0) {
+                        pomodoroTimerActivityPresenter.startTimer(Integer.parseInt(messagePomodoro[1]));
+                        state = TIMING;
+                    } else {
+                        radioButton_forwardTiming_11.setChecked(true);
+                    }
+                    /*Intent intent = new Intent("PLAY");
                     intent.setPackage(getPackageName());
-                    sendBroadcast(intent);
+                    sendBroadcast(intent);*/
                 } else {
-                    Intent intent = new Intent("PAUSE");
-                    intent.setPackage(getPackageName());
-                    sendBroadcast(intent);
+
                 }
+                imageButton_ASwitchThatControlsTheTiming.setClickable(false);
             }
         });
         imageView_TheChoiceOfMusicWhenFocused.setOnClickListener(new View.OnClickListener() {
@@ -191,52 +227,8 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
         });
         timeTextView = findViewById(R.id.timeTextView_TheTimeOfTheTimer);
         progressCircle = findViewById(R.id.progressCircle);
-        /*startTimer(25);*/
-        startPositiveTimer();
         textView_PomodoroGreetings = findViewById(R.id.textView_PomodoroGreetings);
         pomodoroTimerActivityPresenter.changeRandomWordsOfEncouragement();
-    }
-    //开始倒计时
-    private void startTimer(int min) {
-        progressCircle.startCountDown(min * 60000L, 1000);
-        new CountDownTimer(min * 60000L, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                int seconds = (int) (millisUntilFinished / 1000) % 60;
-                int minutes = (int) ((millisUntilFinished / 1000) / 60) % 60;
-                timeTextView.setText(String.format("%02d:%02d", minutes, seconds));
-            }
-
-            @Override
-            public void onFinish() {
-                timeTextView.setText("00:00");
-                progressCircle.cancelCountDown();
-            }
-        }.start();
-    }
-    //开始正向计时
-    private void startPositiveTimer() {
-        elapsedTime = 0;
-        countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                elapsedTime += 1000;
-                timeTextView.setText(formatTime(elapsedTime));
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        }.start();
-    }
-
-    private String formatTime(long millis) {
-        int seconds = (int) (millis / 1000);
-        int hours = seconds / 3600;
-        int minutes = (seconds % 3600) / 60;
-        int secs = seconds % 60;
-
-        return String.format("%02d:%02d:%02d", hours, minutes, secs);
     }
 
     @Override
@@ -250,10 +242,20 @@ public class PomodoroTimerActivity extends AppCompatActivity implements SelectTh
 
     @Override
     public void onSongSelected(String songName) {
-        Intent changeMusicIntent = new Intent(PomodoroTimerActivity.this, MusicService.class);
-        changeMusicIntent.setAction("CHANGE_MUSIC");
-        int s = Integer.parseInt(songName);
-        changeMusicIntent.putExtra("MUSIC_RESOURCE_ID", s);
-        startService(changeMusicIntent);
+        if (state == TIMING) {
+            Intent changeMusicIntent = new Intent(PomodoroTimerActivity.this, MusicService.class);
+            changeMusicIntent.setAction("CHANGE_MUSIC");
+            int s = Integer.parseInt(songName);
+            changeMusicIntent.putExtra("MUSIC_RESOURCE_ID", s);
+            startService(changeMusicIntent);
+        } else {
+
+        }
+    }
+
+    public void stopMusic() {
+        Intent intent = new Intent("PAUSE");
+        intent.setPackage(getPackageName());
+        sendBroadcast(intent);
     }
 }

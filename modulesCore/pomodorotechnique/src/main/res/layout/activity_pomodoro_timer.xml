@@ -83,7 +83,7 @@
         android:id="@+id/timeTextView_TheTimeOfTheTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="04:59"
+        android:text="00:00"
         android:textSize="48sp"
         app:layout_constraintTop_toTopOf="@id/progressCircle"
         app:layout_constraintBottom_toBottomOf="@id/progressCircle"
@@ -92,6 +92,7 @@
         android:textColor="@android:color/white"/>
 
     <TextView
+        android:id="@+id/textView_StatusInformation_focus_or_rest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="专注中"

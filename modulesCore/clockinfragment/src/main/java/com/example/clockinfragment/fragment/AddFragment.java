@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.clockinfragment.ClockInFragment_1;
 import com.example.clockinfragment.R;
@@ -208,5 +209,13 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
     @Override
     public void onItemClick(int color, int iconIn) {
         changeFragmentLayout(color, iconIn);
+    }
+    public void SendToast(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
