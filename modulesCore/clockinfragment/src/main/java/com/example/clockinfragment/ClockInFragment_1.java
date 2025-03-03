@@ -146,6 +146,7 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
         testBeads.add(testBead4);
         TestBead testBead5 = new TestBead("背单词", "2", "3", R.drawable.word, 3);
         testBeads.add(testBead5);
+        testBeads.sort((o1, o2) -> Boolean.compare(o1.getFinish(), o2.getFinish()));
     }
     public void setClockInFragmentPresenter(ClockInFragmentPresenter clockInFragmentPresenter) {
         this.clockInFragmentPresenter = clockInFragmentPresenter;

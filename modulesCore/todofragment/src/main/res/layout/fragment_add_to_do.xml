@@ -65,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
                 app:layout_constraintBottom_toBottomOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
                 app:layout_constraintStart_toEndOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
-                android:textColor="@color/blue"/>
+                android:textColor="@color/blueE"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

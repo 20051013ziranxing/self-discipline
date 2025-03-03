@@ -2,11 +2,14 @@ package com.example.pomodorotechnique;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 
 import java.util.Random;
 
 public class PomodoroTimerActivityPresenter {
+    private static final String TAG = "TestTT_PomodoroTimerActivityPresenter";
+    CountDownTimer CountDownTimer;
     PomodoroTimerActivity pomodoroTimerActivity;
     PomodoroTimerActivityModule pomodoroTimerActivityModule;
 
@@ -31,7 +34,10 @@ public class PomodoroTimerActivityPresenter {
 
     public void startTimer(int min) {
         pomodoroTimerActivity.progressCircle.startCountDown(min * 60000L, 1000);
-        new CountDownTimer(min * 60000L, 1000) {
+        if (CountDownTimer != null) {
+            CountDownTimer.cancel();
+        }
+        CountDownTimer = new CountDownTimer(min * 60000L, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 pomodoroTimerActivity.RadioGroup_TimingSelection.setVisibility(View.GONE);
@@ -47,16 +53,21 @@ public class PomodoroTimerActivityPresenter {
                 pomodoroTimerActivity.progressCircle.cancelCountDown();
                 if (pomodoroTimerActivity.textView_StatusInformation_focus_or_rest.getText().toString().equals("休息中")) {
                     pomodoroTimerActivity.finish();
+                } else {
+                    startTimer(5);
+                    pomodoroTimerActivity.textView_StatusInformation_focus_or_rest.setText("休息中");
                 }
             }
         }.start();
     }
 
-    private void startPositiveTimer() {
+    public void startPositiveTimer() {
+        Log.d(TAG, "进入到正向计时了");
         pomodoroTimerActivity.elapsedTime = 0;
         pomodoroTimerActivity.countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.d(TAG, "进入到正向计时了hhh");
                 pomodoroTimerActivity.RadioGroup_TimingSelection.setVisibility(View.GONE);
                 pomodoroTimerActivity.elapsedTime += 1000;
                 pomodoroTimerActivity.timeTextView.setText(formatTime(pomodoroTimerActivity.elapsedTime));

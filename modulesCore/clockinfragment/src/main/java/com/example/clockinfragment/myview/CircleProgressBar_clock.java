@@ -1,4 +1,4 @@
-package com.example.pomodorotechnique.myView;
+package com.example.clockinfragment.myview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,14 +9,14 @@ import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class CircleProgressBar extends View {
+public class CircleProgressBar_clock extends View {
     private Paint paint;
     private int width;
     private int height;
     private int progress = 0;
     private CountDownTimer countDownTimer;
 
-    public CircleProgressBar(Context context, AttributeSet attrs) {
+    public CircleProgressBar_clock(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
