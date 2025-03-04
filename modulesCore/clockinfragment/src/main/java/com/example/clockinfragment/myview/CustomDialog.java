@@ -20,6 +20,7 @@ public class CustomDialog extends Dialog {
 
     public CustomDialog(Context context) {
         super(context);
+        setContentView(R.layout.dialog_custom);
     }
     public interface OnDialogConfirmedListener {
         void onDialogConfirmed(String inputText);
@@ -32,8 +33,6 @@ public class CustomDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_custom);
-
         cancelButton = findViewById(R.id.dialog_cancel);
         confirmButton = findViewById(R.id.dialog_confirm);
         reductionButton = findViewById(R.id.button_dialog_reduction);

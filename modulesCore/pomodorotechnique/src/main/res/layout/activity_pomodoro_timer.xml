@@ -5,6 +5,132 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_blue"
     tools:context=".PomodoroTimerActivity">
+
+    <ImageView
+        android:id="@+id/ImageView_999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/yin"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_PomodoroGreetings"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ImageView_999"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="每天反复做的事情造就了我们，然后你会发现，优秀不是一种行为，而是一种习惯"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+
+    <RadioGroup
+        android:id="@+id/RadioGroup_TimingSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/background_white_9"
+        android:padding="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButton_countdown_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="倒计时"
+            android:layout_marginEnd="20dp"
+            android:textSize="13dp"
+            android:textColor="@color/black"/>
+
+        <RadioButton
+            android:id="@+id/radioButton_forwardTiming_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正计时"
+            android:textSize="13dp"
+            android:textColor="@color/black"/>
+
+    </RadioGroup>
+
+    <com.example.pomodorotechnique.myView.CircleProgressBar
+        android:id="@+id/progressCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/progressCircle"
+        android:src="@drawable/pomodoro_icon_blue"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/timeTextView_TheTimeOfTheTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="48sp"
+        app:layout_constraintTop_toTopOf="@id/progressCircle"
+        app:layout_constraintBottom_toBottomOf="@id/progressCircle"
+        app:layout_constraintStart_toStartOf="@id/progressCircle"
+        app:layout_constraintEnd_toEndOf="@id/progressCircle"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/textView_StatusInformation_focus_or_rest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="专注中"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/progressCircle"
+        android:layout_marginBottom="30dp"/>
+
+    <ImageView
+        android:id="@+id/imageButton_ASwitchThatControlsTheTiming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/start_icon"
+        android:background="#00ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="70dp"/>
+
+     <ImageButton
+        android:id="@+id/imageView_TheChoiceOfMusicWhenFocused"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/imageButton_ASwitchThatControlsTheTiming"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/music_icon"
+        android:background="#00ffffff"
+        app:layout_constraintBottom_toBottomOf="@id/imageButton_ASwitchThatControlsTheTiming"/>
+
+    <ImageButton
+        android:id="@+id/imageView_SkipTheCurrentTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/skip_icon"
+        android:background="#00ffffff"
+        app:layout_constraintTop_toTopOf="@id/imageButton_ASwitchThatControlsTheTiming"
+        app:layout_constraintStart_toStartOf="@id/imageButton_ASwitchThatControlsTheTiming"
+        app:layout_constraintBottom_toBottomOf="@id/imageButton_ASwitchThatControlsTheTiming"
+        android:layout_marginStart="55dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

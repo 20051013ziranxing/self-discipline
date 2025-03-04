@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.myfragment.R;
 import com.example.myfragment.bean.NewFunction;
 
@@ -37,7 +38,9 @@ public class AddFounctionAdapter extends RecyclerView.Adapter<AddFounctionAdapte
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //进行新功能的单击事件，使用Arouter进行跳转
+                ARouter.getInstance().build("/PomodoroTimerActivity/PomodoroTimerActivity")
+                        .withString("pomodoro", "0级，倒计时")
+                        .navigation();
             }
         });
     }

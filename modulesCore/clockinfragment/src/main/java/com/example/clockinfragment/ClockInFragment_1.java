@@ -12,13 +12,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.necer.calendar.NCalendar;
+import com.necer.enumeration.DateChangeBehavior;
+import com.necer.listener.OnCalendarChangedListener;
+import com.necer.utils.hutool.ChineseDate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +33,14 @@ import java.util.List;
  * Use the {@link ClockInFragment_1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClockInFragment_1 extends Fragment {
+public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapter.OnItemClickListener{
     private static final String TAG = "TestTT_ClockInFragment_1";
     RecyclerView recyclerView;
     List<TestBead> testBeads;
     ClockInFragmentPresenter clockInFragmentPresenter;
     FloatingActionButton floatingActionButton_floatingButton_add_clockIn;
+    NCalendar nCalendar;
+    FloatingActionButton floatingButton_backNowDay;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,12 +88,36 @@ public class ClockInFragment_1 extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clock_in_1, container, false);
         initData();
+        nCalendar = view.findViewById(R.id.weekCalendar);
+        floatingButton_backNowDay = view.findViewById(R.id.floatingButton_backNowDay);
+        floatingButton_backNowDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nCalendar.toToday();
+            }
+        });
+        nCalendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
+            @Override
+            public void onCalendarChange(int i, int i1, LocalDate localDate, DateChangeBehavior dateChangeBehavior) {
+                if (localDate != null) {
+                    ChineseDate chineseDate = new ChineseDate(localDate);
+                    String s = localDate.toString();
+                    String s2 = LocalDate.now().toString();
+                    if (! s.equals(s2)){
+                        Log.d("nvjbifgj", localDate.toString() + "pppppp" + LocalDate.now().toString());
+                        floatingButton_backNowDay.setVisibility(View.VISIBLE);
+                    } else {
+                        floatingButton_backNowDay.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
         floatingActionButton_floatingButton_add_clockIn = view.findViewById(R.id.floatingButton_add_clockIn);
         recyclerView = view.findViewById(R.id.clockIn_recycler_View);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads);
+        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads, (ClockInRecyclerAdapter.OnItemClickListener) this);
         FrameLayout childFragmentContainer = view.findViewById(R.id.fragment_addPunchShards);
         recyclerView.setAdapter(addFounctionAdapter);
         floatingActionButton_floatingButton_add_clockIn.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +134,7 @@ public class ClockInFragment_1 extends Fragment {
     }
     public void initData() {
         testBeads = new ArrayList<>();
-        TestBead testBead = new TestBead("喝水", "8", "3", R.drawable.walter, 3);
+        TestBead testBead = new TestBead("喝水", "8", "8", R.drawable.walter, 3);
         testBeads.add(testBead);
         TestBead testBead1 = new TestBead("早起", "6", "3", R.drawable.morning, 3);
         testBeads.add(testBead1);
@@ -114,8 +146,14 @@ public class ClockInFragment_1 extends Fragment {
         testBeads.add(testBead4);
         TestBead testBead5 = new TestBead("背单词", "2", "3", R.drawable.word, 3);
         testBeads.add(testBead5);
+        testBeads.sort((o1, o2) -> Boolean.compare(o1.getFinish(), o2.getFinish()));
     }
     public void setClockInFragmentPresenter(ClockInFragmentPresenter clockInFragmentPresenter) {
         this.clockInFragmentPresenter = clockInFragmentPresenter;
+    }
+    @Override
+    public void onItemClick() {
+
+
     }
 }

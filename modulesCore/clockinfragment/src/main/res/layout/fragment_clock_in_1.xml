@@ -22,6 +22,7 @@
             android:textColor="@color/black"
             android:layout_marginTop="15dp"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:text="打卡"/>
 
         <androidx.cardview.widget.CardView
@@ -61,12 +62,24 @@
             android:id="@+id/floatingButton_add_clockIn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/add"
-            app:backgroundTint="#58ABC1"
-            android:layout_margin="30dp"/>
+            app:backgroundTint="#58ABC1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingButton_backNowDay"
+            app:layout_constraintEnd_toStartOf="@id/floatingButton_add_clockIn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="20dp"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/day_todo_floatingbutton"
+            app:backgroundTint="@color/white" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

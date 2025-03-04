@@ -50,6 +50,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView textView;
     EditText editText;
+    TextView textView_sign_out;
     private static final int CHOOSE_PHOTO = 2;
     AccountSecurityPresenter accountSecurityPresenter;
     ConstraintLayout constraintLayout_change_Icon;
@@ -102,7 +103,15 @@ public class AccountSecurityActivity extends AppCompatActivity {
                 finish();
             }
         });
+        textView_sign_out = findViewById(R.id.sign_out);
+        textView_sign_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accountSecurityPresenter.signOut();
+            }
+        });
     }
+
 
     public void openAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");

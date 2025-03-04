@@ -10,7 +10,7 @@ public class AccountSecurityPresenter {
 
     public AccountSecurityPresenter(AccountSecurityActivity accountSecurityActivity, String emailNumber) {
         this.accountSecurityActivity = accountSecurityActivity;
-        this.accountSecurityModule = new AccountSecurityModule();
+        this.accountSecurityModule = new AccountSecurityModule(accountSecurityActivity);
     }
 
     public void saveMessage() {
@@ -31,5 +31,9 @@ public class AccountSecurityPresenter {
     public void changeIcon(String icon) {
         iconsave.setMyString(icon);
         Log.d(TAG, iconsave.getMyString() + "changeIcon");
+    }
+
+    public void signOut() {
+        accountSecurityModule.revise();
     }
 }

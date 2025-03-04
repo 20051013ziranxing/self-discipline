@@ -20,6 +20,7 @@ import com.example.activitymanager.ActivityManager;
 import com.example.clockinfragment.ClockInFragmentModule;
 import com.example.clockinfragment.ClockInFragmentPresenter;
 import com.example.clockinfragment.ClockInFragment_1;
+import com.example.communityfragment.view.CommunityFragemnt;
 import com.example.myfragment.MyFragmentModule;
 import com.example.myfragment.MyFragmentPresenter;
 import com.example.myfragment.MyFragment_1;
@@ -82,10 +83,11 @@ public class MainActivity1 extends AppCompatActivity {
                     ToDoFragment toDoFragment1 = new ToDoFragment();
                     fragmentTransaction.replace(R.id.fragment_content, toDoFragment1).commit();
                 } else if (menuItem.getItemId() == R.id.community) {
-                    /*FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    CommunityFragemnt communityFragemnt = new CommunityFragemnt();
+                    fragmentTransaction.replace(R.id.fragment_content, communityFragemnt).commit();
 
-                    fragmentTransaction.replace(R.id.fragment_content, toDoFragment1).commit();*/
                 }
                 return true;
             }

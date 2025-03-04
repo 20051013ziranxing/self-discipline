@@ -52,6 +52,14 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.pomodorotechnique">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-02-26T13:36:12.727964700Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=DEBYLBCUSWLZEQ8T" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="modulesCore.accountsecurity">
         <option name="selectionMode" value="DROPDOWN" />
