@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- 运行Android 12L（API 32级）或更低版本的设备  -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <!--运行Android 13（API 33级）或更高版本的设备-->
@@ -13,14 +15,32 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
+    <application android:usesCleartextTraffic="true">
         <activity
             android:name=".TestCommunityActivity"
-            android:usesCleartextTraffic="true"
-            android:exported="true">
-        </activity>
-        <activity android:name=".view.PublishActivity"
-            />
+            android:exported="true"
+            android:usesCleartextTraffic="true"></activity>
+        <activity android:name=".view.PublishActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:ignore="WrongManifestParent">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider_paths" />
+        </provider>
     </application>
 
 </manifest>

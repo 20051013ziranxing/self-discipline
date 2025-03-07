@@ -1,6 +1,8 @@
 package com.example.communityfragment.bean;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
     private int id;
     private String userid;
     private String userAvatar;
