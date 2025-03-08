@@ -19,17 +19,13 @@ public class UserMessageModel {
         this.networkClient = networkClient;
     }
 
-    public boolean insert(String userName, String userPassword, String userEmail, boolean isActive) {
-        boolean insert = userMessageHelper.insert(userName, userPassword, userEmail, isActive);
+    public boolean insert(String userName, String userPictureURL, String userEmail, String userToken, int userId) {
+        boolean insert = userMessageHelper.insert(userName, userPictureURL, userEmail, userToken, userId);
         return insert;
     }
     public String queryUser(String userEmail) {
         String s = userMessageHelper.queryUser(userEmail);
         return s;
-    }
-
-    public void queryAllUser() {
-        userMessageHelper.queryAllUser();
     }
 
     //发送验证码

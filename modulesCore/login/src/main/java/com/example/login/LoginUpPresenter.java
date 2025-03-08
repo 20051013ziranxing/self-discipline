@@ -3,7 +3,9 @@ package com.example.login;
 import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.login.bean.UserBaseMessage;
 import com.example.networkrequests.NetworkClient;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +28,9 @@ public class LoginUpPresenter {
             @Override
             public Boolean onSuccess(String response) {
                 loginUpActivity.goToThematicSection();
-                userMessageModel.insert(userName, userPassword, userEmail, isCheck);
+                String userToken = "userToken";
+                int userId = 1;
+                userMessageModel.insert(userName, null, userEmail, userToken, userId);
                 return null;
             }
 
@@ -44,7 +48,17 @@ public class LoginUpPresenter {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "登录成功，收到的返回数据为：" + response);
-                userMessageModel.insert("睡到自然醒", userPassword, userEmail, ischeck);
+                UserBaseMessage userBaseMessage = new Gson().fromJson(response, UserBaseMessage.class);
+                String userName = userBaseMessage.getMessage().getUsername();
+                String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
+                String userToken = userBaseMessage.getMessage().getAccess_token();
+                int userId = Integer.parseInt(userBaseMessage.getMessage().getUser_id());
+                Log.d(TAG, userPictureURL + userToken + userId + userName);
+                if (ischeck == true) {
+                    userMessageModel.insert(userName, userPictureURL, userEmail,userToken, userId);
+                } else {
+                    userMessageModel.insert(userName, userPictureURL, userEmail, null, userId);
+                }
                 loginUpActivity.goToThematicSection();
                 return null;
             }

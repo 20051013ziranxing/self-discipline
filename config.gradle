@@ -27,7 +27,8 @@ ext {
             "selectanimage" : "com.example.selectanimage",
             "activitymanager" : "com.example.activitymanager",
             "networkrequests" : "com.example.networkrequests",
-            "music" : "com.example.music"
+            "music" : "com.example.music",
+            "cancelyouraccount" : "com.example.cancelyouraccount"
     ]
 
     library = [

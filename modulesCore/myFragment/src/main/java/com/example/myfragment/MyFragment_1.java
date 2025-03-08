@@ -15,16 +15,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.bumptech.glide.Glide;
 import com.example.myfragment.adapter.AddFounctionAdapter;
 import com.example.myfragment.adapter.FunctionAdapter;
 import com.example.myfragment.bean.Function;
 import com.example.myfragment.bean.NewFunction;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +39,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class MyFragment_1 extends Fragment {
+    CircleImageView imageView_headPicture;
+    TextView textView_UserName;
     MyFragmentPresenter presenter;
     ConstraintLayout constraintLayout;
     RecyclerView recyclerView;
@@ -83,6 +92,12 @@ public class MyFragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_1, container, false);
+        imageView_headPicture = view.findViewById(R.id.imageView_headPicture);
+        /*Glide.with(this)
+                .load(presenter.getUserPicture())
+                .into(imageView_headPicture);*/
+        textView_UserName = view.findViewById(R.id.textView_UserName);
+        textView_UserName.setText(presenter.getUserName());
         //进行数据的初始化
         initData();
         constraintLayout = view.findViewById(R.id.constraint);

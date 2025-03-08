@@ -24,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.Calendar;
 
 public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
+    EditText editText_AddToDoFragment_toDoThingName;
     //用来显式你所选的时间
     TextView textView_AddToDoFragment_toDoThingTime;
     //用来选择时间的按钮
@@ -55,6 +56,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        editText_AddToDoFragment_toDoThingName = view.findViewById(R.id.editText_AddToDoFragment_toDoThingName);
         textView_AddToDoFragment_toDoThingTime = view.findViewById(R.id.textView_AddToDoFragment_toDoThingTime);
         textView_AddToDoFragment_toDoThingTime.setText(year + "-" + month + "-" + day);
         //根据选择的时间进行展示
@@ -180,7 +182,11 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         imageButton_AddToDoFragment_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                if (!editText_AddToDoFragment_toDoThingName.getText().toString().isEmpty()) {
+                    dismiss();
+                } else {
+                    Toast.makeText(getContext(), "事情的名称不能为空", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return view;
@@ -195,11 +201,11 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 String str = dialog_custom_countdown_textView.getText().toString();
-                if (str != null && str.matches("\\d+") && Integer.parseInt(str) <= 180) {
+                if (str != null && str.matches("\\d+") && Integer.parseInt(str) <= 180 && Integer.parseInt(str) >= 10) {
                     radioButton_pomodoro_free_minutes_2_3.setText(str + "分钟");
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(getContext(), "输入的只能是数字，且小于180分钟", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "输入的只能是数字，且小于180分钟，大于等于10分钟", Toast.LENGTH_SHORT).show();
                 }
             }
         });

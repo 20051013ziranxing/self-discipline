@@ -24,6 +24,7 @@ import com.example.communityfragment.view.CommunityFragemnt;
 import com.example.myfragment.MyFragmentModule;
 import com.example.myfragment.MyFragmentPresenter;
 import com.example.myfragment.MyFragment_1;
+import com.example.networkrequests.NetworkClient;
 import com.example.todofragment.ToDoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -66,7 +67,7 @@ public class MainActivity1 extends AppCompatActivity {
                     fragment.setArguments(args);
                     fragmentTransaction.replace(R.id.fragment_content, fragment).commit();
                     Log.d(TAG,"我提交了");
-                    MyFragmentModule myFragmentModule = new MyFragmentModule();
+                    MyFragmentModule myFragmentModule = new MyFragmentModule(MainActivity1.this, new NetworkClient());
                     MyFragmentPresenter presenter = new MyFragmentPresenter(myFragmentModule, fragment);
                     fragment.setPresenter(presenter);
                 } else if (menuItem.getItemId() == R.id.clock) {

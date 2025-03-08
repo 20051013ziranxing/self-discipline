@@ -2,6 +2,8 @@ package com.example.accountsecurity;
 
 import android.util.Log;
 
+import com.example.networkrequests.NetworkClient;
+
 public class AccountSecurityPresenter {
     private static String TAG = "TestTT_AccountSecurityPresenter";
     AccountSecurityModule accountSecurityModule;
@@ -9,8 +11,9 @@ public class AccountSecurityPresenter {
     Iconsave iconsave;
 
     public AccountSecurityPresenter(AccountSecurityActivity accountSecurityActivity, String emailNumber) {
+        NetworkClient networkClient = new NetworkClient();
         this.accountSecurityActivity = accountSecurityActivity;
-        this.accountSecurityModule = new AccountSecurityModule(accountSecurityActivity);
+        this.accountSecurityModule = new AccountSecurityModule(accountSecurityActivity, networkClient);
     }
 
     public void saveMessage() {
@@ -21,11 +24,11 @@ public class AccountSecurityPresenter {
     }
     //进行初始化
     public void initData() {
-        //根据邮箱地址获取图片并将其设置到图片的位置
+        /*//根据邮箱地址获取图片并将其设置到图片的位置
         iconsave = new Iconsave("content://media/external_primary/images/media/1000031793");
         accountSecurityActivity.displayImage(iconsave.getMyString());
         //文字设置为获取到的信息
-        accountSecurityActivity.editText.setText("hhh");
+        accountSecurityActivity.editText.setText("hhh");*/
     }
 
     public void changeIcon(String icon) {
@@ -34,6 +37,6 @@ public class AccountSecurityPresenter {
     }
 
     public void signOut() {
-        accountSecurityModule.revise();
+        accountSecurityModule.signOut();
     }
 }
