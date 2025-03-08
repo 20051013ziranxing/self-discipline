@@ -41,7 +41,7 @@ public class UserMessageHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insert(String userName, String userPictureURL, String userEmail,String userToken, int userId) {
+    public boolean insert(String userName, String userPictureURL, String userEmail,String userToken, String userId) {
         /*queryAllUser();*/
         Log.d(TAG, "我进行了添加");
         SQLiteDatabase db;

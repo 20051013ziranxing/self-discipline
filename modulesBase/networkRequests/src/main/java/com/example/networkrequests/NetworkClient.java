@@ -20,10 +20,10 @@ public class NetworkClient {
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
-    public void get(String url, String Json, final NetworkCallback callback) {
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public void get(String url, RequestBody requestBody, final NetworkCallback callback) {
+        /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
-                JSON, Json);
+                JSON, Json);*/
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)

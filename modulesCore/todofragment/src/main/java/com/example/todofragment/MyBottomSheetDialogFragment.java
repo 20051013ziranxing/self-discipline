@@ -3,6 +3,7 @@ package com.example.todofragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
 public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
+    private static final String TAG = "TestTT_MyBottomSheetDialogFragment";
+    RadioGroup RadioGroup_111;
+    RadioGroup RadioGroup_222;
+    UserBaseMessageEventBus userBaseMessageEventBus;
+    MyBottomSheetDialogFragmentPresenter myBottomSheetDialogFragmentPresenter;
     EditText editText_AddToDoFragment_toDoThingName;
     //用来显式你所选的时间
     TextView textView_AddToDoFragment_toDoThingTime;
@@ -48,6 +60,12 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
     RadioButton radioButton_pomodoro_free_minutes_2_3;
     ImageButton imageButton_AddToDoFragment_save;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,9 +74,14 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String formattedMonth = String.format("%02d", month);
+        String formattedDay = String.format("%02d", day);
+        RadioGroup_111 = view.findViewById(R.id.RadioGroup_111);
+        RadioGroup_222 = view.findViewById(R.id.RadioGroup_222);
+        myBottomSheetDialogFragmentPresenter = new MyBottomSheetDialogFragmentPresenter(this);
         editText_AddToDoFragment_toDoThingName = view.findViewById(R.id.editText_AddToDoFragment_toDoThingName);
         textView_AddToDoFragment_toDoThingTime = view.findViewById(R.id.textView_AddToDoFragment_toDoThingTime);
-        textView_AddToDoFragment_toDoThingTime.setText(year + "-" + month + "-" + day);
+        textView_AddToDoFragment_toDoThingTime.setText(year + "-" + formattedMonth + "-" + formattedDay);
         //根据选择的时间进行展示
         imageButton_AddToDoFragment_toDoThingTimeChoice = view.findViewById(R.id.imageButton_AddToDoFragment_toDoThingTimeChoice);
         imageButton_AddToDoFragment_toDoThingTimeChoice.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +90,9 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView_AddToDoFragment_toDoThingTime.setText(year + "-" + month + "-" + dayOfMonth);
+                        String formattedMonth = String.format("%02d", month);
+                        String formattedDay = String.format("%02d", dayOfMonth);
+                        textView_AddToDoFragment_toDoThingTime.setText(year + "-" + formattedMonth + "-" + formattedDay);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -178,11 +203,20 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
                 }
             }
         });
+        //进行添加操作
         imageButton_AddToDoFragment_save = view.findViewById(R.id.imageButton_AddToDoFragment_save);
         imageButton_AddToDoFragment_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!editText_AddToDoFragment_toDoThingName.getText().toString().isEmpty()) {
+                    String userId = userBaseMessageEventBus.getUserId();
+                    Log.d(TAG, editText_AddToDoFragment_toDoThingName.getText().toString()+
+                            getGrade() + "," + getPomodoroInformation()+
+                            "pending"+userId+ textView_AddToDoFragment_toDoThingTime.getText().toString());
+                    myBottomSheetDialogFragmentPresenter.addToDoThing(editText_AddToDoFragment_toDoThingName.getText().toString(),
+                            getGrade() + "," + getPomodoroInformation(),
+                            "pending",userId, textView_AddToDoFragment_toDoThingTime.getText().toString());
+
                     dismiss();
                 } else {
                     Toast.makeText(getContext(), "事情的名称不能为空", Toast.LENGTH_SHORT).show();
@@ -235,5 +269,68 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         radioButton_gradle_3.setChecked(false);
         radioButton_gradle_2.setChecked(false);
         radioButton_gradle_4.setChecked(false);
+    }
+
+    public void sendToast(String message) {
+        Log.d(TAG, message);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+    public String getGrade() {
+        if (radioButton_gradle_4.isChecked()) {
+            return "4级";
+        } else if (radioButton_gradle_3.isChecked()) {
+            return "3级";
+        } else if (radioButton_gradle_2.isChecked()) {
+            return "2级";
+        } else if (radioButton_gradle_1.isChecked()) {
+            return "1级";
+        } else {
+            return "0级";
+        }
+    }
+    public String getPomodoroInformation() {
+        int checkedId = RadioGroup_111.getCheckedRadioButtonId();
+        if (checkedId == R.id.pomodoro_countdown_1_1) {
+            int time = RadioGroup_222.getCheckedRadioButtonId();
+            if (time == R.id.pomodoro_25_minutes_2_1) {
+                return "倒计时,25";
+            } else if (time == R.id.pomodoro_35_minutes_2_2) {
+                return "倒计时,35";
+            } else {
+                if (radioButton_pomodoro_free_minutes_2_3.getText().toString().equals("自定义")) {
+                    return "倒计时,-1";
+                } else {
+                    StringBuilder number = new StringBuilder();
+                    String input = radioButton_pomodoro_free_minutes_2_3.getText().toString();
+                    for (char c : input.toCharArray()) {
+                        if (Character.isDigit(c)) {
+                            number.append(c);
+                        }
+                    }
+                    Log.d(TAG, "倒计时," + number.toString());
+                    return "倒计时," + number.toString();
+                }
+            }
+        } else if (checkedId == R.id.pomodoro_PositiveTiming_1_2) {
+            return "正向计时, -1";
+        } else if (checkedId == R.id.pomodoro_NoTimers_1_3) {
+            return "不计时";
+        } else {
+            return "不计时";
+        }
     }
 }

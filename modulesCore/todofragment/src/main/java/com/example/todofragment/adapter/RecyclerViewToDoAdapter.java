@@ -15,14 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todofragment.LineView;
 import com.example.todofragment.R;
+import com.example.todofragment.bean.GetToDoThings;
 import com.example.todofragment.bean.ToDoThing;
 
 import java.util.List;
 
 public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewToDoAdapter.MyViewHolder> {
-    List<ToDoThing> toDoThings;
+    List<GetToDoThings.GetToDothingMessage> toDoThings;
 
-    public RecyclerViewToDoAdapter(List<ToDoThing> toDoThings) {
+    public RecyclerViewToDoAdapter(List<GetToDoThings.GetToDothingMessage> toDoThings) {
         this.toDoThings = toDoThings;
     }
 
@@ -36,17 +37,25 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ToDoThing toDoThing = toDoThings.get(position);
-        holder.checkBox.setChecked(toDoThing.getThingFinish());
-        holder.textView_ThingName.setText(toDoThing.getThingName());
-        holder.imageView_ThingGradle.setImageResource(GetThingGradle(toDoThing.getThingGradle()));
-        holder.textView_ThingTimes.setText(toDoThing.getThingTime());
-        if (ThingNeedTime(toDoThing.getThingTime())) {
+        GetToDoThings.GetToDothingMessage toDoThing = toDoThings.get(position);
+        boolean isFinish;
+        if (toDoThing.getStatus().equals("pending")) {
+            isFinish = false;
+        } else {
+            isFinish = true;
+        }
+        holder.checkBox.setChecked(isFinish);
+        holder.textView_ThingName.setText(toDoThing.getTitle());
+        String description = toDoThing.getDescription();
+        String[] result = description.split(",");
+        holder.imageView_ThingGradle.setImageResource(GetThingGradle(result[0]));
+        holder.textView_ThingTimes.setText(result[1] + "," + result[2]);
+        if (ThingNeedTime(result[2])) {
             holder.imageButton_ThingTime.setImageResource(R.drawable.fanqie);
         } else {
             holder.imageButton_ThingTime.setVisibility(View.GONE);
         }
-        if (toDoThing.getThingFinish()) {
+        if (toDoThing.getStatus().equals("completed")) {
             Animation animation = new Animation() {
                 @Override
                 protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -102,13 +111,13 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         }
     }
     public int GetThingGradle(String s1) {
-        if (s1.equals("一级")) {
+        if (s1.equals("1级")) {
             return R.drawable.one_1;
-        } else if (s1.equals("二级")) {
+        } else if (s1.equals("2级")) {
             return R.drawable.two_2;
-        } else if (s1.equals("三级")) {
+        } else if (s1.equals("3级")) {
             return R.drawable.three_3;
-        } else if (s1.equals("四级")) {
+        } else if (s1.equals("4级")) {
             return R.drawable.four;
         }
         return R.drawable.four;

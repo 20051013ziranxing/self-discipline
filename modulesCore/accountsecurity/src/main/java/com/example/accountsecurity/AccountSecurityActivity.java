@@ -40,6 +40,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.activitymanager.ActivityManager;
 import com.example.selectanimage.ImageHelper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -87,6 +88,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        EventBus.getDefault().register(this);
         ActivityManager.getInstance().addActivity(this);
         //此处的邮箱地址应该根据数据进行进行改变
         imageHelper = new ImageHelper(this);

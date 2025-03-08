@@ -43,6 +43,7 @@ dependencies {
     implementation project(':modulesBase:networkRequests')
     implementation("org.greenrobot:eventbus:3.3.1")
     implementation project(':modulesBase:localDatabase')
+    implementation project(':modulesBase:eventBus')
     implementation("com.alibaba:arouter-api:1.5.2")
     annotationProcessor("com.alibaba:arouter-compiler:1.5.2")
     implementation("androidx.room:room-runtime:2.4.3")

@@ -1,46 +1,36 @@
-package com.example.accountsecurity;
+package com.example.todofragment;
 
-import android.app.Activity;
-
-import com.example.localdatabase.UserMessageHelper;
 import com.example.networkrequests.NetworkClient;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AccountSecurityModule {
-    UserMessageHelper userMessageHelper;
+public class MyBottomSheetDialogFragmentModule {
     private NetworkClient networkClient;
-    public AccountSecurityModule(Activity activity, NetworkClient networkClient) {
-        this.userMessageHelper = new UserMessageHelper(activity, "AllUsersMessage", null, 1);
+
+    public MyBottomSheetDialogFragmentModule(NetworkClient networkClient) {
         this.networkClient = networkClient;
     }
-    public void signOut() {
-        userMessageHelper.updateUniqueUserToken(null);
-    }
-    public void modifyTheUserSAvatar(String id, File file) {
-        String url = "http://101.200.121.142:9999/profile";
+
+    public void addToDoThing(String title, String description, String status, String user_id, String updated_at, final ModelCallback callback) {
+        String url = "http://101.200.121.142:9999/create-todo";
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id", id);
+            jsonObject.put("title", title);
+            jsonObject.put("description", description);
+            jsonObject.put("status", status);
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("updated_at", updated_at + "T14:30:00Z");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // 创建请求体
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("json", jsonObject.toString())
-                .addFormDataPart("file", file.getName(), RequestBody.create(file, MediaType.parse("image/jpeg"))) // 上传文件
-                .build();
+        String json = jsonObject.toString();
+        PublicNetworkRequestMethod(url, json, callback);
     }
-    //将调用接口提出来
     public void PublicNetworkRequestMethod(String url,String Json, ModelCallback callback) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
@@ -57,6 +47,7 @@ public class AccountSecurityModule {
             }
         });
     }
+
     public interface ModelCallback {
         Boolean onSuccess(String response);
         Boolean onFailure(IOException e);

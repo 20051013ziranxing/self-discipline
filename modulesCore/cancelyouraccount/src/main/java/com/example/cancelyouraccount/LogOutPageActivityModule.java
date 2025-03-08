@@ -11,6 +11,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 public class LogOutPageActivityModule {
     public static final String TAG = "TestTT_LogOutPageActivityModule";
     UserMessageHelper userMessageHelper;
@@ -35,7 +38,10 @@ public class LogOutPageActivityModule {
     }
     //将调用接口提出来
     public void PublicNetworkRequestMethod(String url,String Json, ModelCallback callback) {
-        networkClient.get(url, Json, new NetworkClient.NetworkCallback() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(
+                JSON, Json);
+        networkClient.get(url, requestBody, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
                 callback.onSuccess(response);

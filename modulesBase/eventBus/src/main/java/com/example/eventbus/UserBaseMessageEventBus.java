@@ -1,11 +1,19 @@
-package com.example.localdatabase.bean;
+package com.example.eventbus;
 
-public class UserBaseMessage {
+public class UserBaseMessageEventBus {
     String userName;
     String userPictureURL;
     String userEmail;
     String userToken;
     String userId;
+
+    public UserBaseMessageEventBus(String userName, String userPictureURL, String userEmail, String userToken, String userId) {
+        this.userName = userName;
+        this.userPictureURL = userPictureURL;
+        this.userEmail = userEmail;
+        this.userToken = userToken;
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -44,14 +52,6 @@ public class UserBaseMessage {
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public UserBaseMessage(String userName, String userPictureURL, String userEmail, String userToken, String userId) {
-        this.userName = userName;
-        this.userPictureURL = userPictureURL;
-        this.userEmail = userEmail;
-        this.userToken = userToken;
         this.userId = userId;
     }
 }

@@ -3,12 +3,12 @@ package com.example.login;
 import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.example.login.bean.UserBaseMessage;
 import com.example.networkrequests.NetworkClient;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -27,10 +27,20 @@ public class LoginUpPresenter {
         userMessageModel.Registration(userName, userPassword, userEmail, userCode, new UserMessageModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
+                Log.d(TAG, "注册：" + response);
+                UserBaseMessage userBaseMessage = new Gson().fromJson(response, UserBaseMessage.class);
+                String userToken;
+                if (isCheck) {
+                    userToken = userBaseMessage.getMessage().getAccess_token();
+                } else {
+                    userToken = null;
+                }
+                String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
+                String userId = userBaseMessage.getMessage().getUser_id();
+                userMessageModel.insert(userName, userPictureURL, userEmail, userToken, userId);
+                UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
+                EventBus.getDefault().postSticky(userBaseMessage1);
                 loginUpActivity.goToThematicSection();
-                String userToken = "userToken";
-                int userId = 1;
-                userMessageModel.insert(userName, null, userEmail, userToken, userId);
                 return null;
             }
 
@@ -52,13 +62,15 @@ public class LoginUpPresenter {
                 String userName = userBaseMessage.getMessage().getUsername();
                 String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
                 String userToken = userBaseMessage.getMessage().getAccess_token();
-                int userId = Integer.parseInt(userBaseMessage.getMessage().getUser_id());
+                String userId = userBaseMessage.getMessage().getUser_id();
                 Log.d(TAG, userPictureURL + userToken + userId + userName);
                 if (ischeck == true) {
                     userMessageModel.insert(userName, userPictureURL, userEmail,userToken, userId);
                 } else {
                     userMessageModel.insert(userName, userPictureURL, userEmail, null, userId);
                 }
+                UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
+                EventBus.getDefault().postSticky(userBaseMessage1);
                 loginUpActivity.goToThematicSection();
                 return null;
             }

@@ -22,7 +22,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
+import com.example.todofragment.bean.GetToDoThings;
 import com.example.todofragment.bean.ToDoThing;
 import com.example.todofragment.fragment.AddToDoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +37,10 @@ import com.necer.listener.OnCalendarChangedListener;
 import com.necer.listener.OnCalendarStateChangedListener;
 import com.necer.painter.InnerPainter;
 import com.necer.utils.hutool.ChineseDate;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,10 +57,11 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class ToDoFragment extends Fragment {
+    UserBaseMessageEventBus userBaseMessageEventBus;
+    ToDoFragmentPresenter toDoFragmentPresenter;
     TextView textView_data;
     ImageButton imageButton;
-    List<ToDoThing> toDoThings;
-    NavigationView navigationView;
+    List<GetToDoThings.GetToDothingMessage> toDoThings;
     Toolbar toolbar;
     TextView textView;
     RecyclerView recyclerView_ToDoFragment_show;
@@ -101,6 +108,9 @@ public class ToDoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        toDoFragmentPresenter = new ToDoFragmentPresenter(this);
+        EventBus.getDefault().register(this);
+        toDoThings = new ArrayList<>();
         initData();
         recyclerView_ToDoFragment_show = view.findViewById(R.id.recyclerView_ToDoFragment_show);
         toolbar = view.findViewById(R.id.toolbar);
@@ -161,12 +171,25 @@ public class ToDoFragment extends Fragment {
     }
     public void initData() {
         toDoThings = new ArrayList<>();
+        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), "2025-03-08");
+        /*toDoThings = new ArrayList<>();
         ToDoThing toDoThing = new ToDoThing("喝水", "一级", "不计时", true);
         toDoThings.add(toDoThing);
         ToDoThing toDoThing1 = new ToDoThing("喝水", "三级", "倒计时", false);
         toDoThings.add(toDoThing1);
         ToDoThing toDoThing2 = new ToDoThing("喝水", "一级", "不计时", false);
-        toDoThings.add(toDoThing2);
-        Collections.sort(toDoThings, new ToDoThingComparator());
+        toDoThings.add(toDoThing2);*/
+    }
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
+    public void sendToast(String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

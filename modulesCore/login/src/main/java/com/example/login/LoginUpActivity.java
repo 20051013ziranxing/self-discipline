@@ -33,7 +33,7 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginUpActivity extends AppCompatActivity {
     //邮箱与密码的格式检验
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    private static final String PASSWORD_PATTERN   = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{6}$";
+    private static final String PASSWORD_PATTERN   = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{8}$";
     private static final String TAG = "TestTT_LoginUpActivi ty";
     TextView textView_loginUp;
     TextView textView_signIn;
@@ -116,8 +116,6 @@ public class LoginUpActivity extends AppCompatActivity {
                     SendToast("邮箱输入格式错误");
                 } else if (!password){
                     SendToast("密码输入格式错误");
-                    loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(),
-                            editText_password_up.getText().toString(), checkBox_keepSignUp_up.isChecked());
                 } else {
                     loginUpPresenter.loginUpByPassword(editText_emailNumber_up.getText().toString(),
                             editText_password_up.getText().toString(), checkBox_keepSignUp_up.isChecked());
