@@ -41,10 +41,10 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.communityfragment">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-02-22T15:36:57.911692700Z">
+        <DropdownSelection timestamp="2025-03-07T14:26:15.026968800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=9b4674a0" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=D:\Android\.android\avd\MI13_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>

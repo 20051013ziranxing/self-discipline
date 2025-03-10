@@ -8,7 +8,7 @@
     android:paddingRight="6dp"
     android:paddingBottom="3dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +16,6 @@
         android:layout_marginTop="3dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="3dp"
-        android:background="@drawable/ripple_card"
         app:cardCornerRadius="12dp"
         app:cardElevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,13 +25,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp">
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_post_useravatar"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
                 android:elevation="1dp"
                 android:padding="2dp"
                 android:src="@drawable/ic_launcher_background"
@@ -56,6 +56,7 @@
                 android:id="@+id/img_post_more"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:layout_marginEnd="15dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_more"
                 app:layout_constraintBottom_toBottomOf="@id/tv_post_username"
@@ -66,8 +67,9 @@
                 android:id="@+id/tv_post_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
                 android:fontFamily="@font/misans"
                 android:gravity="start"
                 android:letterSpacing="0.01"
@@ -80,13 +82,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_post_username" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_post_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="2dp"
                 android:elevation="8dp"
                 android:visibility="gone"
@@ -104,14 +106,13 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_launcher_background" />
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:id="@+id/ll_post"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -119,50 +120,83 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cv_post_img">
 
-                <ImageView
-                    android:id="@+id/img_post_like"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:src="@drawable/ic_like" />
+                <LinearLayout
+                    android:id="@+id/ll_post_like"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tv_post_likecount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:fontFamily="@font/misans"
-                    android:minWidth="30dp"
-                    android:text="34"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+                    <ImageView
+                        android:id="@+id/img_post_like"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_like_gray" />
 
-                <ImageView
-                    android:id="@+id/img_post_comment"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginLeft="60dp"
-                    android:src="@drawable/ic_comment" />
+                    <TextView
+                        android:id="@+id/tv_post_likecount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/misans"
+                        android:minWidth="30dp"
+                        android:text="34"
+                        android:textColor="@color/gray3"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_post_commentcount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:fontFamily="@font/misans"
-                    android:minWidth="30dp"
-                    android:text="12"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+                <LinearLayout
+                    android:id="@+id/ll_post_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/img_post_share"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:layout_marginLeft="80dp"
-                    android:src="@drawable/ic_share" />
+                    <ImageView
+                        android:id="@+id/img_post_comment"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_comment_gray" />
 
+                    <TextView
+                        android:id="@+id/tv_post_commentcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/misans"
+                        android:minWidth="30dp"
+                        android:text="12"
+                        android:textColor="@color/gray3"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_post_share"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_post_share"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_share_gray" />
+                </LinearLayout>
 
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,7 @@ public class PublishModel implements IPublishContract.Model {
         MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // 上传文件及类型
-        requestBody.addFormDataPart("user_id", "3");
+        requestBody.addFormDataPart("user_id", "2");
         requestBody.addFormDataPart("content", content);
         File imageFile;
         if (imagePath != null) {

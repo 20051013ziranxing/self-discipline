@@ -23,6 +23,15 @@ public class CommunityPresenter implements ICommunityContract.Presenter {
     }
 
     @Override
+    public void checkLikeStatus(int postId) {
+        mModel.checkLikeStatus(postId);
+    }
+
+    public void updatePostLikeStatus(int postId, boolean isLiked) {
+        mView.updatePostLikeStatus(postId, isLiked);
+    }
+
+    @Override
     public void onDataReceived(List<Post> postList) {
         mView.onDataReceived(postList);
     }
@@ -38,4 +47,5 @@ public class CommunityPresenter implements ICommunityContract.Presenter {
     public void likePost(int postId) {
         mModel.likePost(postId);
     }
+
 }

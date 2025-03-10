@@ -11,6 +11,7 @@ public class Post implements Serializable {
     private String imageUrl;
     private String likeConunt;
     private boolean isLiked;
+    private String commentCount;
 
     public Post() {
     }
@@ -20,6 +21,18 @@ public class Post implements Serializable {
         this.likeConunt = likeConunt;
         this.userAvatar = userAvatar;
         this.userid = userid;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
     }
 
     public int getId() {

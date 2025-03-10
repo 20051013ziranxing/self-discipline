@@ -24,7 +24,8 @@
         <activity
             android:name=".TestCommunityActivity"
             android:exported="true"
-            android:usesCleartextTraffic="true"></activity>
+            android:windowSoftInputMode="adjustResize"
+            android:usesCleartextTraffic="true" />
         <activity android:name=".view.PublishActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
