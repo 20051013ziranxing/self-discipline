@@ -11,7 +11,10 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.networkrequests.NetworkClient;
+
 public class MainActivityMyF extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,12 +27,12 @@ public class MainActivityMyF extends AppCompatActivity {
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MyFragmentModule myFragmentModule = new MyFragmentModule(this, new NetworkClient());
         MyFragment_1 fragment = new MyFragment_1();
         Bundle args = new Bundle();
         args.putString("param1", "Hello World");
         fragment.setArguments(args);
         fragmentTransaction.add(R.id.fragment, fragment).commit();
-        MyFragmentModule myFragmentModule = new MyFragmentModule();
         MyFragmentPresenter presenter = new MyFragmentPresenter(myFragmentModule, fragment);
         fragment.setPresenter(presenter);
     }

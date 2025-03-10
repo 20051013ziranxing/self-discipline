@@ -6,6 +6,17 @@
             android:name="com.example.pomodorotechnique.PomodoroTimerActivity"
             android:exported="true">
         </activity>
+        <service android:name=".MusicService" android:enabled="true"
+            android:exported="true"/>
+        <receiver android:name=".MusicControlReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="PLAY" />
+                <action android:name="PAUSE" />
+                <action android:name="STOP" />
+                <action android:name="CHANGE_MUSIC" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

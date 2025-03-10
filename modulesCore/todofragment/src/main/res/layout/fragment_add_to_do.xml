@@ -64,38 +64,62 @@
                 app:layout_constraintTop_toTopOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
                 app:layout_constraintBottom_toBottomOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
                 app:layout_constraintStart_toEndOf="@id/imageButton_AddToDoFragment_toDoThingTimeChoice"
-                android:textColor="@color/blue"/>
+                android:textColor="@color/blueE"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/imageButton_AddToDoFragment_toDoThingGradle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="#00ffffff"
-            android:src="@drawable/grade_zong"
+        <RadioGroup
+            android:layout_width="wrap_content"
             app:layout_constraintStart_toEndOf="@id/layout_1"
             app:layout_constraintTop_toTopOf="@id/layout_1"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/imageButton_AddToDoFragment_toDoThingPomdoro"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="#00ffffff"
-            android:src="@drawable/pomodoro_icon"
-            app:layout_constraintStart_toEndOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
-            app:layout_constraintTop_toTopOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
-            app:layout_constraintBottom_toBottomOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
-            android:layout_marginStart="10dp"/>
+            <RadioButton
+                android:id="@+id/imageButton_AddToDoFragment_toDoThingGradle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="#00ffffff"
+                android:button="@drawable/gradle_zong_button_icon_selector"
+                android:checked="true"
+                app:layout_constraintStart_toEndOf="@id/layout_1"
+                app:layout_constraintTop_toTopOf="@id/layout_1"
+                android:layout_marginStart="10dp"/>
+
+            <RadioButton
+                android:id="@+id/imageButton_AddToDoFragment_toDoThingPomdoro"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="#00ffffff"
+                android:button="@drawable/pomodoro_button_icon_selector"
+                app:layout_constraintStart_toEndOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
+                app:layout_constraintTop_toTopOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
+                app:layout_constraintBottom_toBottomOf="@id/imageButton_AddToDoFragment_toDoThingGradle"
+                android:layout_marginStart="10dp"/>
+
+        </RadioGroup>
 
         <include
-            android:id="@+id/imageButton_AddToDoFragment_layoutChange"
+            android:id="@+id/imageButton_AddToDoFragment_layoutChange_gradle"
             layout="@layout/grade_layout"
             app:layout_constraintTop_toBottomOf="@id/layout_1"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="220dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            android:layout_marginTop="15dp"/>
+
+        <include
+            android:id="@+id/imageButton_AddToDoFragment_layoutChange_time"
+            layout="@layout/pomodoro_layout"
+            app:layout_constraintTop_toBottomOf="@id/layout_1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -80,16 +80,19 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
 
     private void initPost() {
         mPresenter.getData();
-        Post post = new Post("test1","10",null,"1");
-        Post post2 = new Post("test2test2test2test2test2test2test2test2test2","102",null,"1");
-        Post post3 = new Post("test2test2test2test2test2test2test2test2test2","102",null,"1");
-        Post post4 = new Post("test2test2test2test2test2test2test2test2test2","102",null,"1");
-        post.setImageUrl("https://raw.githubusercontent.com/betteryuxuan/Image/refs/heads/main/yunxing.png");
+        Post post1 = new Post("已经想要自律好几年了，觉得自己根本做不到，每次计划的很好却不由自主抱着手机动不起来，然后耽误时间后就焦虑自责", "10", null, "用户011");
+        Post post2 = new Post("看看自己以往的日记，大多内容都是些不坚持而悔恨。现在一事无成，要拾起来原来上中学时的坚持和拼劲。", "102", null, "1");
+        Post post3 = new Post("从今天开始坚持自律，不管多忙每天至少锻炼1个小时。正常吃喝，不禁食，不减脂，多吃多练把块头练大点。每天晚上9点之前睡觉，打卡第一天#自律#", "102", null, "用户0211");
+        Post post4 = new Post("任何事情都是从小事做起始于点滴的！加油！" +
+                "今天糊涂过了，不过万幸开始认识到要做计划，保持自律，要把自己的事情好好上心，明天加油！", "13", null, "1");
+        Post post5 = new Post("整个寒假都在颓废，每天最大的运动量就是上厕所，今天开学，每天打卡 50 个俯卧撑（我身体素质真的很差，50 个已经极限了，以后会慢慢加的）加油吧", "132", null, "用户03211");
         post3.setImageUrl("https://raw.githubusercontent.com/betteryuxuan/Image/refs/heads/main/yunxing.png");
-        adapter.addPost(post);
+        post5.setImageUrl("https://raw.githubusercontent.com/betteryuxuan/Image/refs/heads/main/yunxing.png");
+        adapter.addPost(post1);
         adapter.addPost(post2);
         adapter.addPost(post3);
         adapter.addPost(post4);
+        adapter.addPost(post5);
     }
 
     public void onDataReceived(List<Post> postList) {

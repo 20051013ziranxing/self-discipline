@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="errorTextAppearance">@style/ErrorTextAppearance</item>
+    </style>
+
+    <style name="ErrorTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">#E62939</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>

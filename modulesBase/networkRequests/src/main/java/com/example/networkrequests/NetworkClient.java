@@ -5,9 +5,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,10 +21,10 @@ public class NetworkClient {
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
-    public void get(String url, final NetworkCallback callback) {
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public void get(String url, RequestBody requestBody, final NetworkCallback callback) {
+        /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
-                JSON, "{\"param1\":\"2858678706@qq.com\"}");
+                JSON, Json);*/
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
@@ -31,6 +34,15 @@ public class NetworkClient {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(e);
+                if (e instanceof SocketTimeoutException) {
+                    Log.e(TAG, "请求超时: " + e.getMessage());
+                } else if (e instanceof UnknownHostException) {
+                    Log.e(TAG, "无法解析主机名: " + e.getMessage());
+                } else {
+                    Log.e(TAG, "其他网络错误: " + e.getMessage());
+                }
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
             }
 
             @Override
@@ -40,6 +52,108 @@ public class NetworkClient {
                     callback.onSuccess(responseData);
                     Log.d(TAG, "成功");
                 } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.d(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
+    public void get(String url, HttpUrl.Builder httpUrlBuilder, final NetworkCallback callback) {
+        /*HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(url).newBuilder();
+        httpUrlBuilder.addQueryParameter("user_id", "2");
+        httpUrlBuilder.addQueryParameter("updated_at", "2025-05-20");*/
+        String finalUrl = httpUrlBuilder.build().toString();
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseData = response.body().string();
+                    callback.onSuccess(responseData);
+                    Log.d(TAG, "成功: " + responseData);
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.e(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
+    public void deleteTask(String url ,String taskId, final NetworkCallback callback) {
+        /*String url = "http://101.200.121.142:9999/delete-todo/" + taskId;*/
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess("Task deleted successfully");
+                    Log.d(TAG, "成功");
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.e(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
+    public void put(String url, RequestBody requestBody, final NetworkCallback callback) {
+        /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(
+                JSON, Json);*/
+        Request request = new Request.Builder()
+                .url(url)
+                .put(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+                if (e instanceof SocketTimeoutException) {
+                    Log.e(TAG, "请求超时: " + e.getMessage());
+                } else if (e instanceof UnknownHostException) {
+                    Log.e(TAG, "无法解析主机名: " + e.getMessage());
+                } else {
+                    Log.e(TAG, "其他网络错误: " + e.getMessage());
+                }
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseData = response.body().string();
+                    callback.onSuccess(responseData);
+                    Log.d(TAG, "成功");
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.d(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
                     callback.onFailure(new IOException("Unexpected code " + response));
                 }
             }

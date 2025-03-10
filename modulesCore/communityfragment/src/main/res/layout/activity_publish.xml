@@ -105,6 +105,7 @@
                 android:paddingRight="30dp"
                 android:paddingBottom="25dp"
                 android:textSize="18sp"
+                android:maxLength="1000"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView

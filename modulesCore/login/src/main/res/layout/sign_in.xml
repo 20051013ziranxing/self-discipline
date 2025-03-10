@@ -79,11 +79,11 @@
             android:id="@+id/editText_emailNumberCaptcha_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/editText_size1"
+            android:background="@drawable/background_1"
+            android:hint="邮箱验证码"
             android:maxLength="20"
             android:padding="@dimen/text_padding"
-            android:background="@drawable/background_1"
-            android:hint="邮箱验证码"/>
+            android:textSize="@dimen/editText_size1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -129,11 +129,21 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/textView_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_password_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        android:text="密码应由8位数字与字母组合"
+        android:textSize="11sp"/>
+
     <CheckBox
         android:id="@+id/checkBox_keepSignUp_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout_password_in"
+        app:layout_constraintTop_toBottomOf="@id/textView_tips"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="5dp"
         android:text="注册并保持登陆状态"/>

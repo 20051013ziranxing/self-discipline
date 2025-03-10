@@ -25,6 +25,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_gradle_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -48,6 +49,7 @@
                 android:layout_marginStart="0dp"/>
 
             <RadioButton
+                android:id="@+id/radioButton_gradle4"
                 android:layout_width="@dimen/gradle_icon_size"
                 android:layout_height="@dimen/gradle_icon_size"
                 app:layout_constraintTop_toTopOf="@id/imageButton_4"
@@ -56,6 +58,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_gradle_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -79,6 +82,7 @@
                 android:layout_marginStart="0dp"/>
 
             <RadioButton
+                android:id="@+id/radioButton_gradle3"
                 android:layout_width="@dimen/gradle_icon_size"
                 android:layout_height="@dimen/gradle_icon_size"
                 app:layout_constraintTop_toTopOf="@id/imageButton_3"
@@ -87,6 +91,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_gradle_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -109,6 +114,7 @@
                 app:layout_constraintTop_toTopOf="@id/imageButton_2" />
 
             <RadioButton
+                android:id="@+id/radioButton_gradle2"
                 android:layout_width="@dimen/gradle_icon_size"
                 android:layout_height="@dimen/gradle_icon_size"
                 app:layout_constraintTop_toTopOf="@id/imageButton_2"
@@ -117,6 +123,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_gradle_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -140,6 +147,7 @@
                 android:layout_marginStart="0dp"/>
 
             <RadioButton
+                android:id="@+id/radioButton_gradle1"
                 android:layout_width="@dimen/gradle_icon_size"
                 android:layout_height="@dimen/gradle_icon_size"
                 app:layout_constraintTop_toTopOf="@id/imageButton_1"

@@ -99,8 +99,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                     if (item.getItemId() == R.id.item_delete) {
                         int pos = holder.getAdapterPosition();
                         if (pos != RecyclerView.NO_POSITION && mActionListener != null) {
-                            mActionListener.onDeleteClick(mPostList.get(pos).getId());
-//                            notifyDataSetChanged();
+//                            mActionListener.onDeleteClick(mPostList.get(pos).getId());
+                            mPostList.remove(pos);
+                            notifyDataSetChanged();
                         }
                         return true;
                     }
@@ -137,8 +138,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     }
 
     public interface OnPostActionListener {
-        void onLikeClick(int postId, boolean isLiked); // 点赞/取消点赞
-        void onDeleteClick(int postId);                // 删除帖子
+        void onLikeClick(int postId, boolean isLiked);
+        void onDeleteClick(int postId);
     }
 
     private OnPostActionListener mActionListener;

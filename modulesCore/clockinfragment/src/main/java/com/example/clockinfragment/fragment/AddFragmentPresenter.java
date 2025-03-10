@@ -31,9 +31,10 @@ public class AddFragmentPresenter {
         if (!addFragment.editText_addFragment_HabitName.getText().toString().isEmpty() &&
                 addFragment.editText_EncouragementWords.getText().toString().isEmpty()) {
             //进行保存操作
+            removeAddFragment();
+        } else {
+            addFragment.SendToast("习惯名不可为空");
         }
-        //保存成功再移除碎片
-        removeAddFragment();
     }
 
     public void removeAddFragment () {

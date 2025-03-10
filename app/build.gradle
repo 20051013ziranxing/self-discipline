@@ -22,9 +22,12 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation project(':modulesCore:login')
+    implementation project(':modulesCore:pomodorotechnique')
     implementation project(':modulesCore:accountsecurity')
     implementation project(':modulesCore:thematicsection')
     implementation project(':modulesCore:findPassword')
+    implementation project(':modulesCore:communityfragment')
+    implementation project(':modulesCore:cancelyouraccount')
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

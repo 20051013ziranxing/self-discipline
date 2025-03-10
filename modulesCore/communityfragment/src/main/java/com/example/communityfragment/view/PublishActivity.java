@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -81,6 +83,13 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
             }
         });
 
+        binding.imgPublishExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
             Log.d(TAG, "选中的图片 URI: " + uri);
 
@@ -104,6 +113,25 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
         });
+
+        binding.etPublishContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 1000) {
+                    Toast.makeText(PublishActivity.this, "字数已达上限", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -113,7 +141,12 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
 
     @Override
     public void publishFailure() {
-        Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private ActivityResultLauncher<String[]> permissionLauncher =

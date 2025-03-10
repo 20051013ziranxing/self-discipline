@@ -15,11 +15,13 @@
             <option value="$PROJECT_DIR$/modulesBase/activityManager" />
             <option value="$PROJECT_DIR$/modulesBase/eventBus" />
             <option value="$PROJECT_DIR$/modulesBase/localDatabase" />
+            <option value="$PROJECT_DIR$/modulesBase/music" />
             <option value="$PROJECT_DIR$/modulesBase/networkRequests" />
             <option value="$PROJECT_DIR$/modulesBase/selectAnImage" />
             <option value="$PROJECT_DIR$/modulesBase/sendemail" />
             <option value="$PROJECT_DIR$/modulesCore" />
             <option value="$PROJECT_DIR$/modulesCore/accountsecurity" />
+            <option value="$PROJECT_DIR$/modulesCore/cancelyouraccount" />
             <option value="$PROJECT_DIR$/modulesCore/clockinfragment" />
             <option value="$PROJECT_DIR$/modulesCore/communityfragment" />
             <option value="$PROJECT_DIR$/modulesCore/findPassword" />

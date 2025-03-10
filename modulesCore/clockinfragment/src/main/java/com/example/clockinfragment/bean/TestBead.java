@@ -7,6 +7,16 @@ public class TestBead {
     String SumCount;
     //完成了的次数
     String FinishCount;
+    Boolean isFinish;
+
+    public Boolean getFinish() {
+        return SumCount == FinishCount;
+    }
+
+    public void setFinish(Boolean finish) {
+        isFinish = finish;
+    }
+
     //
     int IconId;
     int BackgroundId;

@@ -30,6 +30,7 @@ public class PublishModel implements IPublishContract.Model {
     private final static String POST_URL = BASE_URL + "/community/post";
 
     private OkHttpClient client = new OkHttpClient();
+    private File imageFile;
 
 
     public PublishModel(PublishPresenter presenter) {
@@ -38,20 +39,19 @@ public class PublishModel implements IPublishContract.Model {
 
     @Override
     public void publish(String content, String imagePath, IPublishContract.PublishCallback callback) {
-
         // 通过表单上传
         MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // 上传文件及类型
-        File imageFile = new File(imagePath);
-
-        String absolutePath = imageFile.getAbsolutePath();
-        Log.d(TAG, "absolutePath: " + absolutePath);
-        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         requestBody.addFormDataPart("user_id", "2");
         requestBody.addFormDataPart("content", content);
-        requestBody.addFormDataPart("image_url", imageFile.getName(), fileBody);
-
+        if (imagePath != null) {
+            imageFile = new File(imagePath);
+            RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+            requestBody.addFormDataPart("image_url", imageFile.getName(), fileBody);
+        }else {
+            requestBody.addFormDataPart("image_url", "");
+        }
 
         Request request = new Request.Builder()
                 .url(POST_URL)
@@ -72,6 +72,7 @@ public class PublishModel implements IPublishContract.Model {
                         JSONObject json = new JSONObject(response.body().string());
                         int postId = json.getJSONObject("data").getInt("id");
                         callback.onSuccess(postId);
+                        Log.d(TAG, "发布成功: " + postId);
                     } catch (JSONException e) {
                         Log.e(TAG, "解析帖子ID失败: " + e.getMessage());
                         callback.onFailure();
