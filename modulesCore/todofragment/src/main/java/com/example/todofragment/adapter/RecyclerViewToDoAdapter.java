@@ -1,5 +1,7 @@
 package com.example.todofragment.adapter;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +15,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.todofragment.LineView;
 import com.example.todofragment.R;
+import com.example.todofragment.bean.GetToDoThings;
 import com.example.todofragment.bean.ToDoThing;
 
 import java.util.List;
 
 public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewToDoAdapter.MyViewHolder> {
-    List<ToDoThing> toDoThings;
+    private RecyclerViewToDoAdapterListener listener;
+    public interface RecyclerViewToDoAdapterListener {
 
-    public RecyclerViewToDoAdapter(List<ToDoThing> toDoThings) {
+        void markComplete(String id, boolean checked);
+    }
+    private static final String TAG = "TestTT_RecyclerViewToDoAdapter";
+    List<GetToDoThings.GetToDothingMessage> toDoThings;
+
+    public RecyclerViewToDoAdapter(List<GetToDoThings.GetToDothingMessage> toDoThings, RecyclerViewToDoAdapterListener listener) {
         this.toDoThings = toDoThings;
+        this.listener = listener;
+    }
+
+    public void setToDoThings(List<GetToDoThings.GetToDothingMessage> toDoThings) {
+        /*Log.d(TAG, String.valueOf(this.toDoThings.size()));*/
+        this.toDoThings = toDoThings;
+        /*Log.d(TAG, String.valueOf(toDoThings.size()));*/
     }
 
     @NonNull
@@ -35,18 +52,35 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ToDoThing toDoThing = toDoThings.get(position);
-        holder.checkBox.setChecked(toDoThing.getThingFinish());
-        holder.textView_ThingName.setText(toDoThing.getThingName());
-        holder.imageView_ThingGradle.setImageResource(GetThingGradle(toDoThing.getThingGradle()));
-        holder.textView_ThingTimes.setText(toDoThing.getThingTime());
-        if (ThingNeedTime(toDoThing.getThingTime())) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        GetToDoThings.GetToDothingMessage toDoThing = toDoThings.get(position);
+        boolean isFinish;
+        if (toDoThing.getStatus().equals("pending")) {
+            isFinish = false;
+        } else {
+            isFinish = true;
+        }
+        holder.checkBox.setChecked(isFinish);
+        holder.textView_ThingName.setText(toDoThing.getTitle());
+        String description = toDoThing.getDescription();
+        String[] result = description.split(",");
+        holder.imageView_ThingGradle.setImageResource(GetThingGradle(result[0]));
+        holder.textView_ThingTimes.setText(result[1] + "," + result[2]);
+        if (ThingNeedTime(result[1])) {
             holder.imageButton_ThingTime.setImageResource(R.drawable.fanqie);
         } else {
             holder.imageButton_ThingTime.setVisibility(View.GONE);
         }
-        if (toDoThing.getThingFinish()) {
+        holder.imageButton_ThingTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, result[1] + "," + result[2]);
+                ARouter.getInstance().build("/PomodoroTimerActivity/PomodoroTimerActivity")
+                        .withString("pomodoro", result[1] + "," + result[2])
+                        .navigation();
+            }
+        });
+        if (toDoThing.getStatus().equals("completed")) {
             Animation animation = new Animation() {
                 @Override
                 protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -60,6 +94,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.markComplete(toDoThings.get(position).getId().toString(), holder.checkBox.isChecked());
                 if (holder.checkBox.isChecked()) {
                     Animation animation = new Animation() {
                         @Override
@@ -102,13 +137,13 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         }
     }
     public int GetThingGradle(String s1) {
-        if (s1.equals("一级")) {
+        if (s1.equals("1级")) {
             return R.drawable.one_1;
-        } else if (s1.equals("二级")) {
+        } else if (s1.equals("2级")) {
             return R.drawable.two_2;
-        } else if (s1.equals("三级")) {
+        } else if (s1.equals("3级")) {
             return R.drawable.three_3;
-        } else if (s1.equals("四级")) {
+        } else if (s1.equals("4级")) {
             return R.drawable.four;
         }
         return R.drawable.four;

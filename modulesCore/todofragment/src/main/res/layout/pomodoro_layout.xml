@@ -59,7 +59,7 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/pomodoro_25_minutes_2.1"
+            android:id="@+id/pomodoro_25_minutes_2_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="25分钟"
@@ -70,7 +70,7 @@
             android:button="@null"/>
 
         <RadioButton
-            android:id="@+id/pomodoro_35_minutes_2.2"
+            android:id="@+id/pomodoro_35_minutes_2_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="35分钟"
@@ -80,7 +80,7 @@
             android:button="@null"/>
 
         <RadioButton
-            android:id="@+id/pomodoro_free_minutes_2.3"
+            android:id="@+id/pomodoro_free_minutes_2_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="自定义"

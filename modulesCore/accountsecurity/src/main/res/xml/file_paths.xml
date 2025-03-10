@@ -3,4 +3,13 @@
 <external-path
     name="my_images"
     path="."/>
+    <external-files-path
+        name="my_images"
+        path="Picyures"/>
+    <external-files-path
+        name="external_files"
+        path="." />
+    <external-path
+        name="external_storage_root"
+        path="." />
 </paths>

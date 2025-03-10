@@ -1,11 +1,110 @@
 package com.example.todofragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import com.example.networkrequests.NetworkClient;
+import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
+import com.example.todofragment.bean.GetToDoThings;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ToDoFragmentPresenter {
+    private static final String TAG = "TestTT_ToDoFragmentPresenter";
     ToDoFragmentModule toDoFragmentModule;
     ToDoFragment toDoFragment;
 
     public ToDoFragmentPresenter(ToDoFragment toDoFragment) {
+        NetworkClient networkClient = new NetworkClient();
         this.toDoFragment = toDoFragment;
-        this.toDoFragmentModule = new ToDoFragmentModule();
+        this.toDoFragmentModule = new ToDoFragmentModule(networkClient);
+    }
+    public void getToDoThings(String user_id, String updated_at) {
+        Log.d(TAG, user_id + "user_id" + updated_at + "updated_at");
+        toDoFragmentModule.getToDoThings(user_id, updated_at, new ToDoFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                Log.d(TAG, response + "ppp");
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "我要开始更新了");
+                        GetToDoThings getToDoThings = new Gson().fromJson(response, GetToDoThings.class);
+                        List<GetToDoThings.GetToDothingMessage> toDoThings = getToDoThings.getData();
+                        List<GetToDoThings.GetToDothingMessage> toDothingMessages = filteringByTime(toDoThings, updated_at);
+                        /*toDoFragment.toDoThings = getToDoThings.getData();*/
+
+                        if (toDothingMessages != null) {
+                            Collections.sort(toDothingMessages, new ToDoThingComparator());
+                        }
+                        /*RecyclerViewToDoAdapter recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoFragment.toDoThings);
+                        toDoFragment.recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);*/
+                        toDoFragment.remindersChange(toDothingMessages);
+                    }
+                });
+                return null;
+            }
+
+            @Override
+            public Boolean onFailure(IOException e) {
+                toDoFragment.sendToast("获取数据失败");
+                return null;
+            }
+        });
+    }
+
+    public void markWhetherTheAgencyIsCompleteOrNot(String id, Boolean isFinish) {
+        toDoFragmentModule.markWhetherTheTaskIsCompletedOrNot(id, isFinish, new ToDoFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), toDoFragment.textView_data.getText().toString());
+                return null;
+            }
+
+            @Override
+            public Boolean onFailure(IOException e) {
+                toDoFragment.sendToast("标记失败");
+                return null;
+            }
+        });
+    }
+
+    public void deleteToDoThing(String id) {
+        toDoFragmentModule.deleteToDoThing(id, new ToDoFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                toDoFragment.sendToast("删除成功");
+                return null;
+            }
+
+            @Override
+            public Boolean onFailure(IOException e) {
+                toDoFragment.sendToast("删除失败");
+                return null;
+            }
+        });
+    }
+
+    //对获取到的代办事件进行筛选
+    public List<GetToDoThings.GetToDothingMessage> filteringByTime(List<GetToDoThings.GetToDothingMessage> toDoThings, String updated_at) {
+        if (toDoThings != null) {
+            List<GetToDoThings.GetToDothingMessage> toDothingMessages = new ArrayList<>();
+            Log.d(TAG, "获取到的数据：" + toDoThings.size());
+            for (int i = 0;i < toDoThings.size(); i++) {
+                Log.d(TAG, toDoThings.get(i).getUpdated_at().toString() + "   ooo    " + updated_at);
+                if (toDoThings.get(i).getUpdated_at().equals(updated_at)) {
+                    toDothingMessages.add(toDoThings.get(i));
+                }
+            }
+            Log.d(TAG, "帅选到的数据：" + toDothingMessages.size());
+            return toDothingMessages;
+        }
+        return null;
     }
 }

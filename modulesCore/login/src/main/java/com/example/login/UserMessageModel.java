@@ -9,6 +9,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 public class UserMessageModel {
     private final static String TAG = "TestTT_UserMessageModel";
     private NetworkClient networkClient;
@@ -19,17 +22,13 @@ public class UserMessageModel {
         this.networkClient = networkClient;
     }
 
-    public boolean insert(String userName, String userPassword, String userEmail, boolean isActive) {
-        boolean insert = userMessageHelper.insert(userName, userPassword, userEmail, isActive);
+    public boolean insert(String userName, String userPictureURL, String userEmail, String userToken, String userId) {
+        boolean insert = userMessageHelper.insert(userName, userPictureURL, userEmail, userToken, userId);
         return insert;
     }
     public String queryUser(String userEmail) {
         String s = userMessageHelper.queryUser(userEmail);
         return s;
-    }
-
-    public void queryAllUser() {
-        userMessageHelper.queryAllUser();
     }
 
     //发送验证码
@@ -73,7 +72,10 @@ public class UserMessageModel {
 
     //将调用接口提出来
     public void PublicNetworkRequestMethod(String url,String Json, ModelCallback callback) {
-        networkClient.get(url, Json, new NetworkClient.NetworkCallback() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(
+                JSON, Json);
+        networkClient.get(url, requestBody, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
                 callback.onSuccess(response);

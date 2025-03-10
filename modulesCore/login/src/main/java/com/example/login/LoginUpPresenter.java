@@ -3,10 +3,12 @@ package com.example.login;
 import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.eventbus.UserBaseMessageEventBus;
+import com.example.login.bean.UserBaseMessage;
 import com.example.networkrequests.NetworkClient;
+import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -25,8 +27,20 @@ public class LoginUpPresenter {
         userMessageModel.Registration(userName, userPassword, userEmail, userCode, new UserMessageModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
+                Log.d(TAG, "注册：" + response);
+                UserBaseMessage userBaseMessage = new Gson().fromJson(response, UserBaseMessage.class);
+                String userToken;
+                if (isCheck) {
+                    userToken = userBaseMessage.getMessage().getAccess_token();
+                } else {
+                    userToken = null;
+                }
+                String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
+                String userId = userBaseMessage.getMessage().getUser_id();
+                userMessageModel.insert(userName, userPictureURL, userEmail, userToken, userId);
+                UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
+                EventBus.getDefault().postSticky(userBaseMessage1);
                 loginUpActivity.goToThematicSection();
-                userMessageModel.insert(userName, userPassword, userEmail, isCheck);
                 return null;
             }
 
@@ -44,7 +58,19 @@ public class LoginUpPresenter {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "登录成功，收到的返回数据为：" + response);
-                userMessageModel.insert("睡到自然醒", userPassword, userEmail, ischeck);
+                UserBaseMessage userBaseMessage = new Gson().fromJson(response, UserBaseMessage.class);
+                String userName = userBaseMessage.getMessage().getUsername();
+                String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
+                String userToken = userBaseMessage.getMessage().getAccess_token();
+                String userId = userBaseMessage.getMessage().getUser_id();
+                Log.d(TAG, userPictureURL + userToken + userId + userName);
+                if (ischeck == true) {
+                    userMessageModel.insert(userName, userPictureURL, userEmail,userToken, userId);
+                } else {
+                    userMessageModel.insert(userName, userPictureURL, userEmail, null, userId);
+                }
+                UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
+                EventBus.getDefault().postSticky(userBaseMessage1);
                 loginUpActivity.goToThematicSection();
                 return null;
             }

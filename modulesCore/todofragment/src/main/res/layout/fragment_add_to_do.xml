@@ -34,7 +34,6 @@
             app:layout_constraintTop_toTopOf="@id/editText_AddToDoFragment_toDoThingName"
             app:layout_constraintBottom_toBottomOf="@id/editText_AddToDoFragment_toDoThingName"
             app:layout_constraintEnd_toEndOf="parent"
-            android:clickable="true"
             android:enabled="false"
             android:padding="5dp"
             android:src="@drawable/icon_selector_gray_white"

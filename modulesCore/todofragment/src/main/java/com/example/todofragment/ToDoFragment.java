@@ -1,62 +1,64 @@
 package com.example.todofragment;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
-import com.example.todofragment.bean.ToDoThing;
-import com.example.todofragment.fragment.AddToDoFragment;
+import com.example.todofragment.bean.GetToDoThings;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.necer.calendar.NCalendar;
-import com.necer.enumeration.CalendarState;
-import com.necer.enumeration.CheckModel;
 import com.necer.enumeration.DateChangeBehavior;
 import com.necer.listener.OnCalendarChangedListener;
-import com.necer.listener.OnCalendarStateChangedListener;
-import com.necer.painter.InnerPainter;
 import com.necer.utils.hutool.ChineseDate;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ToDoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ToDoFragment extends Fragment {
+public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragment.OnFragmentInteractionListener{
+    private static final String TAG = "TestTT_ToDoFragment";
+    private static final String DATA = "2025_03_08";
+    UserBaseMessageEventBus userBaseMessageEventBus;
+    ToDoFragmentPresenter toDoFragmentPresenter;
     TextView textView_data;
     ImageButton imageButton;
-    List<ToDoThing> toDoThings;
-    NavigationView navigationView;
+    List<GetToDoThings.GetToDothingMessage> toDoThings;
     Toolbar toolbar;
-    TextView textView;
+    NCalendar miui10Calendar;
+    /*TextView textView_data;*/
+    RecyclerViewToDoAdapter recyclerViewToDoAdapter;
     RecyclerView recyclerView_ToDoFragment_show;
     FloatingActionButton floatingActionButton_backDay;
     FloatingActionButton floatingActionButton_add;
@@ -101,20 +103,31 @@ public class ToDoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
-        initData();
-        recyclerView_ToDoFragment_show = view.findViewById(R.id.recyclerView_ToDoFragment_show);
-        toolbar = view.findViewById(R.id.toolbar);
-        textView = view.findViewById(R.id.data);
-        NCalendar miui10Calendar = view.findViewById(R.id.miui10Calendar);
-        floatingActionButton_backDay = view.findViewById(R.id.floatingButton_backNowDay);
-        floatingActionButton_add = view.findViewById(R.id.floatingButton_add);
-        floatingActionButton_add.setOnClickListener(new View.OnClickListener() {
+        toDoFragmentPresenter = new ToDoFragmentPresenter(this);
+        EventBus.getDefault().register(this);
+        toDoThings = new ArrayList<>();
+        textView_data = view.findViewById(R.id.data_time);
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime(); // 获取当前日期
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formattedDate = dateFormat.format(currentDate);
+        textView_data.setText(formattedDate);
+        textView_data.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment();
-                bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+        miui10Calendar = view.findViewById(R.id.miui10Calendar);
         miui10Calendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
             @Override
             public void onCalendarChange(int year, int month, LocalDate localDate, DateChangeBehavior dateChangeBehavior) {
@@ -122,7 +135,7 @@ public class ToDoFragment extends Fragment {
                     ChineseDate chineseDate = new ChineseDate(localDate);
                     String s = localDate.toString();
                     String s2 = LocalDate.now().toString();
-                    textView.setText(localDate.toString());
+                    textView_data.setText(localDate.toString());
                     if (! s.equals(s2)){
                         Log.d("nvjbifgj", localDate.toString() + "pppppp" + LocalDate.now().toString());
                         floatingActionButton_backDay.setVisibility(View.VISIBLE);
@@ -132,23 +145,50 @@ public class ToDoFragment extends Fragment {
                 }
             }
         });
+        recyclerView_ToDoFragment_show = view.findViewById(R.id.recyclerView_ToDoFragment_show);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView_ToDoFragment_show.setLayoutManager(linearLayoutManager);
+        recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoThings, new RecyclerViewToDoAdapter.RecyclerViewToDoAdapterListener() {
+            @Override
+            public void markComplete(String id, boolean checked) {
+                toDoFragmentPresenter.markWhetherTheAgencyIsCompleteOrNot(id, checked);
+            }
+        });
+        recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
+        initData();
+
+
+        toolbar = view.findViewById(R.id.toolbar);
+        floatingActionButton_backDay = view.findViewById(R.id.floatingButton_backNowDay);
+        floatingActionButton_add = view.findViewById(R.id.floatingButton_add);
+        floatingActionButton_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
+                    @Override
+                    public void onMethodCalled() {
+                        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                        /*getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "开始进行更新");
+                                recyclerViewToDoAdapter.setToDoThings(toDoThings);
+                                recyclerViewToDoAdapter.notifyDataSetChanged();
+                            }
+                        });*/
+                    }
+                });
+                bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+            }
+        });
         floatingActionButton_backDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 miui10Calendar.toToday();
             }
         });
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView_ToDoFragment_show.setLayoutManager(linearLayoutManager);
-        RecyclerViewToDoAdapter recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoThings);
-        recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
-        textView_data = view.findViewById(R.id.data);
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        textView_data.setText(year + "-" + month + "-" + day);
+        /*textView_data = view.findViewById(R.id.data_time);*/
         drawerLayout = view.findViewById(R.id.DrawableLayout);
         imageButton = view.findViewById(R.id.showNestedScrollView);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -161,12 +201,38 @@ public class ToDoFragment extends Fragment {
     }
     public void initData() {
         toDoThings = new ArrayList<>();
-        ToDoThing toDoThing = new ToDoThing("喝水", "一级", "不计时", true);
-        toDoThings.add(toDoThing);
-        ToDoThing toDoThing1 = new ToDoThing("喝水", "三级", "倒计时", false);
-        toDoThings.add(toDoThing1);
-        ToDoThing toDoThing2 = new ToDoThing("喝水", "一级", "不计时", false);
-        toDoThings.add(toDoThing2);
-        Collections.sort(toDoThings, new ToDoThingComparator());
+        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+    }
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
+    public void sendToast(String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //接口回调使其执行刷新操作
+    @Override
+    public void onMethodCalled() {
+        Log.d(TAG, "开始执行回调了");
+        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+    }
+
+    public void remindersChange(List<GetToDoThings.GetToDothingMessage> toDoThings) {
+        Log.d(TAG, "我应该开始执行更新了");
+       /* recyclerViewToDoAdapter.setToDoThings(toDoThings);
+        recyclerViewToDoAdapter.notifyDataSetChanged();*/
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "开始进行更新");
+                recyclerViewToDoAdapter.setToDoThings(toDoThings);
+                recyclerViewToDoAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
