@@ -24,7 +24,7 @@ public class MyBottomSheetDialogFragmentModule {
             jsonObject.put("description", description);
             jsonObject.put("status", status);
             jsonObject.put("user_id", user_id);
-            jsonObject.put("updated_at", updated_at + "T14:30:00Z");
+            jsonObject.put("updated_at", updated_at);
         } catch (Exception e) {
             e.printStackTrace();
         }

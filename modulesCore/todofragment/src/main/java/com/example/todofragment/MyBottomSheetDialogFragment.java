@@ -2,6 +2,7 @@ package com.example.todofragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import org.w3c.dom.Text;
 import java.util.Calendar;
 
 public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
+    private OnFragmentInteractionListener mListener;
     private static final String TAG = "TestTT_MyBottomSheetDialogFragment";
     RadioGroup RadioGroup_111;
     RadioGroup RadioGroup_222;
@@ -59,6 +61,10 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
     RadioButton radioButton_pomodoro_35_minutes_2_2;
     RadioButton radioButton_pomodoro_free_minutes_2_3;
     ImageButton imageButton_AddToDoFragment_save;
+
+    public MyBottomSheetDialogFragment(OnFragmentInteractionListener mListener) {
+        this.mListener = mListener;
+    }
 
     @Override
     public void onStart() {
@@ -123,6 +129,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         radioButton_gradle_3 = view.findViewById(R.id.radioButton_gradle3);
         radioButton_gradle_2 = view.findViewById(R.id.radioButton_gradle2);
         radioButton_gradle_1 = view.findViewById(R.id.radioButton_gradle1);
+        radioButton_gradle_4.setChecked(true);
         constraintLayout_gradle_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,6 +296,12 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
     public String getGrade() {
         if (radioButton_gradle_4.isChecked()) {
             return "4级";
@@ -326,11 +339,21 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
                 }
             }
         } else if (checkedId == R.id.pomodoro_PositiveTiming_1_2) {
-            return "正向计时, -1";
+            return "正向计时,-1";
         } else if (checkedId == R.id.pomodoro_NoTimers_1_3) {
-            return "不计时";
+            return "不计时,-1";
         } else {
-            return "不计时";
+            return "不计时,-1";
+        }
+    }
+    public interface OnFragmentInteractionListener {
+        void onMethodCalled();
+    }
+    public void refetchTheDataAndRefreshTheInterface() {
+        Log.d(TAG, "为空");
+        if (mListener != null) {
+            Log.d(TAG, "不为空，应该会掉了");
+            mListener.onMethodCalled();
         }
     }
 }

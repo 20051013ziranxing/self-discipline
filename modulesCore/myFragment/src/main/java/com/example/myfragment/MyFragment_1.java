@@ -21,11 +21,15 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.example.myfragment.adapter.AddFounctionAdapter;
 import com.example.myfragment.adapter.FunctionAdapter;
 import com.example.myfragment.bean.Function;
 import com.example.myfragment.bean.NewFunction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * create an instance of this fragment.
  */
 public class MyFragment_1 extends Fragment {
+    UserBaseMessageEventBus userBaseMessageEventBus;
     CircleImageView imageView_headPicture;
     TextView textView_UserName;
     MyFragmentPresenter presenter;
@@ -92,12 +97,14 @@ public class MyFragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_1, container, false);
+        EventBus.getDefault().register(this);
         imageView_headPicture = view.findViewById(R.id.imageView_headPicture);
-        /*Glide.with(this)
-                .load(presenter.getUserPicture())
-                .into(imageView_headPicture);*/
+        Log.d(TAG, userBaseMessageEventBus.getUserPictureURL());
+        Glide.with(this)
+                .load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
+                .into(imageView_headPicture);
         textView_UserName = view.findViewById(R.id.textView_UserName);
-        textView_UserName.setText(presenter.getUserName());
+        textView_UserName.setText(userBaseMessageEventBus.getUserName());
         //进行数据的初始化
         initData();
         constraintLayout = view.findViewById(R.id.constraint);
@@ -145,5 +152,21 @@ public class MyFragment_1 extends Fragment {
 
     public void setPresenter(MyFragmentPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }*/
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 }

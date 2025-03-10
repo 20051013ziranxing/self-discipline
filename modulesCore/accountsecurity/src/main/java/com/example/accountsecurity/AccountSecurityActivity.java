@@ -31,22 +31,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.bumptech.glide.Glide;
 import com.example.activitymanager.ActivityManager;
-import com.example.selectanimage.ImageHelper;
+import com.example.eventbus.UserBaseMessageEventBus;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
@@ -60,23 +66,21 @@ import okhttp3.Response;
 
 @Route(path = "/accountsecurity/AccountSecurityActivity")
 public class AccountSecurityActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_PERMISSIONS_CAMERA = 100;
-    private static final int REQUEST_CODE_PERMISSIONS_ALBUM = 10;
-    private static final int REQUEST_CODE_TAKE_PHOTO = 200;
-    private static final int REQUEST_CODE_OPEN_ALBUM = 300;
+    private static final int TAKE_PHOTO = 1;
+    private static final int CHOOSE_PHOTO = 2;
+    private Uri imageUri;
 
-    private ImageHelper imageHelper;
     private ImageView imageView;
     private static String TAG = "TestTT_AccountSecurityActivity";
     Toolbar toolbar;
     TextView textView;
-    EditText editText;
+    EditText editText_textView_userName;
     TextView textView_sign_out;
     TextView cancel_your_account;
-    private static final int CHOOSE_PHOTO = 2;
     AccountSecurityPresenter accountSecurityPresenter;
     ConstraintLayout constraintLayout_change_Icon;
-    CircleImageView circleImageView;
+    CircleImageView imageView_userIcon;
+    UserBaseMessageEventBus userBaseMessageEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +95,15 @@ public class AccountSecurityActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         ActivityManager.getInstance().addActivity(this);
         //此处的邮箱地址应该根据数据进行进行改变
-        imageHelper = new ImageHelper(this);
-        imageView = findViewById(R.id.imageView_userIcon);
+        imageView_userIcon = findViewById(R.id.imageView_userIcon);
+        Glide.with(this)
+                /*.load(userBaseMessageEventBus.getUserPictureURL())*/
+                .load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
+                .into(imageView_userIcon);
         accountSecurityPresenter = new AccountSecurityPresenter(this, "2858678706");
         constraintLayout_change_Icon = findViewById(R.id.change_Icon);
-        /*circleImageView = findViewById(R.id.imageView_userIcon);*/
         textView = findViewById(R.id.textView_save);
-        editText = findViewById(R.id.textView_userName);
+        editText_textView_userName = findViewById(R.id.textView_userName);
         cancel_your_account = findViewById(R.id.cancel_your_account);
         cancel_your_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +113,6 @@ public class AccountSecurityActivity extends AppCompatActivity {
         });
         accountSecurityPresenter.initData();
         //根据获取到的进行图片的设置
-        /*displayImage("content://media/external_primary/images/media/1000031793");*/
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -117,24 +122,21 @@ public class AccountSecurityActivity extends AppCompatActivity {
         constraintLayout_change_Icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*imageHelper.choicePhoto();*/
-                imageHelper.takePhoto();
-                /*if (ContextCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
+                if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            10);
                 } else {
                     openAlbum();
-                }*/
+                }
             }
         });
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //按下保存的时候要改变存储的数据
-                Log.d(TAG, editText.getText().toString());
-                accountSecurityPresenter.saveMessage();
-                finish();
+                Log.d(TAG, editText_textView_userName.getText().toString());
+                accountSecurityPresenter.saveMessage(userBaseMessageEventBus.getUserId(),
+                        editText_textView_userName.getText().toString(), UriSave.getInstance().getUriImage());
             }
         });
         //退出登录按钮
@@ -147,25 +149,26 @@ public class AccountSecurityActivity extends AppCompatActivity {
         });
     }
 
-
-    /*public void openAlbum() {
-        Intent intent = new Intent("android.intent.action.GET_CONTENT");
-        intent.setType("image/*");
-        startActivityForResult(intent, CHOOSE_PHOTO);
-    }
-
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
-    /*@Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                take();
+            } else {
+                Toast.makeText(AccountSecurityActivity.this, "拍照权限受限制", Toast.LENGTH_SHORT).show();
+            }
+        }
         if (requestCode == 10) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openAlbum();
@@ -178,6 +181,18 @@ public class AccountSecurityActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                    imageView_userIcon.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ;
+            }
+        }
         if (requestCode == CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 if (Build.VERSION.SDK_INT >= 19) {
@@ -187,7 +202,34 @@ public class AccountSecurityActivity extends AppCompatActivity {
                 }
             }
         }
-    }*/
+    }
+
+    public void take() {
+        File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+        try {
+            if (outputImage.exists()) {
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT >= 24) {
+            imageUri = FileProvider.getUriForFile(AccountSecurityActivity.this,
+                    "com.example.accountsecurity.fileprovider", outputImage);
+        } else {
+            imageUri = Uri.fromFile(outputImage);
+        }
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, TAKE_PHOTO);
+    }
+
+    public void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO);
+    }
 
     private void handleImageOnKitKat(Intent data) {
         String imagepath = null;
@@ -207,20 +249,17 @@ public class AccountSecurityActivity extends AppCompatActivity {
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             imagepath = uri.getPath();
         }
-        Log.d(TAG, String.valueOf(uri) + "  url");
-        accountSecurityPresenter.changeIcon(String.valueOf(uri));
-        Log.d(TAG, "来自handleImageOnKitKat的url");
-        getPathFromUri(uri);
-        displayImage1(imagepath);
+        displayImage(imagepath);
+        UriSave.getInstance().setUriImage(imageUri);
+        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     private void handleImageBeforeKitKat(Intent data) {
         Uri uri = data.getData();
-        Log.d(TAG, "来自handleImageBeforeKitKat的url");
-        getPathFromUri(uri);
         String imagepath = getImagePath(uri, null);
-        Log.d(TAG, imagepath + "777");
-        displayImage1(imagepath);
+        displayImage(imagepath);
+        UriSave.getInstance().setUriImage(imageUri);
+        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     @SuppressLint("Range")
@@ -236,131 +275,26 @@ public class AccountSecurityActivity extends AppCompatActivity {
         return path;
     }
 
-    /*public void displayImage(String imagePath) {
-        if (imagePath != null) {
-            Log.d(TAG, imagePath + "999");
-            Bitmap bitmap = null;
-            try {
-                bitmap = getBitmapFromUri(Uri.parse(imagePath));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            circleImageView.setImageBitmap(bitmap);
-        } else {
-            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
-        }
-    }*/
-    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
-        InputStream inputStream = getContentResolver().openInputStream(uri);
-        return BitmapFactory.decodeStream(inputStream);
-    }
-    private void displayImage1(String imagePath) {
-        if (imagePath != null) {
-            Log.d(TAG, imagePath + "999");
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            circleImageView.setImageBitmap(bitmap);
-            accountSecurityPresenter.changeIcon(imagePath);
-        } else {
-            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public String getPathFromUri(Uri uri) {
-        Cursor cursor = null;
-        String path = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = getContentResolver().query(uri, proj, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                path = cursor.getString(column_index);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        Log.d(TAG,"psth+++：" + path);
-        return path;
-    }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_PERMISSIONS_CAMERA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                imageHelper.dispatchTakePictureIntent();
-            } else {
-                Toast.makeText(this, "需要开启相机和存储权限才能拍照！", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == REQUEST_CODE_PERMISSIONS_ALBUM) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                imageHelper.openAlbum();
-            } else {
-                Toast.makeText(this, "需要开启相册和存储权限才能选择图片！", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_TAKE_PHOTO && resultCode == RESULT_OK) {
-            String imagePath = imageHelper.getCurrentPhotoPath();
-            displayImage(imagePath);
-            /*uploadImage(imagePath);*/
-        } else if (requestCode == REQUEST_CODE_OPEN_ALBUM && resultCode == RESULT_OK && data != null) {
-            Uri selectedImageUri = data.getData();
-            String imagePath = imageHelper.getPathFromUri(selectedImageUri);
-            displayImage(imagePath);
-            /*uploadImage(imagePath);*/
-        }
-    }
-
-    // 显示图片到 ImageView
     private void displayImage(String imagePath) {
         if (imagePath != null) {
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imageView_userIcon.setImageBitmap(bitmap);
         } else {
-            Toast.makeText(this, "无法获取图片路径！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // 上传图片到后端
-    /*private void uploadImage(String imagePath) {
-        if (imagePath == null) {
-            Toast.makeText(this, "无法获取图片路径！", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
 
-        File file = new File(imagePath);
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), RequestBody.create(file, MediaType.parse("image/jpeg")))
-                .build();
-
-        Request request = new Request.Builder()
-                .url("https://your-backend-server.com/upload") // 替换为你的后端接口地址
-                .post(requestBody)
-                .build();
-
-        OkHttpClient client = new OkHttpClient();
-        client.newCall(request).enqueue(new Callback() {
+    public void sendToast(String message) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                runOnUiThread(() -> Toast.makeText(AccountSecurityActivity.this, "上传失败：" + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> Toast.makeText(AccountSecurityActivity.this, "上传成功！", Toast.LENGTH_SHORT).show());
-                } else {
-                    runOnUiThread(() -> Toast.makeText(AccountSecurityActivity.this, "上传失败：" + response.body().toString(), Toast.LENGTH_SHORT).show());
-                }
+            public void run() {
+                Toast.makeText(AccountSecurityActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-    }*/
+    }
 }
