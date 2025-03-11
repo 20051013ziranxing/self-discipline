@@ -33,8 +33,8 @@ public class AccountSecurityModule {
     public void signOut() {
         userMessageHelper.updateUniqueUserToken(null);
     }
-    public void modifyTheUserSAvatar(String id, String username, String imageUri, final ModelCallback callback) {
-        File file = new File(imageUri);
+    public void modifyTheUserSAvatar(String id, String username, File file, final ModelCallback callback) {
+        /*File file = new File(imageUri);*/
         String url = "http://101.200.121.142:9999/profile";
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("id", id);

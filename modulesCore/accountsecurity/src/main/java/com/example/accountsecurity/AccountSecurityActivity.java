@@ -127,7 +127,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             10);
                 } else {
-                    openAlbum();
+                    take();
                 }
             }
         });
@@ -222,6 +222,8 @@ public class AccountSecurityActivity extends AppCompatActivity {
         }
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        UriSave.getInstance().setUriImage(outputImage);
+        Log.d(TAG, "take：" + outputImage.toString());
         startActivityForResult(intent, TAKE_PHOTO);
     }
 
@@ -249,17 +251,18 @@ public class AccountSecurityActivity extends AppCompatActivity {
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             imagepath = uri.getPath();
         }
+        UriSave.getInstance().setUriImage(new File(imagepath));
+        Log.d(TAG, "take：" + UriSave.getInstance().getUriImage().toString());
         displayImage(imagepath);
-        UriSave.getInstance().setUriImage(imageUri);
-        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     private void handleImageBeforeKitKat(Intent data) {
         Uri uri = data.getData();
+        /*UriSave.getInstance().setUriImage(new File(imagepath));
+        Log.d(TAG, "take：" + UriSave.getInstance().getUriImage().toString());*/
+        Log.d(TAG, "take：" + uri.toString());
         String imagepath = getImagePath(uri, null);
         displayImage(imagepath);
-        UriSave.getInstance().setUriImage(imageUri);
-        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     @SuppressLint("Range")

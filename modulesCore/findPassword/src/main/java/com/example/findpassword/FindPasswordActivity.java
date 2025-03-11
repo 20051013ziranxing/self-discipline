@@ -51,6 +51,7 @@ public class FindPasswordActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         findPasswordPresenter = new FindPasswordPresenter(this);
         editText_captcha = findViewById(R.id.editText_captcha);
         editText_newPassword = findViewById(R.id.editText_newPassword);
