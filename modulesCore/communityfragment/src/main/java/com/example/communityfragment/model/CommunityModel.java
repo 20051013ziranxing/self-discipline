@@ -7,8 +7,12 @@ import androidx.annotation.NonNull;
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.ICommunityContract;
 import com.example.communityfragment.presenter.CommunityPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,10 +101,10 @@ public class CommunityModel implements ICommunityContract.Model {
     }
 
     @Override
-    public void checkLikeStatus(int postId) {
+    public void checkLikeStatus(int postId, String userId) {
         JSONObject object = new JSONObject();
         try {
-            object.put("user_id", "2");
+            object.put("user_id", userId);
             object.put("post_id", String.valueOf(postId));
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -143,8 +147,9 @@ public class CommunityModel implements ICommunityContract.Model {
 
     public void deletePost(int postId) {
 
+//        String userId = userBaseMessageEventBus.getUserId();
 //        JSONObject object = new JSONObject();
-//        object.put("user_id", "2");
+//        object.put("user_id", userId);
 //        object.put("post_id",  String.valueOf(postId));
 //        String json = object.toString();
 //        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
@@ -168,10 +173,10 @@ public class CommunityModel implements ICommunityContract.Model {
     }
 
 
-    public void likePost(int postId) {
+    public void likePost(int postId, String userId) {
         JSONObject object = new JSONObject();
         try {
-            object.put("user_id", "2");
+            object.put("user_id", userId);
             object.put("post_id", String.valueOf(postId));
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -209,10 +214,10 @@ public class CommunityModel implements ICommunityContract.Model {
         });
     }
 
-    public void unlikePost(int postId) {
+    public void unlikePost(int postId, String userId) {
         JSONObject object = new JSONObject();
         try {
-            object.put("user_id", "2");
+            object.put("user_id", userId);
             object.put("post_id", String.valueOf(postId));
         } catch (JSONException e) {
             throw new RuntimeException(e);

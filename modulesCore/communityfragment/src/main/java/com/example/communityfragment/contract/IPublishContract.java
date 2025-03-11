@@ -8,11 +8,11 @@ public interface IPublishContract {
     }
 
     interface Presenter {
-        void publish(String content, String imgURL);
+        void publish(String content, String userId,String imagePath);
     }
 
     interface Model {
-        void publish(String content, String imgURL,PublishCallback callback);
+        void publish(String content,String userId, String imgURL,PublishCallback callback);
     }
 
     interface PublishCallback {

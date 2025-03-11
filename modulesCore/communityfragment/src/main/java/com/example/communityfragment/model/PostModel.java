@@ -8,7 +8,11 @@ import androidx.annotation.NonNull;
 import com.example.communityfragment.bean.Comment;
 import com.example.communityfragment.contract.IPostContract;
 import com.example.communityfragment.presenter.PostPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +43,6 @@ public class PostModel implements IPostContract.Model {
     public PostModel(Context mContext, PostPresenter mPresenter) {
         this.mContext = mContext;
         this.mPresenter = mPresenter;
-
     }
 
     @Override
@@ -92,10 +95,10 @@ public class PostModel implements IPostContract.Model {
     }
 
     @Override
-    public void comment(int postId, String comment) {
+    public void comment(int postId, String userId , String comment) {
         MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
-        requestBody.addFormDataPart("user_id", "2");
+        requestBody.addFormDataPart("user_id", userId);
         requestBody.addFormDataPart("post_id", String.valueOf(postId));
         requestBody.addFormDataPart("content", comment);
 

@@ -131,7 +131,6 @@
                         android:adjustViewBounds="true"
                         android:clickable="true"
                         android:focusable="true"
-                        android:layout_gravity=""
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_launcher_background" />
 

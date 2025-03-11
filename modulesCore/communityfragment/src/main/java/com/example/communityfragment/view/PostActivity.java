@@ -18,18 +18,21 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.communityfragment.R;
-import com.example.communityfragment.TimeUtils;
+import com.example.communityfragment.utils.TimeUtils;
 import com.example.communityfragment.adapter.CommentAdapter;
 import com.example.communityfragment.bean.Comment;
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.IPostContract;
 import com.example.communityfragment.databinding.ActivityPostBinding;
 import com.example.communityfragment.presenter.PostPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Route(path = "/communityPageView/PostActivity")
 public class PostActivity extends AppCompatActivity implements IPostContract.View {
@@ -41,6 +44,11 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
     @Autowired(required = true)
     protected Post post;
 
+    private UserBaseMessageEventBus userBaseMessageEventBus;
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +62,10 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
             return insets;
         });
 
+        EventBus.getDefault().register(this);
+
         ARouter.getInstance().inject(this);
         post = (Post) getIntent().getSerializableExtra("post");
-
 
         binding.imgMypostBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +117,10 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
                     Toast.makeText(PostActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
                 } else {
 //                    binding.tvPostSend.setEnabled(false);
-                    mPresenter.comment(post.getId(), content);
+                    if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
+                        mPresenter.comment(post.getId(), userBaseMessageEventBus.getUserId(), content);
+                    else
+                        mPresenter.comment(post.getId(), "2", content);
                 }
             }
         });
@@ -151,5 +163,9 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

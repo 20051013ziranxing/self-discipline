@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,11 @@ import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.ICommunityContract;
 import com.example.communityfragment.databinding.FragmentCommunityBinding;
 import com.example.communityfragment.presenter.CommunityPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,11 +36,17 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
     private FragmentCommunityBinding binding;
     private PostAdapter adapter;
     private CommunityPresenter mPresenter;
+    private UserBaseMessageEventBus userBaseMessageEventBus;
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +67,8 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         binding.rlvCommunity.setLayoutManager(manager);
         binding.rlvCommunity.setAdapter(adapter);
 
+        mPresenter.getData();
+
         binding.fabPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,19 +80,34 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
             @Override
             public void onLikeClick(int postId, boolean isLiked) {
                 if (isLiked) {
-                    mPresenter.unlikePost(postId);
+                    mPresenter.unlikePost(postId, getUserId());
                 } else {
-                    mPresenter.likePost(postId);
+                    mPresenter.likePost(postId, getUserId());
                 }
             }
 
             @Override
             public void onDeleteClick(int postId) {
-                mPresenter.deletePost(postId);
+                mPresenter.deletePost(postId, getUserId());
+            }
+        });
+
+        binding.swipeCommunityRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.getData();
             }
         });
 
 
+    }
+
+    private String getUserId() {
+        userBaseMessageEventBus = EventBus.getDefault().getStickyEvent(UserBaseMessageEventBus.class);
+        if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
+            return userBaseMessageEventBus.getUserId();
+        else
+            return "";
     }
 
 
@@ -87,29 +116,24 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    binding.swipeCommunityRefresh.setRefreshing(false);
                     if (postList == null || postList.isEmpty()) {
-                        binding.tvEmpty.setVisibility(View.VISIBLE);
+                        binding.tvCommunityEmpty.setVisibility(View.VISIBLE);
                         binding.rlvCommunity.setVisibility(View.GONE);
                     } else {
                         Log.d(TAG, "onDataReceived: " + postList.size());
-                        binding.tvEmpty.setVisibility(View.GONE);
+                        binding.tvCommunityEmpty.setVisibility(View.GONE);
                         binding.rlvCommunity.setVisibility(View.VISIBLE);
                         Collections.reverse(postList);
                         // 查看是否点赞
                         for (Post post : postList) {
-                            mPresenter.checkLikeStatus(post.getId());
+                            mPresenter.checkLikeStatus(post.getId(), getUserId());
                         }
                         adapter.setPostList(postList);
                     }
                 }
             });
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.getData();
     }
 
     public void updatePostLikeStatus(int postId, boolean isLiked) {
@@ -129,4 +153,11 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (userBaseMessageEventBus != null) {
+            EventBus.getDefault().unregister(userBaseMessageEventBus);
+        }
+    }
 }

@@ -14,7 +14,7 @@ public interface IPostContract {
     }
 
     interface Presenter {
-        void comment(int postId, String comment);
+        void comment(int postId, String userId, String comment);
 
         void onCommentsSuccess(List<Comment> comments);
         void onCommentsFailure();
@@ -25,7 +25,7 @@ public interface IPostContract {
 
     interface Model {
         void getComments(int postId);
-        void comment(int postId, String comment);
+        void comment(int postId, String userId, String comment);
     }
 
 

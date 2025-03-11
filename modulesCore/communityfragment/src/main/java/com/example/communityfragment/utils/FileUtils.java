@@ -1,4 +1,4 @@
-package com.example.communityfragment;
+package com.example.communityfragment.utils;
 
 import android.content.ContentUris;
 import android.content.Context;

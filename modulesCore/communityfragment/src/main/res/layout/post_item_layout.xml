@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:maxHeight="300dp"
+                    android:maxHeight="250dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_launcher_background" />
 

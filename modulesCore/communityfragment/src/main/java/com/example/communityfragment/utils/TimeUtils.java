@@ -1,4 +1,4 @@
-package com.example.communityfragment;
+package com.example.communityfragment.utils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

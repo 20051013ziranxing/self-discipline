@@ -25,16 +25,19 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.example.communityfragment.FileUtils;
+import com.example.communityfragment.utils.FileUtils;
 import com.example.communityfragment.R;
 import com.example.communityfragment.contract.IPublishContract;
 import com.example.communityfragment.databinding.ActivityPublishBinding;
 import com.example.communityfragment.presenter.PublishPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.yalantis.ucrop.UCrop;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -51,6 +54,12 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private AlertDialog.Builder builder;
     private AlertDialog dialogPick;
+    private UserBaseMessageEventBus userBaseMessageEventBus;
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,7 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
         });
 
         mPresenter = new PublishPresenter(this);
+        EventBus.getDefault().register(this);
 
         binding.imgPublishSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,10 +84,13 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                     Toast.makeText(PublishActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
                 } else {
                     binding.imgPublishSend.setEnabled(false);
+                    String userId = "2";
+                    if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
+                        userId = userBaseMessageEventBus.getUserId();
                     if (cameraImageUri != null)
-                        mPresenter.publish(content, FileUtils.getRealPathFromUri(PublishActivity.this, cameraImageUri));
+                        mPresenter.publish(content, userId, FileUtils.getRealPathFromUri(PublishActivity.this, cameraImageUri));
                     else
-                        mPresenter.publish(content, null);
+                        mPresenter.publish(content, userId, null);
                 }
             }
         });
@@ -295,5 +308,11 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                 .build());
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userBaseMessageEventBus != null) {
+            EventBus.getDefault().unregister(userBaseMessageEventBus);
+        }
+    }
 }
