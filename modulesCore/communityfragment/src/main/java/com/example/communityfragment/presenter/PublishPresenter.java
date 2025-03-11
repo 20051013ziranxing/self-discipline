@@ -1,8 +1,5 @@
 package com.example.communityfragment.presenter;
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.communityfragment.contract.IPublishContract;
@@ -21,9 +18,9 @@ public class PublishPresenter implements IPublishContract.Presenter {
     }
 
     @Override
-    public void publish(String content, String imagePath) {
+    public void publish(String content, String userId, String imagePath) {
         Log.d(TAG, "选中的图片 完整路径: " + imagePath);
-        mModel.publish(content, imagePath, new IPublishContract.PublishCallback() {
+        mModel.publish(content, userId, imagePath, new IPublishContract.PublishCallback() {
             @Override
             public void onSuccess(int id) {
                 mView.publishSuccess(id);

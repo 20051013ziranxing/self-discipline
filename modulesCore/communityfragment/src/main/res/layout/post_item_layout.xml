@@ -3,22 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="12dp"
-    android:paddingTop="4dp"
-    android:paddingRight="12dp"
-    android:paddingBottom="4dp">
+    android:paddingLeft="6dp"
+    android:paddingTop="3dp"
+    android:paddingRight="6dp"
+    android:paddingBottom="3dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="3dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,14 +25,15 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_post_useravatar"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:elevation="4dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:elevation="1dp"
                 android:padding="2dp"
                 android:src="@drawable/ic_launcher_background"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,48 +44,54 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/misans"
                 android:text="用户12345"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/img_post_useravatar"
                 app:layout_constraintStart_toEndOf="@id/img_post_useravatar"
                 app:layout_constraintTop_toTopOf="@id/img_post_useravatar" />
 
             <ImageView
                 android:id="@+id/img_post_more"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="15dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_more"
                 app:layout_constraintBottom_toBottomOf="@id/tv_post_username"
-                app:layout_constraintEnd_toEndOf="@id/tv_post_content"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_post_username" />
 
             <TextView
                 android:id="@+id/tv_post_content"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/misans"
+                android:gravity="start"
+                android:letterSpacing="0.01"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="15"
                 android:text="帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:maxLines="15"
+                android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_post_username" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_post_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="2dp"
-                android:visibility="gone"
                 android:elevation="8dp"
+                android:visibility="gone"
                 app:cardCornerRadius="8dp"
                 app:layout_constraintBottom_toTopOf="@id/ll_post"
                 app:layout_constraintStart_toStartOf="parent"
@@ -96,53 +102,101 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:maxHeight="300dp"
+                    android:maxHeight="250dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_launcher_background" />
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:id="@+id/ll_post"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="end"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cv_post_img">
 
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/img_post_comment"-->
-                <!--                    android:layout_width="22dp"-->
-                <!--                    android:layout_height="22dp"-->
-                <!--                    android:layout_marginLeft="80dp"-->
-                <!--                    android:src="@drawable/ic_comment" />-->
+                <LinearLayout
+                    android:id="@+id/ll_post_like"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/img_post_share"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:src="@drawable/ic_share" />
+                    <ImageView
+                        android:id="@+id/img_post_like"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_like_gray" />
 
-                <ImageView
-                    android:id="@+id/img_post_like"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_like" />
+                    <TextView
+                        android:id="@+id/tv_post_likecount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/misans"
+                        android:minWidth="30dp"
+                        android:text="34"
+                        android:textColor="@color/gray3"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_post_likecount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:minWidth="30dp"
-                    android:text="34"
-                    android:textSize="16dp" />
+                <LinearLayout
+                    android:id="@+id/ll_post_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
 
+                    <ImageView
+                        android:id="@+id/img_post_comment"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_comment_gray" />
+
+                    <TextView
+                        android:id="@+id/tv_post_commentcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/misans"
+                        android:minWidth="30dp"
+                        android:text="12"
+                        android:textColor="@color/gray3"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_post_share"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_post_share"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_share_gray" />
+                </LinearLayout>
 
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

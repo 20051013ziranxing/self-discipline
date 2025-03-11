@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-03-03T12:08:24.780926400Z">
+        <DropdownSelection timestamp="2025-03-10T13:11:06.953934100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=DEBYLBCUSWLZEQ8T" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=9b4674a0" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -49,7 +49,7 @@
       </SelectionState>
       <SelectionState runConfigName="modulesCore.communityfragment">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-02-22T15:36:57.911692700Z">
+        <DropdownSelection timestamp="2025-03-10T13:14:05.844609600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=9b4674a0" />
@@ -72,11 +72,16 @@
       <SelectionState runConfigName="modulesCore.accountsecurity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="modulesCore.cancelYourAccount">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="modulesCore.cancelyouraccount">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-03-10T13:09:19.000930300Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=9b4674a0" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>

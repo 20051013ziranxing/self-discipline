@@ -23,19 +23,29 @@ public class CommunityPresenter implements ICommunityContract.Presenter {
     }
 
     @Override
+    public void checkLikeStatus(int postId, String userId) {
+        mModel.checkLikeStatus(postId,userId);
+    }
+
+    public void updatePostLikeStatus(int postId, boolean isLiked) {
+        mView.updatePostLikeStatus(postId, isLiked);
+    }
+
+    @Override
     public void onDataReceived(List<Post> postList) {
         mView.onDataReceived(postList);
     }
 
-    public void deletePost(int postId) {
+    public void deletePost(int postId, String userId) {
         mModel.deletePost(postId);
     }
 
-    public void unlikePost(int postId) {
-        mModel.unlikePost(postId);
+    public void unlikePost(int postId, String userId) {
+        mModel.unlikePost(postId,userId);
     }
 
-    public void likePost(int postId) {
-        mModel.likePost(postId);
+    public void likePost(int postId, String userId) {
+        mModel.likePost(postId, userId);
     }
+
 }

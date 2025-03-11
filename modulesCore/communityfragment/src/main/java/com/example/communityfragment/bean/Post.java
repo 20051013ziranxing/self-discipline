@@ -1,6 +1,8 @@
 package com.example.communityfragment.bean;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
     private int id;
     private String userid;
     private String userAvatar;
@@ -9,6 +11,7 @@ public class Post {
     private String imageUrl;
     private String likeConunt;
     private boolean isLiked;
+    private String commentCount;
 
     public Post() {
     }
@@ -18,6 +21,18 @@ public class Post {
         this.likeConunt = likeConunt;
         this.userAvatar = userAvatar;
         this.userid = userid;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
     }
 
     public int getId() {

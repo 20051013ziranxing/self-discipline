@@ -2,10 +2,17 @@ package com.example.communityfragment.model;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.ICommunityContract;
 import com.example.communityfragment.presenter.CommunityPresenter;
+import com.example.eventbus.UserBaseMessageEventBus;
+import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +32,14 @@ import okhttp3.Response;
 public class CommunityModel implements ICommunityContract.Model {
     public static final String TAG = "CommunityModelTAG";
     private CommunityPresenter mPresenter;
+
     private final static String BASE_URL = "http://101.200.121.142:9999";
 
+    private final static String ALLLIST_URL = BASE_URL + "/community/all-list";
     private final static String LIST_URL = BASE_URL + "/community/list";
-    private final static String POST_URL = BASE_URL + "/community/post";
     private final static String LIKE_URL = BASE_URL + "/community/like";
     private final static String UNLIKE_URL = BASE_URL + "/community/unlike";
+    private final static String CHECKLIKESTATUS_URL = BASE_URL + "/check-like-status";
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -40,10 +49,8 @@ public class CommunityModel implements ICommunityContract.Model {
 
     @Override
     public void getData() {
-        Log.d(TAG, "getData: ");
-
         Request request = new Request.Builder()
-                .url(LIST_URL)
+                .url(ALLLIST_URL)
                 .get()
                 .build();
 
@@ -55,30 +62,84 @@ public class CommunityModel implements ICommunityContract.Model {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+//                Log.d(TAG, "onResponse: " + responseData);
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: 1");
                     try {
-                        String responseData = response.body().string();
+                        Log.d(TAG, "帖子 : " + responseData);
                         JSONObject json = new JSONObject(responseData);
-                        JSONArray jsonArray = json.getJSONArray("data");
-                        List<Post> postList = new ArrayList<>();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Post post = new Post();
-                            post.setId(jsonObject.getInt("id"));
-                            post.setUserid(jsonObject.getString("userId"));
-                            post.setContent(jsonObject.getString("content"));
-                            post.setCreatedTime(jsonObject.getString("createdTime"));
-                            post.setImageUrl(jsonObject.getString("imageUrl"));
-                            post.setLikeConunt(jsonObject.getString("likeCount"));
-                            postList.add(post);
+                        if (json.isNull("data")) {
+                            Log.d(TAG, "帖子为空");
+                            mPresenter.onDataReceived(new ArrayList<>());
+                        } else {
+                            JSONArray jsonArray = json.getJSONArray("data");
+                            List<Post> postList = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                Post post = new Post();
+                                post.setId(jsonObject.getInt("id"));
+                                post.setUserid(jsonObject.getString("user_id"));
+                                post.setContent(jsonObject.getString("content"));
+                                post.setImageUrl(jsonObject.getString("image_url"));
+                                post.setCreatedTime(jsonObject.getString("created_at"));
+                                post.setLikeConunt(jsonObject.getString("likes_count"));
+                                post.setCommentCount(jsonObject.getString("comment_count"));
+
+                                postList.add(post);
+                                Log.d(TAG, "帖子 : " + post.toString());
+                            }
                             mPresenter.onDataReceived(postList);
                         }
                     } catch (JSONException e) {
-                        Log.d(TAG, "onResponse: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 } else {
-                    Log.d(TAG, "onResponse: 2");
+                    Log.e(TAG, "onResponse: " + response.code());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void checkLikeStatus(int postId, String userId) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("user_id", userId);
+            object.put("post_id", String.valueOf(postId));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        String json = object.toString();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
+        Request request = new Request.Builder()
+                .url(CHECKLIKESTATUS_URL)
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d(TAG, "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String responseData = response.body().string();
+                Log.d(TAG, "onResponse: " + responseData);
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        if (jsonObject.getInt("data") == 0) {
+                            mPresenter.updatePostLikeStatus(postId, false);
+                        } else {
+                            mPresenter.updatePostLikeStatus(postId, true);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Log.e(TAG, "onResponse: " + response.code());
                 }
             }
         });
@@ -86,9 +147,10 @@ public class CommunityModel implements ICommunityContract.Model {
 
     public void deletePost(int postId) {
 
+//        String userId = userBaseMessageEventBus.getUserId();
 //        JSONObject object = new JSONObject();
-//        object.put("user_id", "2");
-//        object.put("post_id", postId);
+//        object.put("user_id", userId);
+//        object.put("post_id",  String.valueOf(postId));
 //        String json = object.toString();
 //        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
 //        Request request = new Request.Builder()
@@ -110,15 +172,16 @@ public class CommunityModel implements ICommunityContract.Model {
 //        });
     }
 
-    public void unlikePost(int postId) {
 
+    public void likePost(int postId, String userId) {
         JSONObject object = new JSONObject();
         try {
-            object.put("user_id", "2");
-            object.put("post_id", postId);
+            object.put("user_id", userId);
+            object.put("post_id", String.valueOf(postId));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
         String json = object.toString();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
         Request request = new Request.Builder()
@@ -129,24 +192,33 @@ public class CommunityModel implements ICommunityContract.Model {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "onFailure: " + e.getMessage());
+                Log.d(TAG, "点赞onFailure: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "删除成功: " + response.body().string());
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        if (jsonObject.get("message").equals("Post liked successfully")) {
+                            Log.d(TAG, "点赞成功:" );
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Log.e(TAG, "点赞失败" + response.code());
                 }
             }
         });
     }
 
-    public void likePost(int postId) {
-
+    public void unlikePost(int postId, String userId) {
         JSONObject object = new JSONObject();
         try {
-            object.put("user_id", "2");
-            object.put("post_id", postId);
+            object.put("user_id", userId);
+            object.put("post_id", String.valueOf(postId));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -165,10 +237,22 @@ public class CommunityModel implements ICommunityContract.Model {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "删除成功: " + response.body().string());
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        if (jsonObject.get("message").equals("Post unliked successfully")) {
+                            Log.d(TAG, "取消点赞成功");
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Log.e(TAG, "取消点赞失败" + response.code());
                 }
             }
         });
     }
+
+
 }

@@ -1,17 +1,21 @@
 package com.example.communityfragment.adapter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.communityfragment.R;
@@ -38,24 +42,41 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.userName.setText(mPostList.get(position).getUserid());
         holder.postContent.setText(mPostList.get(position).getContent());
         holder.postLikeCount.setText(mPostList.get(position).getLikeConunt());
-        if (mPostList.get(position).getImageUrl() != null && !mPostList.get(position).getImageUrl().equals("null")) {
+        holder.postComment.setText(mPostList.get(position).getCommentCount());
+        if (mPostList.get(position).getImageUrl() != null && !mPostList.get(position).getImageUrl().equals("")) {
             Glide.with(holder.itemView.getContext())
                     .load(mPostList.get(position).getImageUrl())
                     .placeholder(R.drawable.ic_launcher_background)
                     .apply(RequestOptions.skipMemoryCacheOf(true)) //跳过内存缓存
                     .into(holder.postImg);
             holder.cvImg.setVisibility(View.VISIBLE);
-            Log.d("CommunityModelTAG",mPostList.get(position).getImageUrl());
+            Log.d("CommunityModelTAG", mPostList.get(position).getImageUrl());
         } else {
             holder.cvImg.setVisibility(View.GONE);
         }
 
 
         if (mPostList.get(position).getIsLiked()) {
-            holder.postLike.setImageResource(R.drawable.ic_liked);
+            holder.postLike.setImageResource(R.drawable.ic_like_green);
+            holder.postLikeCount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.grenn1));
         } else {
-            holder.postLike.setImageResource(R.drawable.ic_like);
+            holder.postLike.setImageResource(R.drawable.ic_like_gray);
+            holder.postLikeCount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.gray3));
         }
+
+        holder.cvPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = holder.getAdapterPosition();
+                if (currentPosition == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                Post currentPost = mPostList.get(currentPosition);
+                ARouter.getInstance().build("/communityPageView/PostActivity")
+                        .withSerializable("post", currentPost)
+                        .navigation();
+            }
+        });
 
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -72,13 +93,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                 }
 
                 if (currentPost.getIsLiked()) {
-                    holder.postLike.setImageResource(R.drawable.ic_like);
+                    holder.postLike.setImageResource(R.drawable.ic_like_gray);
+                    holder.postLikeCount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.gray3));
                     currentPost.setLiked(false);
                     String likeConunt = String.valueOf(Integer.parseInt(currentPost.getLikeConunt()) - 1);
                     currentPost.setLikeConunt(likeConunt);
                     holder.postLikeCount.setText(likeConunt);
                 } else {
-                    holder.postLike.setImageResource(R.drawable.ic_liked);
+                    holder.postLike.setImageResource(R.drawable.ic_like_green);
+                    holder.postLikeCount.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.grenn1));
                     currentPost.setLiked(true);
                     String likeConunt = String.valueOf(Integer.parseInt(currentPost.getLikeConunt()) + 1);
                     currentPost.setLikeConunt(likeConunt);
@@ -87,8 +110,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
             }
         };
 
-        holder.postLike.setOnClickListener(listener);
-        holder.postLikeCount.setOnClickListener(listener);
+        holder.llLike.setOnClickListener(listener);
+
         holder.postMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,8 +133,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                 popupMenu.show();
             }
         });
-
-
 
     }
 
@@ -137,8 +158,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         super.onViewRecycled(holder);
     }
 
+    public List<Post> getPostList() {
+        return mPostList;
+    }
+
     public interface OnPostActionListener {
         void onLikeClick(int postId, boolean isLiked);
+
         void onDeleteClick(int postId);
     }
 
@@ -149,25 +175,35 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        private CardView cvPost;
         private CircleImageView userAvatar;
         private TextView userName;
         private TextView postContent;
+        private TextView postComment;
         private ImageView postImg;
         private ImageView postLike;
         private TextView postLikeCount;
         private ImageView postMore;
         private CardView cvImg;
+        private LinearLayout llLike;
+        private LinearLayout llComment;
+        private LinearLayout llShare;
 
         public MyViewHolder(View view) {
             super(view);
+            cvPost = view.findViewById(R.id.cv_post);
             userAvatar = view.findViewById(R.id.img_post_useravatar);
             userName = view.findViewById(R.id.tv_post_username);
             postContent = view.findViewById(R.id.tv_post_content);
+            postComment = view.findViewById(R.id.tv_post_commentcount);
             postImg = view.findViewById(R.id.img_post);
             postLike = view.findViewById(R.id.img_post_like);
             postLikeCount = view.findViewById(R.id.tv_post_likecount);
             postMore = view.findViewById(R.id.img_post_more);
-            cvImg =  view.findViewById(R.id.cv_post_img);
+            cvImg = view.findViewById(R.id.cv_post_img);
+            llLike = view.findViewById(R.id.ll_post_like);
+            llComment = view.findViewById(R.id.ll_post_comment);
+            llShare = view.findViewById(R.id.ll_post_share);
         }
     }
 }

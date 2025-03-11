@@ -11,12 +11,15 @@ public interface ICommunityContract {
 
     public interface Presenter {
         void getData();
+        void checkLikeStatus(int postId, String userId);
 
         void onDataReceived(List<Post> postList);
     }
 
     public interface Model {
         void getData();
+
+        void checkLikeStatus(int postId, String userId);
     }
 
     public interface MyCallback {
