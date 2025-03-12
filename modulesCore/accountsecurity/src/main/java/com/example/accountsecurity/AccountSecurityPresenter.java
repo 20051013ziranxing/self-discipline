@@ -24,13 +24,15 @@ public class AccountSecurityPresenter {
         this.accountSecurityModule = new AccountSecurityModule(accountSecurityActivity, networkClient);
     }
 
-    public void saveMessage(String id, String username, File imageUri) {
-        Log.d(TAG, "id:" + id + username + imageUri.toString());
+    public void saveMessageNameAndIcon(String id, String username, File imageUri) {
+        /*Log.d(TAG, "id:" + id + username + imageUri.toString());*/
         accountSecurityModule.modifyTheUserSAvatar(id, username, imageUri, new AccountSecurityModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, response);
                 accountSecurityActivity.sendToast("修改成功");
+
+                /*accountSecurityModule.modifyTheBasicInformationOfALocalUser();*/
                 accountSecurityActivity.finish();
                 return null;
             }
@@ -42,6 +44,10 @@ public class AccountSecurityPresenter {
             }
         });
     }
+    public void saveMessageString(String id, String userName) {
+
+    }
+
     //进行初始化
     public void initData() {
         /*//根据邮箱地址获取图片并将其设置到图片的位置
@@ -60,6 +66,7 @@ public class AccountSecurityPresenter {
         accountSecurityModule.signOut();
     }
 
+    //获取绝对路径
     /*private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader = new CursorLoader(accountSecurityActivity, contentUri, proj, null, null, null);

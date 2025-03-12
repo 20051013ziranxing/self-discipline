@@ -131,7 +131,16 @@ public class UserMessageHelper extends SQLiteOpenHelper {
         values.put("userToken", newToken);
         int rowsAffected = db.update("users", values, null, null);
         Log.d(TAG, "我退出登陆了，所以修改了");
-        /*queryAllUser();*/
+        db.close();
+        return rowsAffected;
+    }
+    public int updateUniqueUserNameAndIcon(String newname, String newIcon) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("userName", newname);
+        values.put("userPictureURL", newIcon);
+        int rowsAffected = db.update("users", values, null, null);
+        Log.d(TAG, "我修改信息了，所以修改了");
         db.close();
         return rowsAffected;
     }

@@ -101,7 +101,8 @@ public class MyFragment_1 extends Fragment {
         imageView_headPicture = view.findViewById(R.id.imageView_headPicture);
         Log.d(TAG, userBaseMessageEventBus.getUserPictureURL());
         Glide.with(this)
-                .load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
+                .load(userBaseMessageEventBus.getUserPictureURL())
+                //.load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
                 .into(imageView_headPicture);
         textView_UserName = view.findViewById(R.id.textView_UserName);
         textView_UserName.setText(userBaseMessageEventBus.getUserName());
