@@ -219,7 +219,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
         }
         if (Build.VERSION.SDK_INT >= 24) {
             imageUri = FileProvider.getUriForFile(AccountSecurityActivity.this,
-                    "com.example.accountsecurity.fileprovider", outputImage);
+                    "com.example.selfdiscipline.fileprovider", outputImage);
         } else {
             imageUri = Uri.fromFile(outputImage);
         }

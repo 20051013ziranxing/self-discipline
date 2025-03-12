@@ -27,6 +27,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.bumptech.glide.Glide;
 import com.example.communityfragment.utils.FileUtils;
 import com.example.communityfragment.R;
 import com.example.communityfragment.contract.IPublishContract;
@@ -76,6 +77,18 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
         mPresenter = new PublishPresenter(this);
         EventBus.getDefault().register(this);
 
+        if(userBaseMessageEventBus.getUserName() != null){
+            binding.tvPublishUsername.setText(userBaseMessageEventBus.getUserName());
+        }else {
+            binding.tvPublishUsername.setText("用户");
+        }
+        if (userBaseMessageEventBus.getUserPictureURL() != null) {
+            Glide.with(this)
+                    .load(userBaseMessageEventBus.getUserPictureURL())
+                    .error(R.drawable.ic_default)
+                    .into(binding.imgPublishAvatar);
+        }
+
         binding.imgPublishSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +96,7 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                 if (content.trim().isEmpty()) {
                     Toast.makeText(PublishActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(PublishActivity.this, "上传中", Toast.LENGTH_SHORT);
                     binding.imgPublishSend.setEnabled(false);
                     String userId = "2";
                     if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
@@ -212,8 +226,13 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
 
     @Override
     public void publishSuccess(int id) {
-        binding.imgPublishSend.setEnabled(true);
-        finish();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.imgPublishSend.setEnabled(true);
+                finish();
+            }
+        });
     }
 
     @Override

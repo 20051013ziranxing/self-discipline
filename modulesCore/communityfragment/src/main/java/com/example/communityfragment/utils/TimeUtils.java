@@ -1,8 +1,11 @@
 package com.example.communityfragment.utils;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +65,27 @@ public class TimeUtils {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
             return parsedTime.format(formatter);
         }
+    }
+
+    public static String getTimeNormal() {
+        LocalTime now = LocalTime.now();
+        int hour = now.getHour();
+        if (hour >= 5 && hour < 12) {
+            return "早安";
+        } else if (hour >= 12 && hour < 14) {
+            return "午安";
+        } else if (hour >= 14 && hour < 18) {
+            return "下午好";
+        } else if (hour >= 18 && hour < 22) {
+            return "晚上好";
+        } else {
+            return "晚安";
+        }
+    }
+
+    public static String getTimeStandardOnlyYMD(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return format.format(time);
     }
 
 }

@@ -1,8 +1,11 @@
 package com.example.communityfragment.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -45,6 +48,8 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
     protected Post post;
 
     private UserBaseMessageEventBus userBaseMessageEventBus;
+    private CommentAdapter adapter;
+
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
         this.userBaseMessageEventBus = userBaseMessageEventBus;
@@ -66,6 +71,13 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
 
         ARouter.getInstance().inject(this);
         post = (Post) getIntent().getSerializableExtra("post");
+        boolean focusCommentInput = getIntent().getBooleanExtra("focusCommentInput", false);
+        if (focusCommentInput) {
+            binding.etPostText.requestFocus();
+            showKeyboard(binding.etPostText);
+        }
+
+        mPresenter.getComments(post.getId());
 
         binding.imgMypostBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +85,16 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
                 finish();
             }
         });
+
         binding.tvMypostContent.setText(post.getContent());
 //        binding.tvPostLikeCount.setText(post.getLikeConunt());
-        Glide.with(this).load("post.getUserAvatar()").into(binding.imgMypostAvatar);
-        binding.tvMypostUsername.setText(post.getUserid());
+        Glide.with(this)
+                .load(post.getUserAvatar())
+                .error("http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741094306314528200_KIb9cH")
+                .into(binding.imgMypostAvatar);
+        binding.tvMypostUsername.setText(post.getUserName());
         binding.tvMypostTime.setText(TimeUtils.getFormatTime(post.getCreatedTime()));
+        binding.tvMypostReply.setText(String.format("共 %s 条回复", post.getCommentCount()));
 
         if (post.getImageUrl() != null && !post.getImageUrl().equals("")) {
             Log.d(TAG, "本帖图" + post.getImageUrl());
@@ -91,23 +108,6 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
             Log.d(TAG, "本帖无图");
             binding.cvMypostPhoto.setVisibility(View.GONE);
         }
-
-        Comment comment1 = new Comment("上档次啊", "2025.8.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户12321");
-        Comment comment2 = new Comment("说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊说的很好啊", "2025.8.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户1221321");
-        Comment comment3 = new Comment("很上档次啊很上档次啊很上档次啊", "2025.8.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户1243321");
-        Comment comment4 = new Comment("真有档次啊", "2025.3.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户12142321");
-        Comment comment5 = new Comment("很上档次啊很上档次啊很上档次啊", "2025.8.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户1243321");
-        Comment comment6 = new Comment("很上档次啊很上档次啊很上档次啊", "2025.8.21 17:35", "http://ssjwo2ece.hn-bkt.clouddn.com/post-images/1741261891308783029_RXev1R", "1", "用户1243321");
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment1);
-        comments.add(comment2);
-        comments.add(comment3);
-        comments.add(comment4);
-        comments.add(comment5);
-        comments.add(comment6);
-        onCommentsSuccess(comments);
-//        onCommentsFailue();
-
 
         binding.tvPostSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +124,7 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
                 }
             }
         });
+
     }
 
     // 获取评论
@@ -132,11 +133,19 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                binding.tvMypostEmpty.setVisibility(View.GONE);
-                binding.rvMypostReply.setVisibility(View.VISIBLE);
-                binding.rvMypostReply.setLayoutManager(new LinearLayoutManager(PostActivity.this));
-                CommentAdapter adapter = new CommentAdapter(PostActivity.this, comments);
-                binding.rvMypostReply.setAdapter(adapter);
+                if (comments == null || comments.isEmpty()) {
+                    binding.tvMypostEmpty.setVisibility(View.VISIBLE);
+                    binding.rvMypostReply.setVisibility(View.GONE);
+                } else {
+                    binding.tvMypostEmpty.setVisibility(View.GONE);
+                    binding.rvMypostReply.setVisibility(View.VISIBLE);
+
+                    binding.rvMypostReply.setLayoutManager(new LinearLayoutManager(PostActivity.this));
+                    adapter = new CommentAdapter(PostActivity.this, comments);
+                    binding.rvMypostReply.setAdapter(adapter);
+
+                    binding.tvMypostReply.setText(String.format("共 %s 条回复", post.getCommentCount()));
+                }
             }
         });
     }
@@ -155,12 +164,35 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
     // 发步评论
     @Override
     public void onPublishCommentSuccess() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(binding.etPostText.getWindowToken(), 0);
+                }
 
+                binding.etPostText.setText("");
+                mPresenter.getComments(post.getId());
+            }
+        });
     }
 
     @Override
     public void onPublishCommentFailure() {
 
+    }
+
+    private void showKeyboard(EditText editText) {
+        editText.post(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
     }
 
     @Override

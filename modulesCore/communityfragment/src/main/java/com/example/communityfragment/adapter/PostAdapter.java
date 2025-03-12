@@ -43,12 +43,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.postContent.setText(mPostList.get(position).getContent());
         holder.postLikeCount.setText(mPostList.get(position).getLikeConunt());
         holder.postComment.setText(mPostList.get(position).getCommentCount());
+        holder.userName.setText(mPostList.get(position).getUserName());
+        Glide.with(holder.itemView.getContext())
+                .load(mPostList.get(position).getUserAvatar())
+                .placeholder(R.drawable.ic_default)
+                .error(R.drawable.ic_default)
+                .into(holder.userAvatar);
+
         if (mPostList.get(position).getImageUrl() != null && !mPostList.get(position).getImageUrl().equals("")) {
             Glide.with(holder.itemView.getContext())
                     .load(mPostList.get(position).getImageUrl())
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .apply(RequestOptions.skipMemoryCacheOf(true)) //跳过内存缓存
+                    .placeholder(R.drawable.dialog_background)
+                    .dontAnimate()
+                    .skipMemoryCache(false)
                     .into(holder.postImg);
+
             holder.cvImg.setVisibility(View.VISIBLE);
             Log.d("CommunityModelTAG", mPostList.get(position).getImageUrl());
         } else {
@@ -74,9 +83,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                 Post currentPost = mPostList.get(currentPosition);
                 ARouter.getInstance().build("/communityPageView/PostActivity")
                         .withSerializable("post", currentPost)
+                        .withBoolean("focusCommentInput", false)
                         .navigation();
             }
         });
+
+        holder.llComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = holder.getAdapterPosition();
+                if (currentPosition == RecyclerView.NO_POSITION) {
+                    return;
+                }
+
+                Post currentPost = mPostList.get(currentPosition);
+                ARouter.getInstance().build("/communityPageView/PostActivity")
+                        .withSerializable("post", currentPost)
+                        .withBoolean("focusCommentInput", true)
+                        .navigation();
+            }
+        });
+
 
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -111,7 +138,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         };
 
         holder.llLike.setOnClickListener(listener);
-
         holder.postMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,10 +162,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
     }
 
-
     @Override
     public int getItemCount() {
         return mPostList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     public void addPost(Post post) {
@@ -161,6 +191,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     public List<Post> getPostList() {
         return mPostList;
     }
+
+    public void clearPostList() {
+        mPostList.clear();
+    }
+
+    public void addPostList(List<Post> newPosts) {
+        if (this.mPostList == null) {
+            this.mPostList = new ArrayList<>();
+        }
+        this.mPostList.addAll(newPosts);
+        notifyDataSetChanged();
+    }
+
 
     public interface OnPostActionListener {
         void onLikeClick(int postId, boolean isLiked);

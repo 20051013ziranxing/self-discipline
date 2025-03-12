@@ -12,4 +12,6 @@
     <external-path
         name="external_storage_root"
         path="." />
+    <cache-path name="cache"
+        path="." />
 </paths>

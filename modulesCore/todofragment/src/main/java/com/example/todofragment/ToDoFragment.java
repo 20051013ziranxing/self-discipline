@@ -47,7 +47,7 @@ import java.util.Locale;
  * Use the {@link ToDoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragment.OnFragmentInteractionListener{
+public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragment.OnFragmentInteractionListener {
     private static final String TAG = "TestTT_ToDoFragment";
     private static final String DATA = "2025_03_08";
     UserBaseMessageEventBus userBaseMessageEventBus;
@@ -125,7 +125,8 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                if (userBaseMessageEventBus != null)
+                    toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
             }
 
             @Override
@@ -142,7 +143,7 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
                     String s = localDate.toString();
                     String s2 = LocalDate.now().toString();
                     textView_data.setText(localDate.toString());
-                    if (! s.equals(s2)){
+                    if (!s.equals(s2)) {
                         Log.d("nvjbifgj", localDate.toString() + "pppppp" + LocalDate.now().toString());
                         floatingActionButton_backDay.setVisibility(View.VISIBLE);
                     } else {
@@ -173,7 +174,8 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
                 MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
                     @Override
                     public void onMethodCalled() {
-                        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                        if (userBaseMessageEventBus != null)
+                            toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
                         /*getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -204,14 +206,18 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
         });
         return view;
     }
+
     public void initData() {
         toDoThings = new ArrayList<>();
-        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+        if (userBaseMessageEventBus != null)
+            toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
     }
+
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
         this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
+
     public void sendToast(String message) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -220,11 +226,14 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
             }
         });
     }
+
     //接口回调使其执行刷新操作
     @Override
     public void onMethodCalled() {
         Log.d(TAG, "开始执行回调了");
-        toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+        if (userBaseMessageEventBus != null) {
+            toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+        }
     }
 
     public void remindersChange(List<GetToDoThings.GetToDothingMessage> toDoThings) {
@@ -258,6 +267,7 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
             EventBus.getDefault().unregister(this);
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
