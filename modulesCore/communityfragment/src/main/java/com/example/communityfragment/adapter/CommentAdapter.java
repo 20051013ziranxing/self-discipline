@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.communityfragment.R;
 import com.example.communityfragment.bean.Comment;
+import com.example.communityfragment.utils.TimeUtils;
 
 import java.util.List;
 
@@ -36,11 +37,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comment comment = comments.get(position);
         holder.content.setText(comment.getContent());
-        Glide.with(mContext).load(comment.getUserAavatar()).into(holder.avatar);
+        Glide.with(mContext)
+                .load(comment.getUserAavatar())
+                .placeholder(R.drawable.ic_default)
+                .into(holder.avatar);
         holder.UserName.setText(comment.getUserName());
-        holder.time.setText(comment.getTime());
-
-
+        holder.time.setText(TimeUtils.getRelativeTime(comment.getTime()));
     }
 
     @Override

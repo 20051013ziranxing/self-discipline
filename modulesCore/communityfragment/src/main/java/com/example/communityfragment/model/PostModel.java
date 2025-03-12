@@ -8,11 +8,7 @@ import androidx.annotation.NonNull;
 import com.example.communityfragment.bean.Comment;
 import com.example.communityfragment.contract.IPostContract;
 import com.example.communityfragment.presenter.PostPresenter;
-import com.example.eventbus.UserBaseMessageEventBus;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +19,10 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MultipartBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PostModel implements IPostContract.Model {
@@ -47,7 +44,7 @@ public class PostModel implements IPostContract.Model {
 
     @Override
     public void getComments(int postId) {
-        String GETCOMMENTS_URL = COMMENTS_URL + "?post_id" + postId;
+        String GETCOMMENTS_URL = COMMENTS_URL + "?post_id=" + postId;
 
         Request request = new Request.Builder()
                 .url(GETCOMMENTS_URL)
@@ -63,10 +60,9 @@ public class PostModel implements IPostContract.Model {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
-                Log.d(TAG, "onResponse: " + responseData);
+                Log.d(TAG, "获取评论: " + postId + " " + responseData);
                 if (response.isSuccessful()) {
                     try {
-                        Log.d(TAG, "帖子 : " + responseData);
                         JSONObject json = new JSONObject(responseData);
                         if (json.isNull("data")) {
                             Log.d(TAG, "无评论");
@@ -75,14 +71,24 @@ public class PostModel implements IPostContract.Model {
                             JSONArray jsonArray = json.getJSONArray("data");
                             List<Comment> comments = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                JSONObject item = jsonArray.getJSONObject(i);
+
+                                JSONObject commentObj = item.getJSONObject("comment");
                                 Comment comment = new Comment();
-                                comment.setUserid(jsonObject.getString("user_id"));
-                                comment.setContent(jsonObject.getString("content"));
+                                comment.setId(String.valueOf(commentObj.getInt("id")));
+                                comment.setContent(commentObj.getString("content"));
+                                comment.setTime(commentObj.getString("created_at"));
+                                comment.setUserid(commentObj.getString("user_id"));
+
+                                if (item.has("user") && !item.isNull("user")) {
+                                    JSONObject userObj = item.getJSONObject("user");
+                                    comment.setUserName(userObj.getString("username"));
+                                    comment.setUserAavatar(userObj.getString("avatar_url"));
+                                }
                                 comments.add(comment);
                                 Log.d(TAG, "帖子 : " + comment.toString());
                             }
-                            mPresenter.onCommentsFailure();
+                            mPresenter.onCommentsSuccess(comments);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -95,47 +101,37 @@ public class PostModel implements IPostContract.Model {
     }
 
     @Override
-    public void comment(int postId, String userId , String comment) {
-        MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+    public void comment(int postId, String userId, String comment) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("post_id", postId);
+            json.put("user_id", String.valueOf(userId));
+            json.put("content", comment);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
-        requestBody.addFormDataPart("user_id", userId);
-        requestBody.addFormDataPart("post_id", String.valueOf(postId));
-        requestBody.addFormDataPart("content", comment);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json.toString());
 
         Request request = new Request.Builder()
                 .url(COMMENT_URL)
-                .post(requestBody.build())
+                .post(requestBody)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d(TAG, "onFailure: " + e.getMessage());
-                mPresenter.onPublishCommentSuccess();
+                mPresenter.onPublishCommentFailure();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String responseData = response.body().string();
+                Log.d(TAG, "发布评论: " + postId + " " + responseData);
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: " + responseData);
-                    Comment comment = new Comment();
-                    try {
-//                        JSONObject json = new JSONObject(responseData);
-//
-//                        JSONObject jsonObject = json.getJSONObject("data");
-//                        comment.setId(String.valueOf(jsonObject.getInt("id")));
-//                        comment.setUserid(jsonObject.getString("user_id"));
-//                        comment.setUserName(jsonObject.getString("user_name"));
-//                        comment.setUserAavatar(jsonObject.getString("user_avatar"));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
                     mPresenter.onPublishCommentSuccess();
                 } else {
-                    Log.d(TAG, "onResponse: " + responseData);
                     mPresenter.onPublishCommentFailure();
                 }
             }

@@ -79,6 +79,8 @@ public class CommunityModel implements ICommunityContract.Model {
                                 Post post = new Post();
                                 post.setId(jsonObject.getInt("id"));
                                 post.setUserid(jsonObject.getString("user_id"));
+                                post.setUserName(jsonObject.getString("user_name"));
+                                post.setUserAvatar(jsonObject.getString("avatar_url"));
                                 post.setContent(jsonObject.getString("content"));
                                 post.setImageUrl(jsonObject.getString("image_url"));
                                 post.setCreatedTime(jsonObject.getString("created_at"));

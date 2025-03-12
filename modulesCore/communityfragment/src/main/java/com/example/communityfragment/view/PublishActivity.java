@@ -27,6 +27,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.bumptech.glide.Glide;
 import com.example.communityfragment.utils.FileUtils;
 import com.example.communityfragment.R;
 import com.example.communityfragment.contract.IPublishContract;
@@ -75,6 +76,18 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
 
         mPresenter = new PublishPresenter(this);
         EventBus.getDefault().register(this);
+
+        if(userBaseMessageEventBus.getUserName() != null){
+            binding.tvPublishUsername.setText(userBaseMessageEventBus.getUserName());
+        }else {
+            binding.tvPublishUsername.setText("用户");
+        }
+        if (userBaseMessageEventBus.getUserPictureURL() != null) {
+            Glide.with(this)
+                    .load(userBaseMessageEventBus.getUserPictureURL())
+                    .error(R.drawable.ic_default)
+                    .into(binding.imgPublishAvatar);
+        }
 
         binding.imgPublishSend.setOnClickListener(new View.OnClickListener() {
             @Override

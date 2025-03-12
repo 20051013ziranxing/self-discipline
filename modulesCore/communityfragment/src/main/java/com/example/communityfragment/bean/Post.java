@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Post implements Serializable {
     private int id;
     private String userid;
+    private String userName;
     private String userAvatar;
     private String content;
     private String createdTime;
@@ -21,6 +22,14 @@ public class Post implements Serializable {
         this.likeConunt = likeConunt;
         this.userAvatar = userAvatar;
         this.userid = userid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getCommentCount() {
@@ -102,13 +111,16 @@ public class Post implements Serializable {
     @Override
     public String toString() {
         return "Post{" +
-                "content='" + content + '\'' +
+                "commentCount='" + commentCount + '\'' +
                 ", id=" + id +
                 ", userid='" + userid + '\'' +
+                ", userName='" + userName + '\'' +
                 ", userAvatar='" + userAvatar + '\'' +
+                ", content='" + content + '\'' +
                 ", createdTime='" + createdTime + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", likeConunt='" + likeConunt + '\'' +
+                ", isLiked=" + isLiked +
                 '}';
     }
 }

@@ -27,6 +27,10 @@ public class PostPresenter implements IPostContract.Presenter {
         mModel.comment(postId, userId, comment);
     }
 
+    public void getComments(int postId) {
+        mModel.getComments(postId);
+    }
+
     @Override
     public void onCommentsSuccess(List<Comment> comments) {
         mView.onCommentsSuccess(comments);
