@@ -41,6 +41,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.example.activitymanager.ActivityManager;
 import com.example.eventbus.UserBaseMessageEventBus;
+import com.example.localdatabase.bean.UserBaseMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -315,5 +316,12 @@ public class AccountSecurityActivity extends AppCompatActivity {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    public void sendEventBus(UserBaseMessage userBaseMessage) {
+        UserBaseMessageEventBus userBaseMessageEventBus1;
+        userBaseMessageEventBus1 = new UserBaseMessageEventBus(userBaseMessage.getUserName(), userBaseMessage.getUserPictureURL(),
+                userBaseMessage.getUserEmail(), userBaseMessage.getUserToken(), userBaseMessage.getUserId());
+        EventBus.getDefault().postSticky(userBaseMessageEventBus1);
     }
 }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BDBDBC"
+    android:background="#F7FBF6"
     app:cardCornerRadius="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.AddFragment">
@@ -170,10 +170,19 @@
                             android:id="@+id/textViewStartTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2025_1_1 ＞"
+                            android:text="2025_1_1"
                             app:layout_constraintBottom_toBottomOf="@id/textViewStart"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textViewStartTime_000"
                             app:layout_constraintTop_toTopOf="@id/textViewStart" />
+
+                        <TextView
+                            android:id="@+id/textViewStartTime_000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ＞"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@id/textViewStart"
+                            app:layout_constraintTop_toTopOf="@id/textViewStart"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -200,10 +209,19 @@
                             android:id="@+id/textViewEndTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="永远 ＞"
+                            android:text="永远"
                             app:layout_constraintBottom_toBottomOf="@id/textViewEnd"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textViewEndTime_000"
                             app:layout_constraintTop_toTopOf="@id/textViewEnd" />
+
+                        <TextView
+                            android:id="@+id/textViewEndTime_000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ＞"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@id/textViewEnd"
+                            app:layout_constraintTop_toTopOf="@id/textViewEnd"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -230,10 +248,19 @@
                             android:id="@+id/textViewSumCount"
                             android:layout_width="40dp"
                             android:layout_height="16dp"
-                            android:text="1次 ＞"
+                            android:text="1"
                             app:layout_constraintBottom_toBottomOf="@id/textViewCount"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textViewSumCount_000"
                             app:layout_constraintTop_toTopOf="@id/textViewCount" />
+
+                        <TextView
+                            android:id="@+id/textViewSumCount_000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="次 ＞"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@id/textViewSumCount"
+                            app:layout_constraintTop_toTopOf="@id/textViewSumCount"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

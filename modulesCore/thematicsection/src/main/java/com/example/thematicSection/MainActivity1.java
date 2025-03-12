@@ -75,9 +75,6 @@ public class MainActivity1 extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     ClockInFragment_1 clockInFragment1 = new ClockInFragment_1();
                     fragmentTransaction.replace(R.id.fragment_content, clockInFragment1).commit();
-                    ClockInFragmentModule clockInFragmentModule = new ClockInFragmentModule();
-                    ClockInFragmentPresenter clockInFragmentPresenter = new ClockInFragmentPresenter(clockInFragment1, clockInFragmentModule);
-                    clockInFragment1.setClockInFragmentPresenter(clockInFragmentPresenter);
                 } else if (menuItem.getItemId() == R.id.toDo) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

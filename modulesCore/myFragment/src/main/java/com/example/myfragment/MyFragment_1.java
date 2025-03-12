@@ -155,19 +155,29 @@ public class MyFragment_1 extends Fragment {
         this.presenter = presenter;
     }
 
-    /*@Override
+    @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-    }*/
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
         this.userBaseMessageEventBus = userBaseMessageEventBus;
+        textView_UserName.setText(userBaseMessageEventBus.getUserName());
+        Glide.with(this)
+                .load(userBaseMessageEventBus.getUserPictureURL())
+                //.load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
+                .into(imageView_headPicture);
     }
 }

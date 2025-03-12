@@ -39,7 +39,7 @@ public class AddFounctionAdapter extends RecyclerView.Adapter<AddFounctionAdapte
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build("/PomodoroTimerActivity/PomodoroTimerActivity")
-                        .withString("pomodoro", "0级，倒计时")
+                        .withString("pomodoro", "倒计时,-1")
                         .navigation();
             }
         });

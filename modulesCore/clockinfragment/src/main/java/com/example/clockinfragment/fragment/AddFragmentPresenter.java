@@ -1,8 +1,14 @@
 package com.example.clockinfragment.fragment;
 
+import android.widget.Toast;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.clockinfragment.ClockInFragmentModule;
+import com.example.networkrequests.NetworkClient;
+
+import java.io.IOException;
 import java.util.Random;
 
 public class AddFragmentPresenter {
@@ -10,8 +16,9 @@ public class AddFragmentPresenter {
     AddFragment addFragment;
 
     public AddFragmentPresenter(AddFragment addFragment) {
+        NetworkClient networkClient = new NetworkClient();
         this.addFragment = addFragment;
-        this.addFragmentModule = new AddFragmentModule();
+        this.addFragmentModule = new AddFragmentModule(networkClient);
     }
     public void changeRandomWordsOfEncouragement() {
         String[] sentences = {
@@ -25,6 +32,23 @@ public class AddFragmentPresenter {
         int index = random.nextInt(sentences.length);
         String randomSentence = sentences[index];
         addFragment.editText_EncouragementWords.setText(randomSentence);
+    }
+
+    public void createAPunchInTask(String user_id, String status, String title, String target_checkin_count, String start_time, String end_time) {
+        addFragmentModule.createAPunchInTask(user_id, status, title, target_checkin_count, new ClockInFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                addFragment.sendToast("习惯添加成功");
+                removeAddFragment();
+                return null;
+            }
+
+            @Override
+            public Boolean onFailure(IOException e) {
+                addFragment.sendToast("习惯添加失败");
+                return null;
+            }
+        });
     }
 
     public void habitsForSavingSettings() {

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,11 @@ import com.example.clockinfragment.adapter.AddHabitRecyclerViewAdapter;
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.Icon;
 import com.example.clockinfragment.myview.CustomDialog;
+import com.example.eventbus.UserBaseMessageEventBus;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +43,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddFragment extends Fragment implements CustomDialog.OnDialogConfirmedListener, AddHabitRecyclerViewAdapter.OnItemClickListener{
+    private static final String TAG = "TestTT_AddFragment";
+    UserBaseMessageEventBus userBaseMessageEventBus;
     List<Icon> iconList;
     EditText editText_addFragment_HabitName;
     Button button_habitsForSavingSettings;
@@ -98,6 +106,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                              Bundle savedInstanceState) {
 
         initData();
+        EventBus.getDefault().register(this);
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         addFragmentPresenter = new AddFragmentPresenter(this);
         editText_addFragment_HabitName = view.findViewById(R.id.editText_addFragment_HabitName);
@@ -112,7 +121,12 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
         button_habitsForSavingSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFragmentPresenter.habitsForSavingSettings();
+                addFragmentPresenter.createAPunchInTask(userBaseMessageEventBus.getUserId(), "successful",
+                        editText_addFragment_HabitName.getText().toString(), textView_SumCount.getText().toString(),
+                        textView_StartTime.getText().toString(), textView_EndTime.getText().toString());
+                Log.d(TAG, userBaseMessageEventBus.getUserId()+ "successful"+
+                        editText_addFragment_HabitName.getText().toString()+textView_SumCount.getText().toString()+
+                        textView_StartTime.getText().toString()+textView_EndTime.getText().toString());
             }
         });
         editText_EncouragementWords = view.findViewById(R.id.editText_EncouragementWords);
@@ -132,7 +146,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         textView_StartTime = view.findViewById(R.id.textViewStartTime);
-        textView_StartTime.setText(year + "-" + month + "-" + day + "＞");
+        textView_StartTime.setText(year + "-" + month + "-" + day);
         textView_EndTime = view.findViewById(R.id.textViewEndTime);
         textView_SumCount = view.findViewById(R.id.textViewSumCount);
         //对打卡任务开始时期的选择
@@ -142,7 +156,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView_StartTime.setText(year + "-" + month + "-" + dayOfMonth + "＞");
+                        textView_StartTime.setText(year + "-" + month + "-" + dayOfMonth);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -155,7 +169,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView_EndTime.setText(year + "-" + month + "-" + dayOfMonth + "＞");
+                        textView_EndTime.setText(year + "-" + month + "-" + dayOfMonth);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -217,5 +231,19 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void sendToast(String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 }

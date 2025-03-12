@@ -73,7 +73,7 @@ public class NetworkClient {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(e);
-                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求失败onFailure: " + e.getMessage());
                 Log.e(TAG, "请求信息: " + call.request().url());
             }
             @Override

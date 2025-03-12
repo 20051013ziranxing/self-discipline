@@ -82,9 +82,6 @@ public class PomodoroTimerActivity extends AppCompatActivity implements
         state = 3;
         ARouter.getInstance().inject(this);
         Log.d(TAG, "pomodoro_requirements" + pomodoro_requirements);
-        /*pomodoro_requirements = "倒计时,25";*/
-        /*pomodoro_requirements = "正向计时,-1";*/
-        /*pomodoro_requirements = "倒计时,-1";*/
         messagePomodoro = pomodoro_requirements.split(",");
         for (String s : messagePomodoro) {
             Log.d(TAG, s);
@@ -107,8 +104,10 @@ public class PomodoroTimerActivity extends AppCompatActivity implements
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.radioButton_countdown_11) {
                     state = COUNTDOWN;
+                    messagePomodoro[0] = "倒计时";
                 } else if (checkedId == R.id.radioButton_forwardTiming_11) {
                     state = FORWARD_TIMING;
+                    messagePomodoro[0] = "正向计时";
                 }
             }
         });

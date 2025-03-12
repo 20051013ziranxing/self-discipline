@@ -18,11 +18,16 @@ import android.widget.FrameLayout;
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
+import com.example.eventbus.UserBaseMessageEventBus;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.necer.calendar.NCalendar;
 import com.necer.enumeration.DateChangeBehavior;
 import com.necer.listener.OnCalendarChangedListener;
 import com.necer.utils.hutool.ChineseDate;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapter.OnItemClickListener{
+    UserBaseMessageEventBus userBaseMessageEventBus;
     private static final String TAG = "TestTT_ClockInFragment_1";
     RecyclerView recyclerView;
     List<TestBead> testBeads;
@@ -155,5 +161,26 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     public void onItemClick() {
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 }

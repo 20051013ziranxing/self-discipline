@@ -45,6 +45,8 @@ public class ToDoFragmentModule {
         httpUrlBuilder.addQueryParameter("user_id", user_id);
         httpUrlBuilder.addQueryParameter("updated_at", updated_at);
         publicGetNetworkRequestMethod("http://101.200.121.142:9999/get-todo", httpUrlBuilder, callback);
+        /*StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder("\"http://101.200.121.142:9999/get-todo\"")*/
     }
 
     public void markWhetherTheTaskIsCompletedOrNot(String id, Boolean isFinish, final ModelCallback callback) {
@@ -91,7 +93,7 @@ public class ToDoFragmentModule {
 
             @Override
             public void onFailure(IOException e) {
-                Log.e(TAG, "请求失败", e);
+                Log.e(TAG, "请求失败：hhhhh", e);
                 callback.onFailure(e);
             }
         });

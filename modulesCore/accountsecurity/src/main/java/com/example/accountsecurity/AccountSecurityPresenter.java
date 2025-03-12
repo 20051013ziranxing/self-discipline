@@ -7,7 +7,9 @@ import android.util.Log;
 
 import androidx.loader.content.CursorLoader;
 
+import com.example.accountsecurity.bean.ModifyNameAndIcon;
 import com.example.networkrequests.NetworkClient;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +33,9 @@ public class AccountSecurityPresenter {
             public Boolean onSuccess(String response) {
                 Log.d(TAG, response);
                 accountSecurityActivity.sendToast("修改成功");
-
-                /*accountSecurityModule.modifyTheBasicInformationOfALocalUser();*/
+                ModifyNameAndIcon modifyNameAndIcon = new Gson().fromJson(response, ModifyNameAndIcon.class);
+                accountSecurityModule.modifyTheBasicInformationOfALocalUser(modifyNameAndIcon.getUsername(), modifyNameAndIcon.getAvatar_url());
+                accountSecurityActivity.sendEventBus(accountSecurityModule.getBaseMessage());
                 accountSecurityActivity.finish();
                 return null;
             }
@@ -43,9 +46,6 @@ public class AccountSecurityPresenter {
                 return null;
             }
         });
-    }
-    public void saveMessageString(String id, String userName) {
-
     }
 
     //进行初始化

@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import androidx.loader.content.CursorLoader;
 
 import com.example.localdatabase.UserMessageHelper;
+import com.example.localdatabase.bean.UserBaseMessage;
 import com.example.networkrequests.NetworkClient;
 
 import org.json.JSONObject;
@@ -64,6 +65,10 @@ public class AccountSecurityModule {
 
     public void modifyTheBasicInformationOfALocalUser(String newName, String newIcon) {
         userMessageHelper.updateUniqueUserNameAndIcon(newName, newIcon);
+    }
+
+    public UserBaseMessage getBaseMessage() {
+        return userMessageHelper.queryAllUser();
     }
 
     public void publicPutNetworkRequestMethod(String url,RequestBody requestBody, ModelCallback callback) {
