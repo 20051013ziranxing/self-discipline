@@ -96,6 +96,7 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                 if (content.trim().isEmpty()) {
                     Toast.makeText(PublishActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(PublishActivity.this, "上传中", Toast.LENGTH_SHORT);
                     binding.imgPublishSend.setEnabled(false);
                     String userId = "2";
                     if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
@@ -225,8 +226,13 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
 
     @Override
     public void publishSuccess(int id) {
-        binding.imgPublishSend.setEnabled(true);
-        finish();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.imgPublishSend.setEnabled(true);
+                finish();
+            }
+        });
     }
 
     @Override

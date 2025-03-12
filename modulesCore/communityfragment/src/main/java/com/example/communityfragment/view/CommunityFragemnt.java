@@ -75,9 +75,6 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         super.onViewCreated(view, savedInstanceState);
         mPresenter = new CommunityPresenter(this);
 
-//        initPost();
-
-
         EventBus.getDefault().register(this);
         if (userBaseMessageEventBus != null) {
             binding.tvCommunityWelcome.setText(String.format("%s！ %s！", TimeUtils.getTimeNormal(), userBaseMessageEventBus.getUserName()));
@@ -91,12 +88,14 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         binding.rlvCommunity.setLayoutManager(manager);
         binding.rlvCommunity.setAdapter(adapter);
 //        ((DefaultItemAnimator) binding.rlvCommunity.getItemAnimator()).setSupportsChangeAnimations(false);
-        mPresenter.getData();
+
 
         binding.fabPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build("/communityPageView/PublishActivity").navigation();
+                ARouter.getInstance()
+                        .build("/communityPageView/PublishActivity")
+                        .navigation();
             }
         });
 
@@ -160,6 +159,12 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.getData();
+        binding.swipeCommunityRefresh.isRefreshing();
+    }
 
     private String getUserId() {
         userBaseMessageEventBus = EventBus.getDefault().getStickyEvent(UserBaseMessageEventBus.class);

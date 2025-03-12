@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/publish_main"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
-    android:background="#f4f5f7">
+    android:background="#f4f5f7"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/top_bar"
@@ -48,8 +48,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="15dp"
         app:cardCornerRadius="10dp"
@@ -59,8 +59,10 @@
 
         <ImageView
             android:id="@+id/img_publish_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
     </androidx.cardview.widget.CardView>
 
@@ -100,12 +102,14 @@
                 android:gravity="top"
                 android:hint="想说点什么呢"
                 android:inputType="textMultiLine"
+                android:maxLength="1000"
                 android:paddingLeft="30dp"
                 android:paddingTop="10dp"
                 android:paddingRight="30dp"
                 android:paddingBottom="25dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray3"
                 android:textSize="18sp"
-                android:maxLength="1000"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
@@ -138,13 +142,13 @@
                         android:id="@+id/img_publish_delete"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginTop="5dp"
                         android:layout_gravity="top|end"
-                        android:scaleType="centerCrop"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_delete"
-                    android:contentDescription="删除图片" />
+                        android:contentDescription="删除图片"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_delete" />
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
@@ -156,10 +160,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
         android:clickable="true"
         android:focusable="true"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
