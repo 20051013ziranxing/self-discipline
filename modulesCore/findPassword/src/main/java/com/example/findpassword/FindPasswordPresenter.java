@@ -1,5 +1,6 @@
 package com.example.findpassword;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.networkrequests.NetworkClient;
@@ -33,6 +34,7 @@ public class FindPasswordPresenter {
         findPasswordModule.VerificationOfTheVerificationCode(emailNumber, code, new FindPasswordModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
+                Log.d("TestTT_", "验证码验证成功");
                 findPasswordModule.ResetOfPassword(password, new FindPasswordModule.ModelCallback() {
                     @Override
                     public Boolean onSuccess(String response) {
@@ -43,6 +45,8 @@ public class FindPasswordPresenter {
 
                     @Override
                     public Boolean onFailure(IOException e) {
+                        Log.d("TestTT_", "验证码验证成功，但");
+                        Log.d("TestTT_", emailNumber + code + password);
                         findPasswordActivity.SendToast("密码重置错误");
                         return null;
                     }

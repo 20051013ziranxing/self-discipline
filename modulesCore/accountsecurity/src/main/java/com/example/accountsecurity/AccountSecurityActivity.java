@@ -97,13 +97,14 @@ public class AccountSecurityActivity extends AppCompatActivity {
         //此处的邮箱地址应该根据数据进行进行改变
         imageView_userIcon = findViewById(R.id.imageView_userIcon);
         Glide.with(this)
-                /*.load(userBaseMessageEventBus.getUserPictureURL())*/
-                .load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
+                .load(userBaseMessageEventBus.getUserPictureURL())
+                //.load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
                 .into(imageView_userIcon);
         accountSecurityPresenter = new AccountSecurityPresenter(this, "2858678706");
         constraintLayout_change_Icon = findViewById(R.id.change_Icon);
         textView = findViewById(R.id.textView_save);
         editText_textView_userName = findViewById(R.id.textView_userName);
+        editText_textView_userName.setText(userBaseMessageEventBus.getUserName());
         cancel_your_account = findViewById(R.id.cancel_your_account);
         cancel_your_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +126,9 @@ public class AccountSecurityActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                         ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            10);
+                            100);
                 } else {
-                    openAlbum();
+                    take();
                 }
             }
         });
@@ -135,7 +136,8 @@ public class AccountSecurityActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, editText_textView_userName.getText().toString());
-                accountSecurityPresenter.saveMessage(userBaseMessageEventBus.getUserId(),
+                Log.d(TAG, String.valueOf(UriSave.getInstance().getUriImage()));
+                accountSecurityPresenter.saveMessageNameAndIcon(userBaseMessageEventBus.getUserId(),
                         editText_textView_userName.getText().toString(), UriSave.getInstance().getUriImage());
             }
         });
@@ -222,6 +224,8 @@ public class AccountSecurityActivity extends AppCompatActivity {
         }
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        UriSave.getInstance().setUriImage(outputImage);
+        Log.d(TAG, "take：" + outputImage.toString());
         startActivityForResult(intent, TAKE_PHOTO);
     }
 
@@ -249,17 +253,16 @@ public class AccountSecurityActivity extends AppCompatActivity {
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             imagepath = uri.getPath();
         }
+        UriSave.getInstance().setUriImage(new File(imagepath));
+        Log.d(TAG, "take：" + UriSave.getInstance().getUriImage().toString());
         displayImage(imagepath);
-        UriSave.getInstance().setUriImage(imageUri);
-        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     private void handleImageBeforeKitKat(Intent data) {
         Uri uri = data.getData();
+        Log.d(TAG, "take：" + uri.toString());
         String imagepath = getImagePath(uri, null);
         displayImage(imagepath);
-        UriSave.getInstance().setUriImage(imageUri);
-        Log.d(TAG, "获取到的：" + imageUri.getPath().toString());
     }
 
     @SuppressLint("Range")
@@ -296,5 +299,21 @@ public class AccountSecurityActivity extends AppCompatActivity {
                 Toast.makeText(AccountSecurityActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

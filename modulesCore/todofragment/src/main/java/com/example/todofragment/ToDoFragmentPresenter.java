@@ -38,13 +38,9 @@ public class ToDoFragmentPresenter {
                         GetToDoThings getToDoThings = new Gson().fromJson(response, GetToDoThings.class);
                         List<GetToDoThings.GetToDothingMessage> toDoThings = getToDoThings.getData();
                         List<GetToDoThings.GetToDothingMessage> toDothingMessages = filteringByTime(toDoThings, updated_at);
-                        /*toDoFragment.toDoThings = getToDoThings.getData();*/
-
                         if (toDothingMessages != null) {
                             Collections.sort(toDothingMessages, new ToDoThingComparator());
                         }
-                        /*RecyclerViewToDoAdapter recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoFragment.toDoThings);
-                        toDoFragment.recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);*/
                         toDoFragment.remindersChange(toDothingMessages);
                     }
                 });

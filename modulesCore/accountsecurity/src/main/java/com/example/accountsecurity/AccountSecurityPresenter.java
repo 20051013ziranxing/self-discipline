@@ -9,6 +9,7 @@ import androidx.loader.content.CursorLoader;
 
 import com.example.networkrequests.NetworkClient;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AccountSecurityPresenter {
@@ -23,12 +24,15 @@ public class AccountSecurityPresenter {
         this.accountSecurityModule = new AccountSecurityModule(accountSecurityActivity, networkClient);
     }
 
-    public void saveMessage(String id, String username, Uri imageUri) {
-        accountSecurityModule.modifyTheUserSAvatar(id, username, getRealPathFromURI(imageUri), new AccountSecurityModule.ModelCallback() {
+    public void saveMessageNameAndIcon(String id, String username, File imageUri) {
+        /*Log.d(TAG, "id:" + id + username + imageUri.toString());*/
+        accountSecurityModule.modifyTheUserSAvatar(id, username, imageUri, new AccountSecurityModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, response);
                 accountSecurityActivity.sendToast("修改成功");
+
+                /*accountSecurityModule.modifyTheBasicInformationOfALocalUser();*/
                 accountSecurityActivity.finish();
                 return null;
             }
@@ -40,6 +44,10 @@ public class AccountSecurityPresenter {
             }
         });
     }
+    public void saveMessageString(String id, String userName) {
+
+    }
+
     //进行初始化
     public void initData() {
         /*//根据邮箱地址获取图片并将其设置到图片的位置
@@ -58,12 +66,14 @@ public class AccountSecurityPresenter {
         accountSecurityModule.signOut();
     }
 
-    private String getRealPathFromURI(Uri contentUri) {
+    //获取绝对路径
+    /*private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader = new CursorLoader(accountSecurityActivity, contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
+        Log.d(TAG, "id:" + contentUri.toString());
         return cursor.getString(column_index);
-    }
+    }*/
 }

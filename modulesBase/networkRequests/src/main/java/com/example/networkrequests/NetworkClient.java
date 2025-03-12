@@ -62,8 +62,8 @@ public class NetworkClient {
 
     public void get(String url, HttpUrl.Builder httpUrlBuilder, final NetworkCallback callback) {
         /*HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(url).newBuilder();
-        httpUrlBuilder.addQueryParameter("user_id", "2");
-        httpUrlBuilder.addQueryParameter("updated_at", "2025-05-20");*/
+        httpUrlBuilder.addQueryParameter("user_id", "8");
+        httpUrlBuilder.addQueryParameter("updated_at", "2025-03-12");*/
         String finalUrl = httpUrlBuilder.build().toString();
         Request request = new Request.Builder()
                 .url(finalUrl)

@@ -33,30 +33,16 @@ public class AccountSecurityModule {
     public void signOut() {
         userMessageHelper.updateUniqueUserToken(null);
     }
-    public void modifyTheUserSAvatar(String id, String username, String imageUri, final ModelCallback callback) {
-        File file = new File(imageUri);
+    public void modifyTheUserSAvatar(String id, String username, File file, final ModelCallback callback) {
         String url = "http://101.200.121.142:9999/profile";
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("id", id);
         builder.addFormDataPart("username", username);
-        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
+        if (file != null) {
+            builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
+        }
         RequestBody requestBody = builder.build();
         publicPutNetworkRequestMethod(url, requestBody, callback);
-
-        /*String url = "http://101.200.121.142:9999/profile";
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 创建请求体
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("json", jsonObject.toString())
-                .addFormDataPart("file", file.getName(), RequestBody.create(file, MediaType.parse("image/jpeg"))) // 上传文件
-                .build();*/
     }
     //将调用接口提出来
     public void PublicNetworkRequestMethod(String url,String Json, ModelCallback callback) {
@@ -74,6 +60,10 @@ public class AccountSecurityModule {
                 callback.onFailure(e);
             }
         });
+    }
+
+    public void modifyTheBasicInformationOfALocalUser(String newName, String newIcon) {
+        userMessageHelper.updateUniqueUserNameAndIcon(newName, newIcon);
     }
 
     public void publicPutNetworkRequestMethod(String url,RequestBody requestBody, ModelCallback callback) {

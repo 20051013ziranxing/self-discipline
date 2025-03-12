@@ -104,7 +104,13 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
         toDoFragmentPresenter = new ToDoFragmentPresenter(this);
-        EventBus.getDefault().register(this);
+        /*Log.d(TAG, "注册过？：" + EventBus.getDefault().isRegistered(this));
+        EventBus.getDefault().register(this);*/
+        Log.d(TAG, "注册过？：" + EventBus.getDefault().isRegistered(this));
+        if (!EventBus.getDefault().isRegistered(this)) {
+            Log.d(TAG, "ToDoFragment执行onStart方法，并进行了注册");
+            EventBus.getDefault().register(this);
+        }
         toDoThings = new ArrayList<>();
         textView_data = view.findViewById(R.id.data_time);
         Calendar calendar = Calendar.getInstance();
@@ -157,7 +163,6 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
         });
         recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
         initData();
-
 
         toolbar = view.findViewById(R.id.toolbar);
         floatingActionButton_backDay = view.findViewById(R.id.floatingButton_backNowDay);
@@ -224,8 +229,6 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
 
     public void remindersChange(List<GetToDoThings.GetToDothingMessage> toDoThings) {
         Log.d(TAG, "我应该开始执行更新了");
-       /* recyclerViewToDoAdapter.setToDoThings(toDoThings);
-        recyclerViewToDoAdapter.notifyDataSetChanged();*/
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -234,5 +237,33 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
                 recyclerViewToDoAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "注册过？hh：" + EventBus.getDefault().isRegistered(this));
+        if (!EventBus.getDefault().isRegistered(this)) {
+            Log.d(TAG, "ToDoFragment执行onStart方法，并进行了注册hh");
+            EventBus.getDefault().register(this);
+        }
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            Log.d(TAG, "ToDoFragment执行onStop方法，并进行了取消注册hh");
+            EventBus.getDefault().unregister(this);
+        }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            Log.d(TAG, "ToDoFragment执行onStop方法，并进行了取消注册");
+            EventBus.getDefault().unregister(this);
+        }
     }
 }
