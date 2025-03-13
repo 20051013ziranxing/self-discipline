@@ -1,5 +1,7 @@
 package com.example.communityfragment.presenter;
 
+import android.util.Log;
+
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.view.CommunityFragemnt;
 import com.example.communityfragment.contract.ICommunityContract;
@@ -9,17 +11,17 @@ import java.util.List;
 
 public class CommunityPresenter implements ICommunityContract.Presenter {
 
-    private CommunityFragemnt mView;
-    private CommunityModel mModel;
+    private ICommunityContract.View mView;
+    private ICommunityContract.Model mModel;
 
-    public CommunityPresenter(CommunityFragemnt view) {
+    public CommunityPresenter(ICommunityContract.View view) {
         mView = view;
         mModel = new CommunityModel(this);
     }
 
     @Override
-    public void getData() {
-        mModel.getData();
+    public void getData(String userId,int type) {
+        mModel.getData(userId,type);
     }
 
     @Override
@@ -36,7 +38,12 @@ public class CommunityPresenter implements ICommunityContract.Presenter {
         mView.onDataReceived(postList);
     }
 
-    public void deletePost(int postId, String userId) {
+    @Override
+    public void deletePostSuccess(int  postId) {
+        mView.deletePostSuccess(postId);
+    }
+
+    public void deletePost(int postId) {
         mModel.deletePost(postId);
     }
 

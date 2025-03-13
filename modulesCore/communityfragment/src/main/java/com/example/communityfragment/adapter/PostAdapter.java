@@ -1,6 +1,9 @@
 package com.example.communityfragment.adapter;
 
-import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -17,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.communityfragment.R;
 import com.example.communityfragment.bean.Post;
 
@@ -28,6 +31,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
     private List<Post> mPostList = new ArrayList<>();
+    private int type;
+
+    public PostAdapter(int type) {
+        this.type = type;
+    }
 
     @NonNull
     @Override
@@ -105,7 +113,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         });
 
 
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,25 +145,80 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         };
 
         holder.llLike.setOnClickListener(listener);
-        holder.postMore.setOnClickListener(new View.OnClickListener() {
+
+        if (type == 1) {
+            holder.postMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.item_copy) {
+                            int pos = holder.getAdapterPosition();
+                            if (pos == RecyclerView.NO_POSITION) {
+                                return false;
+                            }
+
+                            Post currentPost = mPostList.get(pos);
+                            Toast.makeText(v.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                            ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData content = ClipData.newPlainText("content", currentPost.getContent());
+                            clipboard.setPrimaryClip(content);
+                            return true;
+                        }
+                        return false;
+                    });
+                    popupMenu.show();
+                }
+            });
+        }else if (type == 2) {
+            holder.postMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_2, popupMenu.getMenu());
+
+                    int pos = holder.getAdapterPosition();
+                    Post currentPost = mPostList.get(pos);
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.item_copy) {
+                            Toast.makeText(v.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                            ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData content = ClipData.newPlainText("content", currentPost.getContent());
+                            clipboard.setPrimaryClip(content);
+                            return true;
+                        } else if (item.getItemId() == R.id.item_delete) {
+                            if (mActionListener != null) {
+                                mActionListener.onDeleteClick(currentPost.getId());
+                            }
+                            mPostList.remove(pos);
+                        }
+                        return false;
+                    });
+                    popupMenu.show();
+                }
+            });
+        }
+
+
+        holder.llShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                int currentPosition = holder.getAdapterPosition();
+                if (currentPosition == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                Post currentPost = mPostList.get(currentPosition);
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, currentPost.getContent());
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, "title");
+                if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                    v.getContext().startActivity(shareIntent);
+                }
 
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.item_delete) {
-                        int pos = holder.getAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION && mActionListener != null) {
-//                            mActionListener.onDeleteClick(mPostList.get(pos).getId());
-                            mPostList.remove(pos);
-                            notifyDataSetChanged();
-                        }
-                        return true;
-                    }
-                    return false;
-                });
-                popupMenu.show();
             }
         });
 
@@ -203,7 +265,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         this.mPostList.addAll(newPosts);
         notifyDataSetChanged();
     }
-
 
     public interface OnPostActionListener {
         void onLikeClick(int postId, boolean isLiked);

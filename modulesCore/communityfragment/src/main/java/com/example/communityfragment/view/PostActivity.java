@@ -1,8 +1,12 @@
 package com.example.communityfragment.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -10,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,20 +26,20 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.communityfragment.R;
-import com.example.communityfragment.utils.TimeUtils;
 import com.example.communityfragment.adapter.CommentAdapter;
 import com.example.communityfragment.bean.Comment;
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.IPostContract;
 import com.example.communityfragment.databinding.ActivityPostBinding;
 import com.example.communityfragment.presenter.PostPresenter;
+import com.example.communityfragment.utils.TimeUtils;
 import com.example.eventbus.UserBaseMessageEventBus;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Route(path = "/communityPageView/PostActivity")
@@ -73,6 +78,7 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
         post = (Post) getIntent().getSerializableExtra("post");
         boolean focusCommentInput = getIntent().getBooleanExtra("focusCommentInput", false);
         if (focusCommentInput) {
+            Log.d(TAG, "onCreate: " + focusCommentInput);
             binding.etPostText.requestFocus();
             showKeyboard(binding.etPostText);
         }
@@ -125,6 +131,32 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
             }
         });
 
+        binding.imgMypostMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_share, popupMenu.getMenu());
+
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.item_post_share) {
+                            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+                            sendIntent.setType("text/plain");
+                            Intent shareIntent = Intent.createChooser(sendIntent, "title");
+                            if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                                v.getContext().startActivity(shareIntent);
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
+
     }
 
     // 获取评论
@@ -141,9 +173,11 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
                     binding.rvMypostReply.setVisibility(View.VISIBLE);
 
                     binding.rvMypostReply.setLayoutManager(new LinearLayoutManager(PostActivity.this));
+                    Collections.reverse(comments);
                     adapter = new CommentAdapter(PostActivity.this, comments);
                     binding.rvMypostReply.setAdapter(adapter);
 
+                    post.setCommentCount(String.valueOf(comments.size()));
                     binding.tvMypostReply.setText(String.format("共 %s 条回复", post.getCommentCount()));
                 }
             }
@@ -174,6 +208,7 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
 
                 binding.etPostText.setText("");
                 mPresenter.getComments(post.getId());
+                binding.tvMypostReply.setText(String.format("共 %s 条回复", post.getCommentCount()));
             }
         });
     }
@@ -184,20 +219,35 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
     }
 
     private void showKeyboard(EditText editText) {
-        editText.post(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-                }
-            }
-        });
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

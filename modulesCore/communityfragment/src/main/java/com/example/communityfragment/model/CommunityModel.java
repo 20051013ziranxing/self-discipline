@@ -40,6 +40,7 @@ public class CommunityModel implements ICommunityContract.Model {
     private final static String LIKE_URL = BASE_URL + "/community/like";
     private final static String UNLIKE_URL = BASE_URL + "/community/unlike";
     private final static String CHECKLIKESTATUS_URL = BASE_URL + "/check-like-status";
+    private final static String DELETE_URL = BASE_URL + "/community/del-post";
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -48,11 +49,20 @@ public class CommunityModel implements ICommunityContract.Model {
     }
 
     @Override
-    public void getData() {
-        Request request = new Request.Builder()
-                .url(ALLLIST_URL)
-                .get()
-                .build();
+    public void getData(String userId, int type) {
+        Request request = null;
+        if (type == 1) {
+            request = new Request.Builder()
+                    .url(ALLLIST_URL)
+                    .get()
+                    .build();
+        } else if (type == 2) {
+            String MYLIST_URL = LIST_URL + "?user_id=" + userId;
+            request = new Request.Builder()
+                    .url(MYLIST_URL)
+                    .get()
+                    .build();
+        }
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -147,31 +157,34 @@ public class CommunityModel implements ICommunityContract.Model {
         });
     }
 
+    @Override
     public void deletePost(int postId) {
-
-//        String userId = userBaseMessageEventBus.getUserId();
+        String MYDELETE_URL = DELETE_URL + "?id=" +postId;
 //        JSONObject object = new JSONObject();
-//        object.put("user_id", userId);
-//        object.put("post_id",  String.valueOf(postId));
+//        try {
+//            object.put("id", String.valueOf(postId));
+//        } catch (JSONException e) {
+//            throw new RuntimeException(e);
+//        }
 //        String json = object.toString();
 //        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
-//        Request request = new Request.Builder()
-//                .url(POST_URL)
-//                .delete(requestBody)
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.d(TAG, "onFailure: " + e.getMessage());
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (response.isSuccessful()) {
-//                }
-//            }
-//        });
+        Request request = new Request.Builder()
+                .url(MYDELETE_URL)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    mPresenter.deletePostSuccess(postId);
+                }
+            }
+        });
     }
 
 
@@ -204,7 +217,7 @@ public class CommunityModel implements ICommunityContract.Model {
                     try {
                         JSONObject jsonObject = new JSONObject(responseData);
                         if (jsonObject.get("message").equals("Post liked successfully")) {
-                            Log.d(TAG, "点赞成功:" );
+                            Log.d(TAG, "点赞成功:");
                         }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);

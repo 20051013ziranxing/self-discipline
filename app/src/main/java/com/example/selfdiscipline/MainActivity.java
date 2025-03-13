@@ -1,10 +1,15 @@
 package com.example.selfdiscipline;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.window.SplashScreen;
 
 import androidx.activity.EdgeToEdge;
