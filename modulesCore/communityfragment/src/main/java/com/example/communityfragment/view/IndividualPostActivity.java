@@ -75,7 +75,7 @@ public class IndividualPostActivity extends AppCompatActivity implements ICommun
         EventBus.getDefault().register(this);
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
-        adapter = new PostAdapter(2);
+        adapter = new PostAdapter(getUserId());
         adapter.setHasStableIds(true);
         binding.rlvIndi.setLayoutManager(manager);
         binding.rlvIndi.setAdapter(adapter);

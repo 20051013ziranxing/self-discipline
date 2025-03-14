@@ -76,7 +76,7 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         }
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        adapter = new PostAdapter(TYPE);
+        adapter = new PostAdapter(getUserId());
         adapter.setHasStableIds(true);
         binding.rlvCommunity.setLayoutManager(manager);
         binding.rlvCommunity.setAdapter(adapter);
@@ -209,6 +209,19 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
 
     @Override
     public void deletePostSuccess(int postId) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Post post : allPosts) {
+                    if (post.getId() == postId) {
+                        allPosts.remove(post);
+                        break;
+                    }
+                }
+                adapter.setPostList(allPosts);
+            }
+        });
+
     }
 
 

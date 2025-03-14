@@ -134,26 +134,53 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
         binding.imgMypostMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_share, popupMenu.getMenu());
+                if (!getUserId().equals(post.getUserid())) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_share, popupMenu.getMenu());
 
-                popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.item_post_share) {
-                            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
-                            sendIntent.setType("text/plain");
-                            Intent shareIntent = Intent.createChooser(sendIntent, "title");
-                            if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
-                                v.getContext().startActivity(shareIntent);
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.item_post_share) {
+                                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+                                sendIntent.setType("text/plain");
+                                Intent shareIntent = Intent.createChooser(sendIntent, "title");
+                                if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                                    v.getContext().startActivity(shareIntent);
+                                }
+                                return true;
                             }
-                            return true;
+                            return false;
                         }
-                        return false;
-                    }
-                });
+                    });
+                } else {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_share2, popupMenu.getMenu());
+
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.item_post_share) {
+                                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+                                sendIntent.setType("text/plain");
+                                Intent shareIntent = Intent.createChooser(sendIntent, "title");
+                                if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                                    v.getContext().startActivity(shareIntent);
+                                }
+                                return true;
+                            } else if (item.getItemId() == R.id.item_post_delete) {
+                                mPresenter.deletePost(post.getId());
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+
             }
         });
 
@@ -215,7 +242,22 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
 
     @Override
     public void onPublishCommentFailure() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(PostActivity.this, "评论失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    @Override
+    public void onDeleteSuccess(int postId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        });
     }
 
     private void showKeyboard(EditText editText) {
@@ -239,7 +281,7 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
             if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
@@ -249,5 +291,12 @@ public class PostActivity extends AppCompatActivity implements IPostContract.Vie
             }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private String getUserId() {
+        userBaseMessageEventBus = EventBus.getDefault().getStickyEvent(UserBaseMessageEventBus.class);
+        if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
+            return userBaseMessageEventBus.getUserId();
+        else return "";
     }
 }

@@ -18,9 +18,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,7 +26,6 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -37,14 +33,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
-import com.example.communityfragment.utils.FileUtils;
 import com.example.communityfragment.R;
 import com.example.communityfragment.contract.IPublishContract;
 import com.example.communityfragment.databinding.ActivityPublishBinding;
 import com.example.communityfragment.presenter.PublishPresenter;
-import com.example.communityfragment.utils.KeyboardUtils;
+import com.example.communityfragment.utils.FileUtils;
 import com.example.eventbus.UserBaseMessageEventBus;
-import com.google.android.material.card.MaterialCardView;
 import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;

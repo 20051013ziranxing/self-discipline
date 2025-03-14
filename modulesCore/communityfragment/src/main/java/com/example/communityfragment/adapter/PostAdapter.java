@@ -4,6 +4,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +36,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
     private List<Post> mPostList = new ArrayList<>();
+    private String userId;
     private int type;
 
-    public PostAdapter(int type) {
-        this.type = type;
+    public PostAdapter(String userId) {
+        this.userId = userId;
     }
 
     @NonNull
@@ -46,9 +52,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        int pos = holder.getAdapterPosition();
+        Post currentPost = mPostList.get(pos);
+
 //        holder.userAvatar.setImageResource(Integer.parseInt(mPostList.get(position).getUserAvatar()));
         holder.userName.setText(mPostList.get(position).getUserid());
-        holder.postContent.setText(mPostList.get(position).getContent());
         holder.postLikeCount.setText(mPostList.get(position).getLikeConunt());
         holder.postComment.setText(mPostList.get(position).getCommentCount());
         holder.userName.setText(mPostList.get(position).getUserName());
@@ -57,6 +65,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                 .placeholder(R.drawable.ic_default)
                 .error(R.drawable.ic_default)
                 .into(holder.userAvatar);
+
+        String content = mPostList.get(position).getContent();
+        if (content.length() >= 100) {
+            SpannableString spannableString = new SpannableString("...查看更多");
+            spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemView.getContext(), R.color.grenn1)), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(content.substring(0, 100));
+            builder.append(spannableString);
+
+            holder.postContent.setText(builder);
+        } else {
+            holder.postContent.setText(content);
+        }
 
         if (mPostList.get(position).getImageUrl() != null && !mPostList.get(position).getImageUrl().equals("")) {
             Glide.with(holder.itemView.getContext())
@@ -84,11 +105,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.cvPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-                Post currentPost = mPostList.get(currentPosition);
                 ARouter.getInstance().build("/communityPageView/PostActivity")
                         .withSerializable("post", currentPost)
                         .withBoolean("focusCommentInput", false)
@@ -99,12 +115,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.llComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-
-                Post currentPost = mPostList.get(currentPosition);
                 ARouter.getInstance().build("/communityPageView/PostActivity")
                         .withSerializable("post", currentPost)
                         .withBoolean("focusCommentInput", true)
@@ -116,12 +126,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-
-                Post currentPost = mPostList.get(currentPosition);
                 if (mActionListener != null) {
                     mActionListener.onLikeClick(currentPost.getId(), currentPost.getIsLiked());
                 }
@@ -146,7 +150,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
         holder.llLike.setOnClickListener(listener);
 
-        if (type == 1) {
+
+        if (!userId.equals(currentPost.getUserid())) {
             holder.postMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,12 +160,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
                     popupMenu.setOnMenuItemClickListener(item -> {
                         if (item.getItemId() == R.id.item_copy) {
-                            int pos = holder.getAdapterPosition();
-                            if (pos == RecyclerView.NO_POSITION) {
-                                return false;
-                            }
-
-                            Post currentPost = mPostList.get(pos);
                             Toast.makeText(v.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
                             ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                             ClipData content = ClipData.newPlainText("content", currentPost.getContent());
@@ -172,15 +171,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                     popupMenu.show();
                 }
             });
-        }else if (type == 2) {
+        } else {
             holder.postMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                     popupMenu.getMenuInflater().inflate(R.menu.popup_menu_2, popupMenu.getMenu());
-
-                    int pos = holder.getAdapterPosition();
-                    Post currentPost = mPostList.get(pos);
 
                     popupMenu.setOnMenuItemClickListener(item -> {
                         if (item.getItemId() == R.id.item_copy) {
@@ -206,11 +202,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.llShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-                Post currentPost = mPostList.get(currentPosition);
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, currentPost.getContent());
                 sendIntent.setType("text/plain");

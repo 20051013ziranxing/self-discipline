@@ -74,7 +74,6 @@
                 android:gravity="start"
                 android:letterSpacing="0.01"
                 android:lineSpacingMultiplier="1.2"
-                android:maxLines="15"
                 android:text="帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容帖子正文内容"
                 android:textColor="@color/black"
                 android:textSize="17sp"

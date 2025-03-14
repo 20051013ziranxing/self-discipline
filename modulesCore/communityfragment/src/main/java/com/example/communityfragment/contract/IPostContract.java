@@ -11,6 +11,8 @@ public interface IPostContract {
 
         void onPublishCommentSuccess();
         void onPublishCommentFailure();
+
+        void onDeleteSuccess(int postId);
     }
 
     interface Presenter {
@@ -21,11 +23,17 @@ public interface IPostContract {
 
         void onPublishCommentSuccess();
         void onPublishCommentFailure();
+
+        void deletePost(int id);
+
+        void deletePostSuccess(int postId);
     }
 
     interface Model {
         void getComments(int postId);
         void comment(int postId, String userId, String comment);
+
+        void deletePost(int id);
     }
 
 

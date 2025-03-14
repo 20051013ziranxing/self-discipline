@@ -160,14 +160,6 @@ public class CommunityModel implements ICommunityContract.Model {
     @Override
     public void deletePost(int postId) {
         String MYDELETE_URL = DELETE_URL + "?id=" +postId;
-//        JSONObject object = new JSONObject();
-//        try {
-//            object.put("id", String.valueOf(postId));
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        }
-//        String json = object.toString();
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
         Request request = new Request.Builder()
                 .url(MYDELETE_URL)
                 .delete()
