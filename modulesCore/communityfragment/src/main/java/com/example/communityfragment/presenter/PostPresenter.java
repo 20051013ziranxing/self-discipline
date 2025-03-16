@@ -51,4 +51,14 @@ public class PostPresenter implements IPostContract.Presenter {
         mView.onPublishCommentFailure();
     }
 
+    @Override
+    public void deletePost(int id) {
+        mModel.deletePost(id);
+    }
+
+    @Override
+    public void deletePostSuccess(int postId) {
+        mView.onDeleteSuccess(postId);
+    }
+
 }

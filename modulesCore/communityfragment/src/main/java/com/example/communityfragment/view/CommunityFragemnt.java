@@ -1,23 +1,17 @@
 package com.example.communityfragment.view;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.SimpleItemAnimator;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.communityfragment.NoAlphaItemAnimator;
 import com.example.communityfragment.adapter.PostAdapter;
 import com.example.communityfragment.bean.Post;
 import com.example.communityfragment.contract.ICommunityContract;
@@ -36,21 +30,20 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Timer;
 
 @Route(path = "/communityPageView/CommunityFragemnt")
 public class CommunityFragemnt extends Fragment implements ICommunityContract.View {
     private static final String TAG = "CommunityFragemntTAG";
+    private static final int TYPE = 1;
     private FragmentCommunityBinding binding;
     private PostAdapter adapter;
     private CommunityPresenter mPresenter;
     private UserBaseMessageEventBus userBaseMessageEventBus;
 
     private List<Post> allPosts = new ArrayList<>();      // 存储全部帖子
-    private int currentPage = 1;                          // 当前页码，从1开始
+    private int currentPage = 1;                          // 当前页码
     private final int pageSize = 10;                      // 每页显示10个帖子
 
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
@@ -78,17 +71,26 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
         EventBus.getDefault().register(this);
         if (userBaseMessageEventBus != null) {
             binding.tvCommunityWelcome.setText(String.format("%s！ %s！", TimeUtils.getTimeNormal(), userBaseMessageEventBus.getUserName()));
-        }else {
+        } else {
             binding.tvCommunityWelcome.setText(String.format("%s！", TimeUtils.getTimeNormal()));
         }
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        adapter = new PostAdapter();
+        adapter = new PostAdapter(getUserId());
         adapter.setHasStableIds(true);
         binding.rlvCommunity.setLayoutManager(manager);
         binding.rlvCommunity.setAdapter(adapter);
 //        ((DefaultItemAnimator) binding.rlvCommunity.getItemAnimator()).setSupportsChangeAnimations(false);
 
+
+        binding.fabIndi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance()
+                        .build("/communityPageView/IndividualPostActivity")
+                        .navigation();
+            }
+        });
 
         binding.fabPublish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +113,7 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
 
             @Override
             public void onDeleteClick(int postId) {
-                mPresenter.deletePost(postId, getUserId());
+                mPresenter.deletePost(postId);
             }
         });
 
@@ -126,7 +128,7 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
                 currentPage = 1;
                 binding.swipeCommunityRefresh.setNoMoreData(false);
                 binding.swipeCommunityRefresh.finishRefresh(true);
-                mPresenter.getData();
+                mPresenter.getData(null, TYPE);
             }
         });
 
@@ -162,8 +164,7 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.getData();
-        binding.swipeCommunityRefresh.isRefreshing();
+        mPresenter.getData(null, TYPE);
     }
 
     private String getUserId() {
@@ -204,6 +205,23 @@ public class CommunityFragemnt extends Fragment implements ICommunityContract.Vi
                 }
             });
         }
+    }
+
+    @Override
+    public void deletePostSuccess(int postId) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Post post : allPosts) {
+                    if (post.getId() == postId) {
+                        allPosts.remove(post);
+                        break;
+                    }
+                }
+                adapter.setPostList(allPosts);
+            }
+        });
+
     }
 
 

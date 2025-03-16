@@ -1,6 +1,14 @@
 package com.example.communityfragment.adapter;
 
-import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -17,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.communityfragment.R;
 import com.example.communityfragment.bean.Post;
 
@@ -28,6 +36,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
     private List<Post> mPostList = new ArrayList<>();
+    private String userId;
+    private int type;
+
+    public PostAdapter(String userId) {
+        this.userId = userId;
+    }
 
     @NonNull
     @Override
@@ -38,9 +52,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        int pos = holder.getAdapterPosition();
+        Post currentPost = mPostList.get(pos);
+
 //        holder.userAvatar.setImageResource(Integer.parseInt(mPostList.get(position).getUserAvatar()));
         holder.userName.setText(mPostList.get(position).getUserid());
-        holder.postContent.setText(mPostList.get(position).getContent());
         holder.postLikeCount.setText(mPostList.get(position).getLikeConunt());
         holder.postComment.setText(mPostList.get(position).getCommentCount());
         holder.userName.setText(mPostList.get(position).getUserName());
@@ -49,6 +65,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
                 .placeholder(R.drawable.ic_default)
                 .error(R.drawable.ic_default)
                 .into(holder.userAvatar);
+
+        String content = mPostList.get(position).getContent();
+        if (content.length() >= 100) {
+            SpannableString spannableString = new SpannableString("...查看更多");
+            spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemView.getContext(), R.color.grenn1)), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(content.substring(0, 100));
+            builder.append(spannableString);
+
+            holder.postContent.setText(builder);
+        } else {
+            holder.postContent.setText(content);
+        }
 
         if (mPostList.get(position).getImageUrl() != null && !mPostList.get(position).getImageUrl().equals("")) {
             Glide.with(holder.itemView.getContext())
@@ -76,11 +105,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.cvPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-                Post currentPost = mPostList.get(currentPosition);
                 ARouter.getInstance().build("/communityPageView/PostActivity")
                         .withSerializable("post", currentPost)
                         .withBoolean("focusCommentInput", false)
@@ -91,12 +115,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         holder.llComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-
-                Post currentPost = mPostList.get(currentPosition);
                 ARouter.getInstance().build("/communityPageView/PostActivity")
                         .withSerializable("post", currentPost)
                         .withBoolean("focusCommentInput", true)
@@ -105,16 +123,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         });
 
 
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();
-                if (currentPosition == RecyclerView.NO_POSITION) {
-                    return;
-                }
-
-                Post currentPost = mPostList.get(currentPosition);
                 if (mActionListener != null) {
                     mActionListener.onLikeClick(currentPost.getId(), currentPost.getIsLiked());
                 }
@@ -138,25 +149,67 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         };
 
         holder.llLike.setOnClickListener(listener);
-        holder.postMore.setOnClickListener(new View.OnClickListener() {
+
+
+        if (!userId.equals(currentPost.getUserid())) {
+            holder.postMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.item_copy) {
+                            Toast.makeText(v.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                            ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData content = ClipData.newPlainText("content", currentPost.getContent());
+                            clipboard.setPrimaryClip(content);
+                            return true;
+                        }
+                        return false;
+                    });
+                    popupMenu.show();
+                }
+            });
+        } else {
+            holder.postMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_2, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.item_copy) {
+                            Toast.makeText(v.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                            ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData content = ClipData.newPlainText("content", currentPost.getContent());
+                            clipboard.setPrimaryClip(content);
+                            return true;
+                        } else if (item.getItemId() == R.id.item_delete) {
+                            if (mActionListener != null) {
+                                mActionListener.onDeleteClick(currentPost.getId());
+                            }
+                            mPostList.remove(pos);
+                        }
+                        return false;
+                    });
+                    popupMenu.show();
+                }
+            });
+        }
+
+
+        holder.llShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, currentPost.getContent());
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, "title");
+                if (sendIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                    v.getContext().startActivity(shareIntent);
+                }
 
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.item_delete) {
-                        int pos = holder.getAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION && mActionListener != null) {
-//                            mActionListener.onDeleteClick(mPostList.get(pos).getId());
-                            mPostList.remove(pos);
-                            notifyDataSetChanged();
-                        }
-                        return true;
-                    }
-                    return false;
-                });
-                popupMenu.show();
             }
         });
 
@@ -203,7 +256,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         this.mPostList.addAll(newPosts);
         notifyDataSetChanged();
     }
-
 
     public interface OnPostActionListener {
         void onLikeClick(int postId, boolean isLiked);

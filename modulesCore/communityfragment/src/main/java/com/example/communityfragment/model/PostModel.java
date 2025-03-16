@@ -34,6 +34,7 @@ public class PostModel implements IPostContract.Model {
 
     private final static String COMMENT_URL = BASE_URL + "/comment";
     private final static String COMMENTS_URL = BASE_URL + "/comments";
+    private final static String DELETE_URL = BASE_URL + "/community/del-post";
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -133,6 +134,28 @@ public class PostModel implements IPostContract.Model {
                     mPresenter.onPublishCommentSuccess();
                 } else {
                     mPresenter.onPublishCommentFailure();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void deletePost(int postId) {
+        String MYDELETE_URL = DELETE_URL + "?id=" +postId;
+        Request request = new Request.Builder()
+                .url(MYDELETE_URL)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    mPresenter.deletePostSuccess(postId);
                 }
             }
         });

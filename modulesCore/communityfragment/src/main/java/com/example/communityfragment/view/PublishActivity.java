@@ -2,17 +2,22 @@ package com.example.communityfragment.view;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,11 +33,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
-import com.example.communityfragment.utils.FileUtils;
 import com.example.communityfragment.R;
 import com.example.communityfragment.contract.IPublishContract;
 import com.example.communityfragment.databinding.ActivityPublishBinding;
 import com.example.communityfragment.presenter.PublishPresenter;
+import com.example.communityfragment.utils.FileUtils;
 import com.example.eventbus.UserBaseMessageEventBus;
 import com.yalantis.ucrop.UCrop;
 
@@ -77,9 +82,9 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
         mPresenter = new PublishPresenter(this);
         EventBus.getDefault().register(this);
 
-        if(userBaseMessageEventBus.getUserName() != null){
+        if (userBaseMessageEventBus.getUserName() != null) {
             binding.tvPublishUsername.setText(userBaseMessageEventBus.getUserName());
-        }else {
+        } else {
             binding.tvPublishUsername.setText("用户");
         }
         if (userBaseMessageEventBus.getUserPictureURL() != null) {
@@ -96,7 +101,8 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                 if (content.trim().isEmpty()) {
                     Toast.makeText(PublishActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PublishActivity.this, "上传中", Toast.LENGTH_SHORT);
+                    Toast.makeText(PublishActivity.this, "上传中", Toast.LENGTH_SHORT).show();
+                    binding.imgPublishSend.setImageResource(R.drawable.ic_publish_gray);
                     binding.imgPublishSend.setEnabled(false);
                     String userId = "2";
                     if (userBaseMessageEventBus != null && userBaseMessageEventBus.getUserId() != null)
@@ -185,6 +191,8 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
                         .start(PublishActivity.this);
             }
         });
+
+
     }
 
     // 拍照和相册裁剪选择回调
@@ -229,6 +237,7 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
                 binding.imgPublishSend.setEnabled(true);
                 finish();
             }
@@ -241,6 +250,7 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
             @Override
             public void run() {
                 binding.imgPublishSend.setEnabled(true);
+                binding.imgPublishSend.setImageResource(R.drawable.ic_publish);
                 Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
             }
         });
@@ -333,5 +343,24 @@ public class PublishActivity extends AppCompatActivity implements IPublishContra
         if (userBaseMessageEventBus != null) {
             EventBus.getDefault().unregister(userBaseMessageEventBus);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

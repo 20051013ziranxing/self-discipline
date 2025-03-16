@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/black"
             android:gravity="center"
             android:text="发布文章"
             android:textSize="18sp"
@@ -40,8 +41,8 @@
 
         <ImageView
             android:id="@+id/img_publish_send"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_publish" />
 
     </LinearLayout>
@@ -155,7 +156,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_publish_add_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -190,9 +191,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="添加照片"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
