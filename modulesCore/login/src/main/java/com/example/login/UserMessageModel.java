@@ -75,7 +75,7 @@ public class UserMessageModel {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
                 JSON, Json);
-        networkClient.get(url, requestBody, new NetworkClient.NetworkCallback() {
+        networkClient.post(url, requestBody, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
                 callback.onSuccess(response);

@@ -55,6 +55,27 @@ public class ToDoFragmentPresenter {
         });
     }
 
+    public void modifyTheTaskCompletionStatus(String id, boolean check) {
+        String status = "pending";
+        if (check) {
+            status = "completed";
+        }
+        toDoFragmentModule.modifyTheTaskCompletionStatus(id, status, new ToDoFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), toDoFragment.textView_data.getText().toString());
+                return null;
+            }
+
+            @Override
+            public Boolean onFailure(IOException e) {
+                toDoFragment.sendToast("网络连接失败...修改完成状态失败");
+                getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), toDoFragment.textView_data.getText().toString());
+                return null;
+            }
+        });
+    }
+
     public void markWhetherTheAgencyIsCompleteOrNot(String id, Boolean isFinish) {
         toDoFragmentModule.markWhetherTheTaskIsCompletedOrNot(id, isFinish, new ToDoFragmentModule.ModelCallback() {
             @Override
@@ -70,12 +91,28 @@ public class ToDoFragmentPresenter {
             }
         });
     }
+    public void modifyTheAgencyInformation(String id, String title, String description, String status, String updated_at) {
+        toDoFragmentModule.modifyTheAgencyInformation(id, title, description, status, updated_at, new ToDoFragmentModule.ModelCallback() {
+            @Override
+            public Boolean onSuccess(String response) {
+                toDoFragment.sendToast("修改成功");
+                return null;
+            }
 
-    public void deleteToDoThing(String id) {
+            @Override
+            public Boolean onFailure(IOException e) {
+                toDoFragment.sendToast("修改失败");
+                return null;
+            }
+        });
+    }
+
+    public void deleteToDoThing(String id, String user_id, String updata_at) {
         toDoFragmentModule.deleteToDoThing(id, new ToDoFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 toDoFragment.sendToast("删除成功");
+                getToDoThings(user_id, updata_at);
                 return null;
             }
 

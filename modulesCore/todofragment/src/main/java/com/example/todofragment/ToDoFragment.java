@@ -6,14 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
+
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,9 @@ import java.util.Locale;
  * Use the {@link ToDoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragment.OnFragmentInteractionListener {
+public class ToDoFragment extends Fragment{
+
+
     private static final String TAG = "TestTT_ToDoFragment";
     private static final String DATA = "2025_03_08";
     UserBaseMessageEventBus userBaseMessageEventBus;
@@ -63,6 +66,7 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
     FloatingActionButton floatingActionButton_backDay;
     FloatingActionButton floatingActionButton_add;
     DrawerLayout drawerLayout;
+    ItemTouchHelper itemTouchHelper;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -158,11 +162,54 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
         recyclerView_ToDoFragment_show.setLayoutManager(linearLayoutManager);
         recyclerViewToDoAdapter = new RecyclerViewToDoAdapter(toDoThings, new RecyclerViewToDoAdapter.RecyclerViewToDoAdapterListener() {
             @Override
+            public void modifyTheToDoInformation(String id, String title) {
+                MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(id,title, new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
+                    @Override
+                    public void modifyTheToDoInformation(String id, String title, String description, String status, String updated_at) {
+                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at);
+                    }
+
+                    @Override
+                    public void onMethodCalled() {
+                        if (userBaseMessageEventBus != null)
+                            toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                    }
+                });
+                bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+                /*toDoFragmentPresenter.modifyTheAgencyInformation(id, );*/
+            }
+
+            @Override
+            public void deleteAnAgencyEvent(String id) {
+                toDoFragmentPresenter.deleteToDoThing(id, userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+            }
+
+            @Override
+            public void modifyTheBinding() {
+                toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                itemTouchHelper.attachToRecyclerView(recyclerView_ToDoFragment_show);
+            }
+
+            @Override
             public void markComplete(String id, boolean checked) {
                 toDoFragmentPresenter.markWhetherTheAgencyIsCompleteOrNot(id, checked);
             }
-        });
+        }, this);
         recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
+        SwipeToActionCallback.SwipeToActionCallbackListener swipeToActionCallbackListener = new SwipeToActionCallback.SwipeToActionCallbackListener() {
+            @Override
+            public void harkBackTo() {
+
+            }
+
+            @Override
+            public void unbind() {
+                itemTouchHelper.attachToRecyclerView(null);
+            }
+        };
+        itemTouchHelper = new ItemTouchHelper(new SwipeToActionCallback(swipeToActionCallbackListener));
+        itemTouchHelper.attachToRecyclerView(recyclerView_ToDoFragment_show);
+
         initData();
 
         toolbar = view.findViewById(R.id.toolbar);
@@ -173,17 +220,14 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
             public void onClick(View v) {
                 MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
                     @Override
+                    public void modifyTheToDoInformation(String id, String title, String description, String status, String updated_at) {
+                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at);
+                    }
+
+                    @Override
                     public void onMethodCalled() {
                         if (userBaseMessageEventBus != null)
                             toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
-                        /*getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d(TAG, "开始进行更新");
-                                recyclerViewToDoAdapter.setToDoThings(toDoThings);
-                                recyclerViewToDoAdapter.notifyDataSetChanged();
-                            }
-                        });*/
                     }
                 });
                 bottomSheetDialogFragment.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
@@ -228,13 +272,13 @@ public class ToDoFragment extends Fragment implements MyBottomSheetDialogFragmen
     }
 
     //接口回调使其执行刷新操作
-    @Override
+    /*@Override
     public void onMethodCalled() {
         Log.d(TAG, "开始执行回调了");
         if (userBaseMessageEventBus != null) {
             toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
         }
-    }
+    }*/
 
     public void remindersChange(List<GetToDoThings.GetToDothingMessage> toDoThings) {
         Log.d(TAG, "我应该开始执行更新了");

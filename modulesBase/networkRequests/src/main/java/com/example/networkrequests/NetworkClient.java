@@ -21,7 +21,7 @@ public class NetworkClient {
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
-    public void get(String url, RequestBody requestBody, final NetworkCallback callback) {
+    public void post(String url, RequestBody requestBody, final NetworkCallback callback) {
         /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
                 JSON, Json);*/
@@ -91,7 +91,7 @@ public class NetworkClient {
         });
     }
 
-    public void deleteTask(String url ,String taskId, final NetworkCallback callback) {
+    public void deleteTask(String url, final NetworkCallback callback) {
         /*String url = "http://101.200.121.142:9999/delete-todo/" + taskId;*/
 
         Request request = new Request.Builder()

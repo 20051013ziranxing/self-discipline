@@ -61,11 +61,18 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
     RadioButton radioButton_pomodoro_35_minutes_2_2;
     RadioButton radioButton_pomodoro_free_minutes_2_3;
     ImageButton imageButton_AddToDoFragment_save;
+    String toDo_id;
+    String title;
 
     public MyBottomSheetDialogFragment(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
     }
 
+    public MyBottomSheetDialogFragment(String toDo_id, String title, OnFragmentInteractionListener mListener) {
+        this.toDo_id = toDo_id;
+        this.title = title;
+        this.mListener = mListener;
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -86,6 +93,9 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         RadioGroup_222 = view.findViewById(R.id.RadioGroup_222);
         myBottomSheetDialogFragmentPresenter = new MyBottomSheetDialogFragmentPresenter(this);
         editText_AddToDoFragment_toDoThingName = view.findViewById(R.id.editText_AddToDoFragment_toDoThingName);
+        if (title != null) {
+            editText_AddToDoFragment_toDoThingName.setText(title);
+        }
         textView_AddToDoFragment_toDoThingTime = view.findViewById(R.id.textView_AddToDoFragment_toDoThingTime);
         textView_AddToDoFragment_toDoThingTime.setText(year + "-" + formattedMonth + "-" + formattedDay);
         //根据选择的时间进行展示
@@ -217,14 +227,18 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (!editText_AddToDoFragment_toDoThingName.getText().toString().isEmpty()) {
                     String userId = userBaseMessageEventBus.getUserId();
-                    Log.d(TAG, editText_AddToDoFragment_toDoThingName.getText().toString()+
+                    Log.d(TAG, toDo_id+editText_AddToDoFragment_toDoThingName.getText().toString()+
                             getGrade() + "," + getPomodoroInformation()+
                             "pending"+userId+ textView_AddToDoFragment_toDoThingTime.getText().toString());
-                    myBottomSheetDialogFragmentPresenter.addToDoThing(editText_AddToDoFragment_toDoThingName.getText().toString(),
-                            getGrade() + "," + getPomodoroInformation(),
-                            "pending",userId, textView_AddToDoFragment_toDoThingTime.getText().toString());
-
-                    dismiss();
+                    if (toDo_id !=null) {
+                        myBottomSheetDialogFragmentPresenter.modifyTheAgencyInformation(toDo_id, editText_AddToDoFragment_toDoThingName.getText().toString(),
+                                getGrade() + "," + getPomodoroInformation(),
+                                "pending", textView_AddToDoFragment_toDoThingTime.getText().toString());
+                    } else {
+                        myBottomSheetDialogFragmentPresenter.addToDoThing(editText_AddToDoFragment_toDoThingName.getText().toString(),
+                                getGrade() + "," + getPomodoroInformation(),
+                                "pending",userId, textView_AddToDoFragment_toDoThingTime.getText().toString());
+                    }
                 } else {
                     Toast.makeText(getContext(), "事情的名称不能为空", Toast.LENGTH_SHORT).show();
                 }
@@ -348,6 +362,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
     }
     public interface OnFragmentInteractionListener {
         void onMethodCalled();
+        void modifyTheToDoInformation(String id, String title, String description, String status, String updated_at);
     }
     public void refetchTheDataAndRefreshTheInterface() {
         Log.d(TAG, "为空");
