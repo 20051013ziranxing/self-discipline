@@ -3,6 +3,7 @@ package com.example.todofragment;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -67,6 +68,7 @@ public class ToDoFragment extends Fragment{
     FloatingActionButton floatingActionButton_add;
     DrawerLayout drawerLayout;
     ItemTouchHelper itemTouchHelper;
+    ConstraintLayout constraintLayout_not;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -107,6 +109,7 @@ public class ToDoFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        constraintLayout_not = view.findViewById(R.id.constraintLayout_not);
         toDoFragmentPresenter = new ToDoFragmentPresenter(this);
         /*Log.d(TAG, "注册过？：" + EventBus.getDefault().isRegistered(this));
         EventBus.getDefault().register(this);*/
@@ -118,7 +121,7 @@ public class ToDoFragment extends Fragment{
         toDoThings = new ArrayList<>();
         textView_data = view.findViewById(R.id.data_time);
         Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime(); // 获取当前日期
+        Date currentDate = calendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String formattedDate = dateFormat.format(currentDate);
         textView_data.setText(formattedDate);

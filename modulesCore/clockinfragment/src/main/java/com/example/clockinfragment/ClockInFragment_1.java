@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
+import com.example.clockinfragment.myview.RectangleProgressBar;
 import com.example.eventbus.UserBaseMessageEventBus;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.necer.calendar.NCalendar;
@@ -123,7 +124,12 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads, (ClockInRecyclerAdapter.OnItemClickListener) this);
+        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads, new ClockInRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick() {
+                /*clockInFragmentPresenter.createAPunchInTask(userBaseMessageEventBus.getUserId(), "successful", )*/
+            }
+        });
         FrameLayout childFragmentContainer = view.findViewById(R.id.fragment_addPunchShards);
         recyclerView.setAdapter(addFounctionAdapter);
         floatingActionButton_floatingButton_add_clockIn.setOnClickListener(new View.OnClickListener() {
@@ -139,18 +145,20 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
         return view;
     }
     public void initData() {
+        int k = R.drawable.morning;
+        Log.d(TAG, String.valueOf(k));
         testBeads = new ArrayList<>();
-        TestBead testBead = new TestBead("喝水", "8", "8", R.drawable.walter, 3);
+        TestBead testBead = new TestBead("喝水", "8", "8", k, 3);
         testBeads.add(testBead);
-        TestBead testBead1 = new TestBead("早起", "6", "3", R.drawable.morning, 3);
-        testBeads.add(testBead1);
+        /*TestBead testBead1 = new TestBead("早起", "6", "3", R.drawable.morning, 3);
+        testBeads.add(testBead1);*/
         TestBead testBead2 = new TestBead("早睡", "6", "3", R.drawable.night, 3);
         testBeads.add(testBead2);
         TestBead testBead3 = new TestBead("吃水果", "5", "3", R.drawable.firut, 3);
         testBeads.add(testBead3);
         TestBead testBead4 = new TestBead("锻炼", "5", "3", R.drawable.exercise, 3);
         testBeads.add(testBead4);
-        TestBead testBead5 = new TestBead("背单词", "2", "3", R.drawable.word, 3);
+        TestBead testBead5 = new TestBead("背单词", "3", "3", R.drawable.word, 3);
         testBeads.add(testBead5);
         testBeads.sort((o1, o2) -> Boolean.compare(o1.getFinish(), o2.getFinish()));
     }

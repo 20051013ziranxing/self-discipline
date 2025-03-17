@@ -209,7 +209,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
     }
     @Override
     public void onDialogConfirmed(String inputText) {
-        textView_SumCount.setText(inputText + "次＞");
+        textView_SumCount.setText(inputText);
     }
 
     private void changeFragmentLayout(int color, int icon) {

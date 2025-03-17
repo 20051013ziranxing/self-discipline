@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.myfragment.R;
 import com.example.myfragment.bean.Function;
 
@@ -39,7 +40,9 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //进行点击事件进行不同的操作
+                if (function.getFunctionName().equals("账号与安全")) {
+                    ARouter.getInstance().build("/accountsecurity/AccountSecurityActivity").navigation();
+                }
             }
         });
     }

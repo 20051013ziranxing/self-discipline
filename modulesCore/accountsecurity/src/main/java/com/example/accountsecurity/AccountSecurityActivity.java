@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -72,6 +74,7 @@ public class AccountSecurityActivity extends AppCompatActivity {
     private Uri imageUri;
 
     private ImageView imageView;
+    private AlertDialog.Builder builder;
     private static String TAG = "TestTT_AccountSecurityActivity";
     Toolbar toolbar;
     TextView textView;
@@ -124,13 +127,40 @@ public class AccountSecurityActivity extends AppCompatActivity {
         constraintLayout_change_Icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            100);
-                } else {
-                    take();
-                }
+                AlertDialog dialogPick;
+                builder = new AlertDialog.Builder(AccountSecurityActivity.this);
+                View viewDialog = getLayoutInflater().inflate(R.layout.dialog_choise, null);
+                builder.setView(viewDialog);
+                dialogPick = builder.create();
+                dialogPick.show();
+                Button button_takingPictures = viewDialog.findViewById(R.id.button_takingPictures);
+                button_takingPictures.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                                ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    100);
+                        } else {
+                            take();
+                        }
+                        dialogPick.dismiss();
+                    }
+                });
+                Button button_chooseFromTheAlbum = viewDialog.findViewById(R.id.button_chooseFromTheAlbum);
+                button_chooseFromTheAlbum.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                                ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(AccountSecurityActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    10);
+                        } else {
+                            openAlbum();
+                        }
+                        dialogPick.dismiss();
+                    }
+                });
             }
         });
         textView.setOnClickListener(new View.OnClickListener() {

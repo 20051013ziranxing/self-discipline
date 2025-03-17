@@ -17,10 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.clockinfragment.R;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.myview.LineView;
+import com.example.clockinfragment.myview.RectangleProgressBar;
 
 import java.util.List;
 
 public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecyclerAdapter.ViewHolder> {
+    /*ClockInRecyclerAdapterListener listener;
+    public interface ClockInRecyclerAdapterListener {
+
+    }*/
     //对象的引用，以后要与后端对接转为后端获取的数据对象
     List<TestBead> testBeads;
     private ClockInRecyclerAdapter.OnItemClickListener listener;
@@ -50,6 +55,9 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
         holder.textView_progress.setText("已完成 " + testBead.getFinishCount() + "/" + testBead.getSumCount());
         holder.imageButton.setImageResource(testBead.getIconId());
         int color = Color.parseColor(ChoiceBackgroundColor(testBead.getIconId()));
+        holder.rectangleProgressBar.setProgressBarColor(color);
+        holder.rectangleProgressBar.setProgress((float) ((float) (Integer.parseInt(testBead.getFinishCount())) * 1.0 /
+                                Integer.parseInt(testBead.getSumCount())));
         holder.imageButton.setBackgroundColor(color);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +75,7 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             };
             animation.setDuration(1000);
             holder.lineView.startAnimation(animation);
+            holder.imageButton_finish_once_button.setEnabled(false);
         }
     }
 
@@ -82,14 +91,18 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
         View view;
         LineView lineView;
         CardView cardView;
+        RectangleProgressBar rectangleProgressBar;
+        ImageButton imageButton_finish_once_button;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageButton = itemView.findViewById(R.id.clockIn_recycler_imageView_11);
             textView_Name = itemView.findViewById(R.id.clockIn_recycler_TextView_Name);
             textView_progress = itemView.findViewById(R.id.clockIn_recycler_TextView_progress);
             view = itemView;
+            rectangleProgressBar = itemView.findViewById(R.id.rectangleProgressBar);
             cardView = itemView.findViewById(R.id.finish_once_button);
             lineView = itemView.findViewById(R.id.lineView);
+            imageButton_finish_once_button = itemView.findViewById(R.id.imageButton_finish_once_button);
         }
     }
 

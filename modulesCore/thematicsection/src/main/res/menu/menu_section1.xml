@@ -3,22 +3,22 @@
 
     <item
         android:title="待办"
-        android:icon="@drawable/img"
+        android:icon="@drawable/todo_icon1"
         android:id="@+id/toDo"/>
 
     <item
         android:title="打卡"
-        android:icon="@drawable/img"
+        android:icon="@drawable/clock_icon1"
         android:id="@+id/clock"/>
 
     <item
         android:title="社区"
-        android:icon="@drawable/img"
+        android:icon="@drawable/community_icon1"
         android:id="@+id/community"/>
 
     <item
         android:title="我的"
-        android:icon="@drawable/img"
+        android:icon="@drawable/my_icon1"
         android:id="@+id/my"/>
 
 </menu>

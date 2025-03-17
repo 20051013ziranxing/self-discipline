@@ -3,6 +3,7 @@ package com.example.todofragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 
 import com.example.networkrequests.NetworkClient;
 import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
@@ -40,8 +41,12 @@ public class ToDoFragmentPresenter {
                         List<GetToDoThings.GetToDothingMessage> toDothingMessages = filteringByTime(toDoThings, updated_at);
                         if (toDothingMessages != null) {
                             Collections.sort(toDothingMessages, new ToDoThingComparator());
+                            toDoFragment.remindersChange(toDothingMessages);
+                            toDoFragment.constraintLayout_not.setVisibility(View.GONE);
+                        } else {
+                            toDoFragment.constraintLayout_not.setVisibility(View.VISIBLE);
+                            toDoFragment.remindersChange(toDothingMessages);
                         }
-                        toDoFragment.remindersChange(toDothingMessages);
                     }
                 });
                 return null;
