@@ -246,4 +246,20 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
     public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
         this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }

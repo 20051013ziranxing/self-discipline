@@ -31,6 +31,7 @@ android {
 
 dependencies {
 
+    implementation 'com.google.android.material:material:1.10.0'
     implementation project(':modulesCore:myFragment')
     implementation project(':modulesCore:communityfragment')
     implementation project(':modulesCore:todofragment')

@@ -142,4 +142,5 @@ public class FindPasswordActivity extends AppCompatActivity {
     public Boolean CheckPasswordRight(String s) {
         return s != null && s.matches(PASSWORD_PATTERN);
     }
+
 }

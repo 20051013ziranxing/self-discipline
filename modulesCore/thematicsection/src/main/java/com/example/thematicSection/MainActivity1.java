@@ -1,39 +1,57 @@
 package com.example.thematicSection;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.activitymanager.ActivityManager;
-import com.example.clockinfragment.ClockInFragmentModule;
-import com.example.clockinfragment.ClockInFragmentPresenter;
 import com.example.clockinfragment.ClockInFragment_1;
-import com.example.communityfragment.view.CommunityFragemnt;
+import com.example.communityfragment.view.CommunityFragment;
 import com.example.myfragment.MyFragmentModule;
 import com.example.myfragment.MyFragmentPresenter;
 import com.example.myfragment.MyFragment_1;
 import com.example.networkrequests.NetworkClient;
+import com.example.thematicSection.adapter.RecyclerViewAdapterListing;
+import com.example.thematicSection.bean.Listing;
 import com.example.todofragment.ToDoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Route(path = "/thematicsection/MainActivity1")
 public class MainActivity1 extends AppCompatActivity {
+    List<Listing> listingList;
+    public DrawerLayout drawableLayout;
     private static final String TAG = "TestTT_MainActivity1";
     BottomNavigationView bottomNavigationView;
     FragmentContainerView fragmentContainerView;
+    NavigationView navigationView;
+    //侧面导航栏里面的头布局
+    View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +64,12 @@ public class MainActivity1 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });*/
+        //进行侧面导航栏的设置
+        drawableLayout = findViewById(R.id.DrawableLayout);
+        navigationView = findViewById(R.id.navigationView);
+        headerView = navigationView.getHeaderView(0);
+        initHeadData();
+
         ActivityManager.getInstance().addActivity(this);
         fragmentContainerView = findViewById(R.id.fragment_content);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
@@ -83,7 +107,7 @@ public class MainActivity1 extends AppCompatActivity {
                 } else if (menuItem.getItemId() == R.id.community) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    CommunityFragemnt communityFragemnt = new CommunityFragemnt();
+                    CommunityFragment communityFragemnt = new CommunityFragment();
                     fragmentTransaction.replace(R.id.fragment_content, communityFragemnt).commit();
 
                 }
@@ -91,6 +115,56 @@ public class MainActivity1 extends AppCompatActivity {
             }
         });
     }
+
+    private void initHeadData() {
+        RadioButton radio_categorized_by_tag = headerView.findViewById(R.id.radio_categorized_by_tag);
+        radio_categorized_by_tag.setChecked(true);
+        RadioGroup radioGroup = headerView.findViewById(R.id.radioGroup_selectAFilterCondition);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio_categorized_by_tag) {
+                    headerView.findViewById(R.id.include_classified_lists).setVisibility(View.VISIBLE);
+                    headerView.findViewById(R.id.include_label).setVisibility(View.GONE);
+                } else {
+                    headerView.findViewById(R.id.include_classified_lists).setVisibility(View.GONE);
+                    headerView.findViewById(R.id.include_label).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        //记得进行初始化
+        init();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity1.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        RecyclerView recyclerView_ClassifiedLists = headerView.findViewById(R.id.recyclerView_ClassifiedLists);
+        RecyclerViewAdapterListing recyclerViewAdapterListing = new RecyclerViewAdapterListing(listingList, R.drawable.listing_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
+            @Override
+            public void hhh() {
+
+            }
+        });
+        recyclerView_ClassifiedLists.setLayoutManager(linearLayoutManager);
+        recyclerView_ClassifiedLists.setAdapter(recyclerViewAdapterListing);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(MainActivity1.this);
+        linearLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
+        RecyclerView recyclerView_label = headerView.findViewById(R.id.recyclerView_label);
+        RecyclerViewAdapterListing recyclerViewAdapterListing1 = new RecyclerViewAdapterListing(null, R.drawable.label_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
+            @Override
+            public void hhh() {
+
+            }
+        });
+        recyclerView_label.setLayoutManager(linearLayoutManager1);
+        recyclerView_label.setAdapter(recyclerViewAdapterListing1);
+    }
+    public void init() {
+        listingList = new ArrayList<>();
+        Listing listing = new Listing("#222444", "课程作业");
+        listingList.add(listing);
+        listingList.add(listing);
+        listingList.add(listing);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

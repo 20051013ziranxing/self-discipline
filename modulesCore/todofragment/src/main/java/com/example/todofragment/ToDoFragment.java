@@ -66,7 +66,7 @@ public class ToDoFragment extends Fragment{
     RecyclerView recyclerView_ToDoFragment_show;
     FloatingActionButton floatingActionButton_backDay;
     FloatingActionButton floatingActionButton_add;
-    DrawerLayout drawerLayout;
+    /*DrawerLayout drawerLayout;*/
     ItemTouchHelper itemTouchHelper;
     ConstraintLayout constraintLayout_not;
     private static final String ARG_PARAM1 = "param1";
@@ -111,8 +111,6 @@ public class ToDoFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
         constraintLayout_not = view.findViewById(R.id.constraintLayout_not);
         toDoFragmentPresenter = new ToDoFragmentPresenter(this);
-        /*Log.d(TAG, "注册过？：" + EventBus.getDefault().isRegistered(this));
-        EventBus.getDefault().register(this);*/
         Log.d(TAG, "注册过？：" + EventBus.getDefault().isRegistered(this));
         if (!EventBus.getDefault().isRegistered(this)) {
             Log.d(TAG, "ToDoFragment执行onStart方法，并进行了注册");
@@ -243,12 +241,13 @@ public class ToDoFragment extends Fragment{
             }
         });
         /*textView_data = view.findViewById(R.id.data_time);*/
-        drawerLayout = view.findViewById(R.id.DrawableLayout);
+        /*drawerLayout = view.findViewById(R.id.DrawableLayout);*/
         imageButton = view.findViewById(R.id.showNestedScrollView);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
+                /*drawerLayout.openDrawer(GravityCompat.START);*/
+                ((DrawerLayout)getActivity().findViewById(R.id.DrawableLayout)).openDrawer(GravityCompat.START);
             }
         });
         return view;

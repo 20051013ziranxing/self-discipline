@@ -1,9 +1,6 @@
 package com.example.communityfragment.presenter;
 
-import android.util.Log;
-
 import com.example.communityfragment.bean.Post;
-import com.example.communityfragment.view.CommunityFragemnt;
 import com.example.communityfragment.contract.ICommunityContract;
 import com.example.communityfragment.model.CommunityModel;
 

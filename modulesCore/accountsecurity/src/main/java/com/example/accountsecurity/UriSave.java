@@ -19,14 +19,6 @@ public class UriSave {
         return instance;
     }
 
-    /*public Uri getUriImage() {
-        return UriImage;
-    }
-
-    public void setUriImage(Uri uriImage) {
-        UriImage = uriImage;
-    }*/
-
     public File getUriImage() {
         return UriImage;
     }

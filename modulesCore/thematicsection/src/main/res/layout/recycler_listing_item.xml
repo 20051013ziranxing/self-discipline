@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView_icon_listing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_3"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#00ffffff"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/textView_nameChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/imageView_icon_listing"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_icon_listing"
+        app:layout_constraintStart_toEndOf="@id/imageView_icon_listing"
+        android:text="学习通考试"
+        android:layout_marginStart="5dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/come"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageView_icon_listing"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_icon_listing"
+        android:background="#00ffffff"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

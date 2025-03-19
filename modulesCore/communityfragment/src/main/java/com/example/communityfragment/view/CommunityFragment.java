@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Route(path = "/communityPageView/CommunityFragemnt")
-public class CommunityFragemnt extends Fragment implements ICommunityContract.View {
+public class CommunityFragment extends Fragment implements ICommunityContract.View {
     private static final String TAG = "CommunityFragemntTAG";
     private static final int TYPE = 1;
     private FragmentCommunityBinding binding;

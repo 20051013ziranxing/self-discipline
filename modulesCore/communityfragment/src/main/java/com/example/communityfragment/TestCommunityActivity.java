@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.communityfragment.view.CommunityFragemnt;
+import com.example.communityfragment.view.CommunityFragment;
 
 public class TestCommunityActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class TestCommunityActivity extends AppCompatActivity {
             return insets;
         });
 
-        CommunityFragemnt communityFragemnt = (CommunityFragemnt) ARouter
+        CommunityFragment communityFragemnt = (CommunityFragment) ARouter
                 .getInstance()
                 .build("/communityPageView/CommunityFragemnt")
                 .navigation();

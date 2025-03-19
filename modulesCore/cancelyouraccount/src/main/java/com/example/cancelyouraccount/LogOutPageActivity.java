@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 
+import org.greenrobot.eventbus.EventBus;
+
 @Route(path = "/cancelyouraccount/LogOutPageActivity")
 public class LogOutPageActivity extends AppCompatActivity {
     LogOutPageActivityPresenter logOutPageActivityPresenter;
@@ -74,5 +76,21 @@ public class LogOutPageActivity extends AppCompatActivity {
                 Toast.makeText(LogOutPageActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

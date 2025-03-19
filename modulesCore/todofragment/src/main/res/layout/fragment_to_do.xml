@@ -75,7 +75,7 @@
                         android:id="@+id/imageView_tea"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/img_2"
+                        android:src="@drawable/img_2_tea"
                         android:background="#00ffffff"
                         android:layout_marginTop="120dp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -141,13 +141,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.navigation.NavigationView
+    <!--<com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/navigation_view_menu"
-        android:layout_gravity="start">
-
-    </com.google.android.material.navigation.NavigationView>
+        android:layout_gravity="start"
+        app:headerLayout="@layout/head_layout_1"/>-->
 
 </androidx.drawerlayout.widget.DrawerLayout>
