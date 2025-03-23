@@ -43,7 +43,7 @@ public class SelectTheSongBottomSheetDialogFragment extends BottomSheetDialogFra
             public void onClick(View v) {
                 int ID = radioGroup_aToggleCollectionOfMusic.getCheckedRadioButtonId();
                 if (ID == R.id.radio_insectsChirpOnSummerNights) {
-                    listener.onSongSelected(String.valueOf(R.raw.music1));
+                    listener.onSongSelected(String.valueOf(R.raw.music2));
                     Log.d(TAG, "我点击了，并执行了");
                 } else if (ID == R.id.radio_summerRains) {
                     listener.onSongSelected(String.valueOf(R.raw.music1));

@@ -124,7 +124,6 @@ public class PomodoroTimerActivity extends AppCompatActivity implements
                     reStartDialog.setOnDialogReStartDialogListener((ReStartDialog.ReStartDialogListener) PomodoroTimerActivity.this);
                     reStartDialog.show();
                     reStartDialog.textView_finishTheTimingAheadOfSchedule.setText("结束本次正向计时");
-                    countDownTimer.cancel();
                 }  else if (state == REST) {
                     ReStartDialog reStartDialog = new ReStartDialog(PomodoroTimerActivity.this);
                     reStartDialog.setOnDialogReStartDialogListener((ReStartDialog.ReStartDialogListener) PomodoroTimerActivity.this);
@@ -184,6 +183,7 @@ public class PomodoroTimerActivity extends AppCompatActivity implements
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+        stopMusic();
     }
 
     @Override
@@ -215,6 +215,7 @@ public class PomodoroTimerActivity extends AppCompatActivity implements
         pomodoroTimerActivityPresenter.startTimer(5);
         textView_StatusInformation_focus_or_rest.setText("休息中");
         state = REST;
+        stopMusic();
     }
 
     public void showCustomDialog() {

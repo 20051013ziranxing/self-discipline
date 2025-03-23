@@ -31,17 +31,17 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/clockIn_recycler_imageView"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 app:cardCornerRadius="80dp"
                 app:cardElevation="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_height="50dp">
+                android:layout_height="40dp">
 
                 <ImageButton
                     android:id="@+id/clockIn_recycler_imageView_11"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="#ADD8E6"
                     android:scaleType="center"
                     android:src="@drawable/walter"
@@ -72,8 +72,8 @@
 
             <TextView
                 android:id="@+id/clockIn_recycler_TextView_progress"
-                android:layout_width="58dp"
-                android:layout_height="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="已完成 0/4"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@id/clockIn_recycler_imageView"

@@ -14,9 +14,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class ToDoFragmentPresenter {
     private static final String TAG = "TestTT_ToDoFragmentPresenter";
@@ -113,6 +116,10 @@ public class ToDoFragmentPresenter {
         toDoFragmentModule.modifyTheAgencyInformation(id, title, description, status, updated_at, new ToDoFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
+                /*Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String formattedDate = dateFormat.format(calendar.getTime());
+                getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), formattedDate);*/
                 toDoFragment.sendToast("修改成功");
                 return null;
             }

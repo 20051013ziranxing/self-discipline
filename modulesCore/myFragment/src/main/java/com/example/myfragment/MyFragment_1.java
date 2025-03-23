@@ -97,9 +97,11 @@ public class MyFragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_1, container, false);
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         imageView_headPicture = view.findViewById(R.id.imageView_headPicture);
-        Log.d(TAG, userBaseMessageEventBus.getUserPictureURL());
+        /*Log.d(TAG, userBaseMessageEventBus.getUserPictureURL());*/
         Glide.with(this)
                 .load(userBaseMessageEventBus.getUserPictureURL())
                 //.load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")

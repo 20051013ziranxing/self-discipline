@@ -17,6 +17,8 @@ public class MusicService extends Service {
         mediaPlayer = MediaPlayer.create(this, R.raw.music1);
         if (mediaPlayer != null) {
             mediaPlayer.setLooping(true);
+        } else {
+            Log.d(TAG, "mediaPlayer为null了！！！");
         }
     }
 
@@ -85,6 +87,7 @@ public class MusicService extends Service {
                     afd.close();
                 }
                 mediaPlayer.prepare();
+                mediaPlayer.setLooping(true);
                 mediaPlayer.start();
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
