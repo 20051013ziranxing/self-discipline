@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.eventbus.UserBaseMessageEventBus;
 import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
 import com.example.todofragment.bean.GetToDoThings;
+import com.example.todofragment.bean.GetToDothingMessage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.necer.calendar.NCalendar;
 import com.necer.enumeration.DateChangeBehavior;
@@ -58,7 +59,7 @@ public class ToDoFragment extends Fragment{
     ToDoFragmentPresenter toDoFragmentPresenter;
     TextView textView_data;
     ImageButton imageButton;
-    List<GetToDoThings.GetToDothingMessage> toDoThings;
+    List<GetToDothingMessage> toDoThings;
     Toolbar toolbar;
     NCalendar miui10Calendar;
     /*TextView textView_data;*/
@@ -193,7 +194,7 @@ public class ToDoFragment extends Fragment{
 
             @Override
             public void markComplete(String id, boolean checked) {
-                toDoFragmentPresenter.markWhetherTheAgencyIsCompleteOrNot(id, checked);
+                toDoFragmentPresenter.modifyTheTaskCompletionStatus(id, checked);
             }
         }, this);
         recyclerView_ToDoFragment_show.setAdapter(recyclerViewToDoAdapter);
@@ -282,7 +283,7 @@ public class ToDoFragment extends Fragment{
         }
     }*/
 
-    public void remindersChange(List<GetToDoThings.GetToDothingMessage> toDoThings) {
+    public void remindersChange(List<GetToDothingMessage> toDoThings) {
         Log.d(TAG, "我应该开始执行更新了");
         getActivity().runOnUiThread(new Runnable() {
             @Override

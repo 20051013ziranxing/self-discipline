@@ -1,23 +1,17 @@
 package com.example.thematicSection;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,12 +22,14 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.activitymanager.ActivityManager;
 import com.example.clockinfragment.ClockInFragment_1;
 import com.example.communityfragment.view.CommunityFragment;
+import com.example.localdatabase.bean.UserTables;
 import com.example.myfragment.MyFragmentModule;
 import com.example.myfragment.MyFragmentPresenter;
 import com.example.myfragment.MyFragment_1;
 import com.example.networkrequests.NetworkClient;
 import com.example.thematicSection.adapter.RecyclerViewAdapterListing;
 import com.example.thematicSection.bean.Listing;
+import com.example.thematicSection.bottomFragment.BottomSheetDialogAddAChecklist;
 import com.example.todofragment.ToDoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -49,6 +45,7 @@ public class MainActivity1 extends AppCompatActivity {
     private static final String TAG = "TestTT_MainActivity1";
     BottomNavigationView bottomNavigationView;
     FragmentContainerView fragmentContainerView;
+    RecyclerViewAdapterListing recyclerViewAdapterListing;
     NavigationView navigationView;
     //侧面导航栏里面的头布局
     View headerView;
@@ -137,7 +134,7 @@ public class MainActivity1 extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity1.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RecyclerView recyclerView_ClassifiedLists = headerView.findViewById(R.id.recyclerView_ClassifiedLists);
-        RecyclerViewAdapterListing recyclerViewAdapterListing = new RecyclerViewAdapterListing(listingList, R.drawable.listing_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
+        recyclerViewAdapterListing = new RecyclerViewAdapterListing(null, R.drawable.listing_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
             @Override
             public void hhh() {
 
@@ -145,17 +142,28 @@ public class MainActivity1 extends AppCompatActivity {
         });
         recyclerView_ClassifiedLists.setLayoutManager(linearLayoutManager);
         recyclerView_ClassifiedLists.setAdapter(recyclerViewAdapterListing);
+        Button button_addANewList = headerView.findViewById(R.id.button_addANewList);
+        button_addANewList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialogAddAChecklist bottomSheetDialogAddAChecklist = new BottomSheetDialogAddAChecklist();
+                bottomSheetDialogAddAChecklist.show(getSupportFragmentManager(), "BottomSheetDialogAddAChecklist");
+            }
+        });
+
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(MainActivity1.this);
         linearLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         RecyclerView recyclerView_label = headerView.findViewById(R.id.recyclerView_label);
-        RecyclerViewAdapterListing recyclerViewAdapterListing1 = new RecyclerViewAdapterListing(null, R.drawable.label_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
+        RecyclerViewAdapterListing recyclerViewAdapterLabels = new RecyclerViewAdapterListing(null, R.drawable.label_icon, new RecyclerViewAdapterListing.RecyclerViewAdapterListingListen() {
             @Override
             public void hhh() {
 
             }
         });
         recyclerView_label.setLayoutManager(linearLayoutManager1);
-        recyclerView_label.setAdapter(recyclerViewAdapterListing1);
+        recyclerView_label.setAdapter(recyclerViewAdapterLabels);
+
+
     }
     public void init() {
         listingList = new ArrayList<>();
@@ -169,5 +177,15 @@ public class MainActivity1 extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ActivityManager.getInstance().finishAllActivities();
+    }
+
+    public void upDataRecyclerViewListing(List<UserTables.UserListing> userListings) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewAdapterListing.setListingList(userListings);
+                recyclerViewAdapterListing.notifyDataSetChanged();
+            }
+        });
     }
 }

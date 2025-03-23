@@ -1,25 +1,47 @@
 package com.example.login;
 
 import android.app.Activity;
+import android.util.Log;
 
+import com.example.localdatabase.ListOfLabelsHelper;
 import com.example.localdatabase.UserMessageHelper;
+import com.example.localdatabase.bean.UserTables;
 import com.example.networkrequests.NetworkClient;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-public class UserMessageModel {
-    private final static String TAG = "TestTT_UserMessageModel";
+public class LoginUpModel {
+    private final static String TAG = "TestTT_LoginUpModel";
     private NetworkClient networkClient;
     UserMessageHelper userMessageHelper;
+    ListOfLabelsHelper listOfLabelsHelper;
 
-    public UserMessageModel(Activity activity, NetworkClient networkClient) {
+    public LoginUpModel(Activity activity, NetworkClient networkClient) {
         this.userMessageHelper = new UserMessageHelper(activity, "AllUsersMessage", null, 1);
+        this.listOfLabelsHelper = new ListOfLabelsHelper(activity, "hhh", null, 1);
         this.networkClient = networkClient;
+    }
+
+    public boolean insert(UserTables userTables) {
+        boolean ret = false;
+        Log.d(TAG, "我进行添加方法hhhhh" + userTables.getUserId());
+        if (listOfLabelsHelper.findUserTablesByUserId(userTables.getUserId()) == null) {
+            Log.d(TAG, "为bull，进行添加" + ret);
+            ret = listOfLabelsHelper.insert(userTables);
+            Log.d(TAG, "为bull，进行添加" + ret);
+        }
+        List<UserTables> allUserLabels = listOfLabelsHelper.getAllUserLabels();
+        Log.d(TAG, String.valueOf(allUserLabels.size()));
+        for (UserTables allUserLabel : allUserLabels) {
+            Log.d(TAG, allUserLabel.getUserId() + allUserLabel.getUserName());
+        }
+        return ret;
     }
 
     public boolean insert(String userName, String userPictureURL, String userEmail, String userToken, String userId) {

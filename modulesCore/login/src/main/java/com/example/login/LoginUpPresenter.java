@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.eventbus.UserBaseMessageEventBus;
+import com.example.localdatabase.bean.UserTables;
 import com.example.login.bean.UserBaseMessage;
 import com.example.networkrequests.NetworkClient;
 import com.google.gson.Gson;
@@ -15,16 +16,16 @@ import java.io.IOException;
 public class LoginUpPresenter {
     public static final String TAG = "TestTT_LoginUpPresenter";
     LoginUpActivity loginUpActivity;
-    UserMessageModel userMessageModel;
+    LoginUpModel loginUpModel;
 
     public LoginUpPresenter(LoginUpActivity activity) {
         NetworkClient networkClient = new NetworkClient();
         this.loginUpActivity = activity;
-        userMessageModel = new UserMessageModel(activity, networkClient);
+        loginUpModel = new LoginUpModel(activity, networkClient);
     }
     //进行注册操作，注册操作需要传入用户名，密码，邮件地址，还要进行验证码的验证，此处还没有进行添加
     public void signIn(String userName, String userPassword, String userEmail, String userCode, Boolean isCheck) {
-        userMessageModel.Registration(userName, userPassword, userEmail, userCode, new UserMessageModel.ModelCallback() {
+        loginUpModel.Registration(userName, userPassword, userEmail, userCode, new LoginUpModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "注册：" + response);
@@ -37,9 +38,10 @@ public class LoginUpPresenter {
                 }
                 String userPictureURL = userBaseMessage.getMessage().getAvatar_url();
                 String userId = userBaseMessage.getMessage().getUser_id();
-                userMessageModel.insert(userName, userPictureURL, userEmail, userToken, userId);
+                loginUpModel.insert(userName, userPictureURL, userEmail, userToken, userId);
                 UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
                 EventBus.getDefault().postSticky(userBaseMessage1);
+                loginUpModel.insert(new UserTables(userName, userId, null, null));
                 loginUpActivity.goToThematicSection();
                 return null;
             }
@@ -54,7 +56,7 @@ public class LoginUpPresenter {
     //根据密码进行登录
     public void loginUpByPassword(String userEmail, String userPassword, Boolean ischeck) {
         Log.d(TAG, userEmail + "hh" + userPassword);
-        userMessageModel.LogInWithYourPassword(userEmail, userPassword, new UserMessageModel.ModelCallback() {
+        loginUpModel.LogInWithYourPassword(userEmail, userPassword, new LoginUpModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "登录成功，收到的返回数据为：" + response);
@@ -65,12 +67,13 @@ public class LoginUpPresenter {
                 String userId = userBaseMessage.getMessage().getUser_id();
                 Log.d(TAG, userPictureURL + userToken + userId + userName);
                 if (ischeck == true) {
-                    userMessageModel.insert(userName, userPictureURL, userEmail,userToken, userId);
+                    loginUpModel.insert(userName, userPictureURL, userEmail,userToken, userId);
                 } else {
-                    userMessageModel.insert(userName, userPictureURL, userEmail, null, userId);
+                    loginUpModel.insert(userName, userPictureURL, userEmail, null, userId);
                 }
                 UserBaseMessageEventBus userBaseMessage1 = new UserBaseMessageEventBus(userName, userPictureURL, userEmail, userToken, userId);
                 EventBus.getDefault().postSticky(userBaseMessage1);
+                loginUpModel.insert(new UserTables(userName, userId, null, null));
                 loginUpActivity.goToThematicSection();
                 return null;
             }
@@ -90,7 +93,7 @@ public class LoginUpPresenter {
     }
     //注册时候对用户的信息进行查询，检查是否注册过了
     public boolean checkIsRegistered(String emailNumber) {
-        String s = userMessageModel.queryUser(emailNumber);
+        String s = loginUpModel.queryUser(emailNumber);
         Log.d(TAG, s + "s");
         return s == null;
     }
@@ -104,7 +107,7 @@ public class LoginUpPresenter {
         return true;
     }
     public void SendAnEmailVerificationCodeRegistered(String emailNumber) {
-        userMessageModel.sendEmailVerificationCode(emailNumber, new UserMessageModel.ModelCallback() {
+        loginUpModel.sendEmailVerificationCode(emailNumber, new LoginUpModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 loginUpActivity.SendToast("发送验证码成功");
@@ -119,7 +122,7 @@ public class LoginUpPresenter {
     }
     //进行验证码的验证以及注册
     public void VerificationOfTheVerificationCode(String emailNumber, String code, String userName, String userPassword) {
-        userMessageModel.VerificationOfTheVerificationCode(emailNumber, code, new UserMessageModel.ModelCallback() {
+        loginUpModel.VerificationOfTheVerificationCode(emailNumber, code, new LoginUpModel.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d(TAG, "验证成功" + emailNumber + code);

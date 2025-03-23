@@ -15,8 +15,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.eventbus.UserBaseMessageEventBus;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 @Route(path = "/cancelyouraccount/LogOutPageActivity")
 public class LogOutPageActivity extends AppCompatActivity {
@@ -24,6 +27,7 @@ public class LogOutPageActivity extends AppCompatActivity {
     EditText editText_logoff_emailNumber;
     EditText editText_logoff_password;
     Button button_reallyWriteOff;
+    UserBaseMessageEventBus userBaseMessageEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,9 @@ public class LogOutPageActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         logOutPageActivityPresenter = new LogOutPageActivityPresenter(this);
         editText_logoff_emailNumber = findViewById(R.id.editText_logoff_emailNumber);
         editText_logoff_emailNumber.setText(logOutPageActivityPresenter.getUserName());
@@ -92,5 +99,10 @@ public class LogOutPageActivity extends AppCompatActivity {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
+        this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 }

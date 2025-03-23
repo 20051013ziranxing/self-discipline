@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,13 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
+import com.example.clockinfragment.bean.CheckInBean;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
-import com.example.clockinfragment.myview.RectangleProgressBar;
+import com.example.clockinfragment.fragment.ModifyFragment;
+import com.example.clockinfragment.singleton.DateSingleton;
 import com.example.eventbus.UserBaseMessageEventBus;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.necer.calendar.NCalendar;
@@ -30,16 +33,21 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ClockInFragment_1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapter.OnItemClickListener{
+public class ClockInFragment_1 extends Fragment{
     UserBaseMessageEventBus userBaseMessageEventBus;
     private static final String TAG = "TestTT_ClockInFragment_1";
     RecyclerView recyclerView;
@@ -48,6 +56,8 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     FloatingActionButton floatingActionButton_floatingButton_add_clockIn;
     NCalendar nCalendar;
     FloatingActionButton floatingButton_backNowDay;
+    ClockInRecyclerAdapter addFounctionAdapter;
+    ItemTouchHelper itemTouchHelper;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -94,6 +104,10 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clock_in_1, container, false);
+        clockInFragmentPresenter = new ClockInFragmentPresenter(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initData();
         nCalendar = view.findViewById(R.id.weekCalendar);
         floatingButton_backNowDay = view.findViewById(R.id.floatingButton_backNowDay);
@@ -110,6 +124,7 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
                     ChineseDate chineseDate = new ChineseDate(localDate);
                     String s = localDate.toString();
                     String s2 = LocalDate.now().toString();
+                    DateSingleton.getInstance().setDate(s);
                     if (! s.equals(s2)){
                         Log.d("nvjbifgj", localDate.toString() + "pppppp" + LocalDate.now().toString());
                         floatingButton_backNowDay.setVisibility(View.VISIBLE);
@@ -124,27 +139,95 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        ClockInRecyclerAdapter addFounctionAdapter = new ClockInRecyclerAdapter(testBeads, new ClockInRecyclerAdapter.OnItemClickListener() {
+
+        addFounctionAdapter = new ClockInRecyclerAdapter(null,
+                DateSingleton.getInstance().getDate(), new ClockInRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick() {
-                /*clockInFragmentPresenter.createAPunchInTask(userBaseMessageEventBus.getUserId(), "successful", )*/
+            public void modifyTheBinding(String id, String start_time) {
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String formattedDate = dateFormat.format(calendar.getTime());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date date1;
+                Date date2;
+                try {
+                    date1 = formatter.parse(DateSingleton.getInstance().getDate());
+                    date2 = formatter.parse(formattedDate);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                //执行相关逻辑，并
+                /*clockInFragmentPresenter.deleteAClockInTask(id);*/
+                if (date1.equals(date2)) {
+                    Log.d(TAG, formattedDate);
+                    clockInFragmentPresenter.modifyTheClockInInformationToEndEarly(Integer.parseInt(id),start_time.substring(0, 10), formattedDate);
+                } else {
+                    clockInFragmentPresenter.deleteAClockInTask(id);
+                }
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+            }
+
+            @Override
+            public void modifyTheAttendanceInformationByID(int id) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.fragment_addPunchShards, new ModifyFragment(id, new AddFragment.AddFragmentListen() {
+                    @Override
+                    public void makeAnUpdate() {
+                        recaptureTheDataAndUpdateIt();
+                    }
+                })).commit();
+            }
+
+            @Override
+            public void modifyTheClockInInformation(String title, String start_date, String end_date, int icon,
+                                                    int target_checkin_count, String motivation_message) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.fragment_addPunchShards, new ModifyFragment(title, start_date,
+                        end_date, icon, target_checkin_count, motivation_message)).commit();
+            }
+
+            @Override
+            public void onItemClick(int i, String data) {
+                clockInFragmentPresenter.add1ToTheNumberOfCheckInsCompleted(i, data);
             }
         });
         FrameLayout childFragmentContainer = view.findViewById(R.id.fragment_addPunchShards);
         recyclerView.setAdapter(addFounctionAdapter);
+        clockInFragmentPresenter.getAllThePunchesForAGivenDay(userBaseMessageEventBus.getUserId(), DateSingleton.getInstance().getDate());
         floatingActionButton_floatingButton_add_clockIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "点击了应该添加碎片了");
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                AddFragment addFragment = new AddFragment();
+                AddFragment addFragment = new AddFragment(new AddFragment.AddFragmentListen() {
+                    @Override
+                    public void makeAnUpdate() {
+                        recaptureTheDataAndUpdateIt();
+                    }
+                });
                 fragmentTransaction.add(R.id.fragment_addPunchShards, addFragment).commit();
             }
         });
+        SwipeToActionCallbackClock.SwipeToActionCallbackListener swipeToActionCallbackListener = new SwipeToActionCallbackClock.SwipeToActionCallbackListener() {
+            @Override
+            public void unbind() {
+                itemTouchHelper.attachToRecyclerView(null);
+            }
+
+            @Override
+            public void harkBackTo() {
+
+            }
+        };
+        itemTouchHelper = new ItemTouchHelper(new SwipeToActionCallbackClock(swipeToActionCallbackListener));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         return view;
     }
     public void initData() {
+
         int k = R.drawable.morning;
         Log.d(TAG, String.valueOf(k));
         testBeads = new ArrayList<>();
@@ -164,11 +247,6 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     }
     public void setClockInFragmentPresenter(ClockInFragmentPresenter clockInFragmentPresenter) {
         this.clockInFragmentPresenter = clockInFragmentPresenter;
-    }
-    @Override
-    public void onItemClick() {
-
-
     }
 
     @Override
@@ -190,5 +268,28 @@ public class ClockInFragment_1 extends Fragment implements ClockInRecyclerAdapte
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void onMoonStickyEvent(UserBaseMessageEventBus userBaseMessageEventBus) {
         this.userBaseMessageEventBus = userBaseMessageEventBus;
+    }
+
+    public void updateThePunchList(List<CheckInBean.CheckinData> checkinDataList) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addFounctionAdapter.setCheckinBeanList(checkinDataList);
+                addFounctionAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void recaptureTheDataAndUpdateIt() {
+        clockInFragmentPresenter.getAllThePunchesForAGivenDay(userBaseMessageEventBus.getUserId(), DateSingleton.getInstance().getDate());
+    }
+
+    public void sendToast(String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

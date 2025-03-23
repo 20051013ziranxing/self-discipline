@@ -17,14 +17,18 @@ public class AddFragmentModule {
     public AddFragmentModule(NetworkClient networkClient) {
         this.networkClient = networkClient;
     }
-    public void createAPunchInTask(String user_id, String status, String title, String target_checkin_count, final ClockInFragmentModule.ModelCallback callback) {
-        String url = "http://101.200.121.142:9999/profile";
+    public void createAPunchInTask(String user_id, String title, String start_date, String end_date,int target_checkin_count, int icon,
+                                   String motivation_message, final AddFragmentModule.ModelCallback callback) {
+        String url = "http://101.200.121.142:9999/checkin";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id",user_id);
-            jsonObject.put("status", status);
             jsonObject.put("title", title);
+            jsonObject.put("start_date", start_date);
+            jsonObject.put("end_date", end_date);
+            jsonObject.put("icon", icon);
             jsonObject.put("target_checkin_count", target_checkin_count);
+            jsonObject.put("motivation_message", motivation_message);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -33,7 +37,7 @@ public class AddFragmentModule {
     }
 
     //公共提取出来的post方法
-    public void PublicNetworkRequestMethod(String url,String Json, ClockInFragmentModule.ModelCallback callback) {
+    public void PublicNetworkRequestMethod(String url,String Json, AddFragmentModule.ModelCallback callback) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
                 JSON, Json);

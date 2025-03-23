@@ -15,7 +15,9 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         mediaPlayer = MediaPlayer.create(this, R.raw.music1);
-        mediaPlayer.setLooping(true);
+        if (mediaPlayer != null) {
+            mediaPlayer.setLooping(true);
+        }
     }
 
     @Override

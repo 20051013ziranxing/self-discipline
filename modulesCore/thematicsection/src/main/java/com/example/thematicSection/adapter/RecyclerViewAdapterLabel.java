@@ -16,38 +16,37 @@ import com.example.thematicSection.bean.Listing;
 
 import java.util.List;
 
-public class RecyclerViewAdapterListing extends RecyclerView.Adapter<RecyclerViewAdapterListing.MyViewHolder> {
+public class RecyclerViewAdapterLabel extends RecyclerView.Adapter<RecyclerViewAdapterLabel.MyViewHolder> {
     private RecyclerViewAdapterListingListen listingListen;
-
     public interface RecyclerViewAdapterListingListen {
         void hhh();
     }
-    List<UserTables.UserListing> listingList;
+    List<UserTables.UserLabel> listingList;
     int icon;
 
-    public RecyclerViewAdapterListing(List<UserTables.UserListing> listingList, int icon, RecyclerViewAdapterListingListen listingListen) {
+    public RecyclerViewAdapterLabel(List<UserTables.UserLabel> listingList, int icon, RecyclerViewAdapterListingListen listingListen) {
         this.listingListen = listingListen;
         this.listingList = listingList;
         this.icon = icon;
     }
 
-    public void setListingList(List<UserTables.UserListing> listingList) {
+    public void setListingList(List<UserTables.UserLabel> listingList) {
         this.listingList = listingList;
     }
 
     @NonNull
     @Override
-    public RecyclerViewAdapterListing.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewAdapterLabel.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_listing_item,  parent ,false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapterListing.MyViewHolder holder, int position) {
-        UserTables.UserListing listing = listingList.get(position);
-        holder.textView_name.setText(listing.getListingName());
+    public void onBindViewHolder(@NonNull RecyclerViewAdapterLabel.MyViewHolder holder, int position) {
+        UserTables.UserLabel listing = listingList.get(position);
+        holder.textView_name.setText(listing.getLabelName());
         holder.imageView.setImageResource(icon);
-        holder.imageView.setColorFilter(Color.parseColor(listing.getListingColor()));
+        holder.imageView.setColorFilter(Color.parseColor(listing.getLabelColor()));
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

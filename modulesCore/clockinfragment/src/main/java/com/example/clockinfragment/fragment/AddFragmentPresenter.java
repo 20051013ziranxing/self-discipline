@@ -1,17 +1,20 @@
 package com.example.clockinfragment.fragment;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.clockinfragment.ClockInFragmentModule;
+import com.example.clockinfragment.ClockInFragment_1;
 import com.example.networkrequests.NetworkClient;
 
 import java.io.IOException;
 import java.util.Random;
 
 public class AddFragmentPresenter {
+    private static final String TAG = "TestTT_AddFragmentPresenter";
     AddFragmentModule addFragmentModule;
     AddFragment addFragment;
 
@@ -34,11 +37,14 @@ public class AddFragmentPresenter {
         addFragment.editText_EncouragementWords.setText(randomSentence);
     }
 
-    public void createAPunchInTask(String user_id, String status, String title, String target_checkin_count, String start_time, String end_time) {
-        addFragmentModule.createAPunchInTask(user_id, status, title, target_checkin_count, new ClockInFragmentModule.ModelCallback() {
+    public void createAPunchInTask(String user_id, String title, String start_date, String end_date,int target_checkin_count, int icon,
+                                   String motivation_message) {
+        addFragmentModule.createAPunchInTask(user_id, title, start_date, end_date, target_checkin_count, icon,motivation_message , new AddFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 addFragment.sendToast("习惯添加成功");
+                Log.d(TAG, icon + "icon");
+                addFragment.withANewCallback();
                 removeAddFragment();
                 return null;
             }

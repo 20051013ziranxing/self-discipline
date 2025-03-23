@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +34,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +47,10 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddFragment extends Fragment implements CustomDialog.OnDialogConfirmedListener, AddHabitRecyclerViewAdapter.OnItemClickListener{
+    private AddFragmentListen addFragmentListen;
+    public AddFragment(AddFragmentListen addFragmentListen) {
+        this.addFragmentListen = addFragmentListen;
+    }
     private static final String TAG = "TestTT_AddFragment";
     UserBaseMessageEventBus userBaseMessageEventBus;
     List<Icon> iconList;
@@ -52,7 +60,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
     AddFragmentPresenter addFragmentPresenter;
     RecyclerView recyclerView;
     EditText editText_EncouragementWords;
-    ImageButton imageButton_imageView_addFragment_HabitIconChoice;
+    ImageView imageButton_imageView_addFragment_HabitIconChoice;
     TextView textView_StartTime;
     TextView textView_EndTime;
     TextView textView_SumCount;
@@ -121,12 +129,31 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
         button_habitsForSavingSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFragmentPresenter.createAPunchInTask(userBaseMessageEventBus.getUserId(), "successful",
-                        editText_addFragment_HabitName.getText().toString(), textView_SumCount.getText().toString(),
-                        textView_StartTime.getText().toString(), textView_EndTime.getText().toString());
-                Log.d(TAG, userBaseMessageEventBus.getUserId()+ "successful"+
-                        editText_addFragment_HabitName.getText().toString()+textView_SumCount.getText().toString()+
-                        textView_StartTime.getText().toString()+textView_EndTime.getText().toString());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date date1;
+                Date date2;
+                try {
+                    date1 = formatter.parse(textView_StartTime.getText().toString());
+                    date2 = formatter.parse(textView_EndTime.getText().toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                if (editText_addFragment_HabitName.getText().toString().isEmpty()) {
+                    sendToast("习惯名不可为空");
+                } else if (editText_EncouragementWords.getText().toString().isEmpty()) {
+                    sendToast("设置一个鼓励语吧！");
+                } else if (!date2.after(date1)) {
+                    sendToast("请检查时间的设置");
+                } else {
+                    addFragmentPresenter.createAPunchInTask(userBaseMessageEventBus.getUserId(),
+                        editText_addFragment_HabitName.getText().toString(), textView_StartTime.getText().toString(),
+                        textView_EndTime.getText().toString(), Integer.parseInt(textView_SumCount.getText().toString()),
+                            ImageViewSrcSingleton.getInstance().getImageResId(),editText_EncouragementWords.getText().toString());
+                    Log.d(TAG, userBaseMessageEventBus.getUserId()+
+                            editText_addFragment_HabitName.getText().toString()+textView_StartTime.getText().toString()+
+                            textView_EndTime.getText().toString()+ ImageViewSrcSingleton.getInstance().getImageResId()+
+                            Integer.parseInt(textView_SumCount.getText().toString())+ editText_EncouragementWords.getText().toString());
+                }
             }
         });
         editText_EncouragementWords = view.findViewById(R.id.editText_EncouragementWords);
@@ -145,9 +172,11 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String formattedDate = String.format("%d-%02d-%02d", year, month, day);
         textView_StartTime = view.findViewById(R.id.textViewStartTime);
-        textView_StartTime.setText(year + "-" + month + "-" + day);
+        textView_StartTime.setText(formattedDate);
         textView_EndTime = view.findViewById(R.id.textViewEndTime);
+        textView_EndTime.setText(formattedDate);
         textView_SumCount = view.findViewById(R.id.textViewSumCount);
         //对打卡任务开始时期的选择
         constraintLayout_Start.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +185,8 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView_StartTime.setText(year + "-" + month + "-" + dayOfMonth);
+                        String formattedDate = String.format("%d-%02d-%02d", year, month, dayOfMonth);
+                        textView_StartTime.setText(formattedDate);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -169,7 +199,8 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView_EndTime.setText(year + "-" + month + "-" + dayOfMonth);
+                        String formattedDate = String.format("%d-%02d-%02d", year, month, dayOfMonth);
+                        textView_EndTime.setText(formattedDate);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -223,6 +254,7 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
     @Override
     public void onItemClick(int color, int iconIn) {
         changeFragmentLayout(color, iconIn);
+        ImageViewSrcSingleton.getInstance().setImageResId(iconIn);
     }
     public void SendToast(final String message) {
         getActivity().runOnUiThread(new Runnable() {
@@ -261,5 +293,13 @@ public class AddFragment extends Fragment implements CustomDialog.OnDialogConfir
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    public void withANewCallback() {
+        addFragmentListen.makeAnUpdate();
+    }
+
+    public interface AddFragmentListen {
+        void makeAnUpdate();
     }
 }

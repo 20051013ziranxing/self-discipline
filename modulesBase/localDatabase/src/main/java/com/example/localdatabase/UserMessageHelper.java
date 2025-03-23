@@ -110,19 +110,6 @@ public class UserMessageHelper extends SQLiteOpenHelper {
             return null;
         }
     }
-    @SuppressLint("Range")
-    public boolean checkUserActiveStatus() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("users", null, null, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
-            cursor.close();
-            return isActive == 1;
-        } else {
-            cursor.close();
-            return false;
-        }
-    }
 
     //在退出的时候将userToken部分设置为null
     public int updateUniqueUserToken(String newToken) {
@@ -134,6 +121,7 @@ public class UserMessageHelper extends SQLiteOpenHelper {
         db.close();
         return rowsAffected;
     }
+
     public int updateUniqueUserNameAndIcon(String newname, String newIcon) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

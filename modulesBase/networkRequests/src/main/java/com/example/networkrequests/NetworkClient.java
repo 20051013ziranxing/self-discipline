@@ -21,6 +21,8 @@ public class NetworkClient {
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
+
+
     public void post(String url, RequestBody requestBody, final NetworkCallback callback) {
         /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(
@@ -53,7 +55,7 @@ public class NetworkClient {
                     Log.d(TAG, "成功");
                 } else {
                     String errorResponse = response.body() != null ? response.body().string() : "No response body";
-                    Log.d(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
+                    Log.d(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse + url);
                     callback.onFailure(new IOException("Unexpected code " + response));
                 }
             }

@@ -1,12 +1,12 @@
 package com.example.clockinfragment.adapter;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -15,29 +15,46 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clockinfragment.R;
-import com.example.clockinfragment.bean.TestBead;
+import com.example.clockinfragment.StringFinder;
+import com.example.clockinfragment.bean.CheckInBean;
 import com.example.clockinfragment.myview.LineView;
 import com.example.clockinfragment.myview.RectangleProgressBar;
+import com.example.clockinfragment.singleton.DateSingleton;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecyclerAdapter.ViewHolder> {
+    private static final String TAG = "TestTT_ClockInRecyclerAdapter";
     /*ClockInRecyclerAdapterListener listener;
     public interface ClockInRecyclerAdapterListener {
 
     }*/
     //对象的引用，以后要与后端对接转为后端获取的数据对象
-    List<TestBead> testBeads;
+    List<CheckInBean.CheckinData> checkinBeanList;
+    String data;
+
+    public void setCheckinBeanList(List<CheckInBean.CheckinData> checkinBeanList) {
+        this.checkinBeanList = checkinBeanList;
+    }
+
     private ClockInRecyclerAdapter.OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick();
+        void onItemClick(int i, String data);
+        void modifyTheClockInInformation(String title, String start_date, String end_date, int icon, int target_checkin_count, String motivation_message);
+        void modifyTheAttendanceInformationByID(int id);
+        void modifyTheBinding(String id, String start_time);
+
     }
 
 
-    public ClockInRecyclerAdapter(List<TestBead> testBeads, ClockInRecyclerAdapter.OnItemClickListener listener) {
-        this.testBeads = testBeads;
+    public ClockInRecyclerAdapter(List<CheckInBean.CheckinData> testBeads, String data, ClockInRecyclerAdapter.OnItemClickListener listener) {
+        this.checkinBeanList = testBeads;
         this.listener = listener;
+        this.data = data;
     }
 
     @NonNull
@@ -50,22 +67,50 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ClockInRecyclerAdapter.ViewHolder holder, int position) {
-        TestBead testBead = testBeads.get(position);
-        holder.textView_Name.setText(testBead.getName());
-        holder.textView_progress.setText("已完成 " + testBead.getFinishCount() + "/" + testBead.getSumCount());
-        holder.imageButton.setImageResource(testBead.getIconId());
-        int color = Color.parseColor(ChoiceBackgroundColor(testBead.getIconId()));
+        CheckInBean.CheckinData checkinData = checkinBeanList.get(position);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formattedDate = dateFormat.format(calendar.getTime());
+        if (formattedDate.equals(DateSingleton.getInstance().getDate())) {
+            Log.d(TAG, formattedDate + "==" + DateSingleton.getInstance().getDate());
+            holder.textView_finish_tect.setText("结束");
+        } else {
+            holder.textView_finish_tect.setText("删除");
+        }
+        holder.textView_Name.setText(checkinData.getCheckin().getTitle());
+        holder.textView_progress.setText("已完成 " + checkinData.getDecodedCheckinCount().get(data) + "/" + checkinData.getCheckin().getTarget_checkin_count());
+        holder.imageButton.setImageResource(checkinData.getCheckin().getIcon());
+        int color = Color.parseColor(StringFinder.getStringFromInt(checkinData.getCheckin().getIcon()));
         holder.rectangleProgressBar.setProgressBarColor(color);
-        holder.rectangleProgressBar.setProgress((float) ((float) (Integer.parseInt(testBead.getFinishCount())) * 1.0 /
-                                Integer.parseInt(testBead.getSumCount())));
+        holder.rectangleProgressBar.setProgress((float) (((float) (checkinData.getDecodedCheckinCount().get(data))) * 1.0 /
+                        (checkinData.getCheckin().getTarget_checkin_count())));
         holder.imageButton.setBackgroundColor(color);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.imageButton_finish_once_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick();
+                //进行点击事件，使其添加一个
+                Log.d(TAG, "执行了加以");
+                listener.onItemClick(checkinData.getCheckin().getId(), data);
             }
         });
-        if (testBead.getFinishCount().equals(testBead.getSumCount())) {
+
+        holder.cardView_B.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.modifyTheBinding(String.valueOf(checkinData.getCheckin().getId()), checkinData.getCheckin().getStart_date());
+            }
+        });
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "点击了整体");
+                /*listener.modifyTheClockInInformation(checkinData.getCheckin().getTitle(), checkinData.getCheckin().getStart_date(),
+                        checkinData.getCheckin().getEnd_date(), checkinData.getCheckin().getIcon(), checkinData.getCheckin().getTarget_checkin_count(),
+                        checkinData.getCheckin().getMotivation_message());*/
+                listener.modifyTheAttendanceInformationByID(checkinData.getCheckin().getId());
+            }
+        });
+        if (checkinData.getDecodedCheckinCount().get(data) == checkinData.getCheckin().getTarget_checkin_count()) {
             Animation animation = new Animation() {
                 @Override
                 protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -81,10 +126,12 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
 
     @Override
     public int getItemCount() {
-        return testBeads == null ? 0 : testBeads.size();
+        return checkinBeanList == null ? 0 : checkinBeanList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public CardView cardView_A;
+        public CardView cardView_B;
         ImageButton imageButton;
         TextView textView_Name;
         TextView textView_progress;
@@ -93,6 +140,9 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
         CardView cardView;
         RectangleProgressBar rectangleProgressBar;
         ImageButton imageButton_finish_once_button;
+        TextView textView_finish_tect;
+        public boolean isAnimationRunning = false;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageButton = itemView.findViewById(R.id.clockIn_recycler_imageView_11);
@@ -103,6 +153,9 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             cardView = itemView.findViewById(R.id.finish_once_button);
             lineView = itemView.findViewById(R.id.lineView);
             imageButton_finish_once_button = itemView.findViewById(R.id.imageButton_finish_once_button);
+            cardView_A = itemView.findViewById(R.id.layout_A_item);
+            cardView_B = itemView.findViewById(R.id.layout_B_item);
+            textView_finish_tect = itemView.findViewById(R.id.textView_finish_tect);
         }
     }
 

@@ -3,11 +3,15 @@ package com.example.todofragment.bean;
 import java.util.List;
 
 public class GetToDoThings {
-    String message;
+    /*String message;*/
     List<GetToDothingMessage> data;
-    String status;
 
-    public GetToDoThings(String message, List<GetToDothingMessage> data, String status) {
+    public GetToDoThings(List<GetToDothingMessage> data) {
+        this.data = data;
+    }
+    /*String status;*/
+
+    /*public GetToDoThings(String message, List<GetToDothingMessage> data, String status) {
         this.message = message;
         this.data = data;
         this.status = status;
@@ -19,7 +23,7 @@ public class GetToDoThings {
 
     public void setMessage(String message) {
         this.message = message;
-    }
+    }*/
 
     public List<GetToDothingMessage> getData() {
         return data;
@@ -29,13 +33,13 @@ public class GetToDoThings {
         this.data = data;
     }
 
-    public String getStatus() {
+    /*public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
+    }*/
 
     public class GetToDothingMessage {
         private String id;

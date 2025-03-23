@@ -25,6 +25,7 @@ import com.example.todofragment.LineView;
 import com.example.todofragment.R;
 import com.example.todofragment.ToDoFragment;
 import com.example.todofragment.bean.GetToDoThings;
+import com.example.todofragment.bean.GetToDothingMessage;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         void modifyTheToDoInformation(String id, String title);
     }
     private static final String TAG = "TestTT_RecyclerViewToDoAdapter";
-    List<GetToDoThings.GetToDothingMessage> toDoThings;
+    List<GetToDothingMessage> toDoThings;
 
-    public RecyclerViewToDoAdapter(List<GetToDoThings.GetToDothingMessage> toDoThings, RecyclerViewToDoAdapterListener listener, ToDoFragment toDoFragment) {
+    public RecyclerViewToDoAdapter(List<GetToDothingMessage> toDoThings, RecyclerViewToDoAdapterListener listener, ToDoFragment toDoFragment) {
         this.toDoThings = toDoThings;
         this.listener = listener;
         gestureDetector = new GestureDetector(toDoFragment.getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -53,7 +54,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         });
     }
 
-    public void setToDoThings(List<GetToDoThings.GetToDothingMessage> toDoThings) {
+    public void setToDoThings(List<GetToDothingMessage> toDoThings) {
         /*Log.d(TAG, String.valueOf(this.toDoThings.size()));*/
         this.toDoThings = toDoThings;
         /*Log.d(TAG, String.valueOf(toDoThings.size()));*/
@@ -69,13 +70,14 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        GetToDoThings.GetToDothingMessage toDoThing = toDoThings.get(position);
+        GetToDothingMessage toDoThing = toDoThings.get(position);
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d(TAG, String.valueOf(v.getId()));
                 if (v.getId() != holder.delete_the_to_do_button_cardView.getId() && v.getId() != holder.modify_the_proxy_information_button_cardView.getId()) {
                     listener.modifyTheBinding();
+                    //进行结束逻辑
                 }
                 holder.delete_the_to_do_button_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -137,6 +139,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "点击了并" + holder.checkBox.isChecked());
                 listener.markComplete(toDoThings.get(position).getId().toString(), holder.checkBox.isChecked());
                 if (holder.checkBox.isChecked()) {
                     Animation animation = new Animation() {

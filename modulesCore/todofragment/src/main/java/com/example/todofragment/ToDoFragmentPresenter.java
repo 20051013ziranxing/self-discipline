@@ -8,9 +8,12 @@ import android.view.View;
 import com.example.networkrequests.NetworkClient;
 import com.example.todofragment.adapter.RecyclerViewToDoAdapter;
 import com.example.todofragment.bean.GetToDoThings;
+import com.example.todofragment.bean.GetToDothingMessage;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,23 +38,32 @@ public class ToDoFragmentPresenter {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "我要开始更新了");
-                        GetToDoThings getToDoThings = new Gson().fromJson(response, GetToDoThings.class);
-                        List<GetToDoThings.GetToDothingMessage> toDoThings = getToDoThings.getData();
-                        List<GetToDoThings.GetToDothingMessage> toDothingMessages = filteringByTime(toDoThings, updated_at);
-                        if (toDothingMessages != null) {
-                            Collections.sort(toDothingMessages, new ToDoThingComparator());
-                            toDoFragment.remindersChange(toDothingMessages);
+                        Log.d(TAG, "我要开始更新了" + response);
+                        GetToDoThings getToDoThings = null;
+                        List<GetToDothingMessage> itemList = null;
+                        if (response != null) {
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<GetToDothingMessage>>() {}.getType();
+                            itemList = gson.fromJson(response, listType);
+                            /*getToDoThings = new Gson().fromJson(response, GetToDoThings.class);*/
+                        }
+                        /*List<GetToDoThings.GetToDothingMessage> toDoThings = null;
+                        if (getToDoThings != null) {
+                            toDoThings = getToDoThings.getData();
+                        }
+                        List<GetToDoThings.GetToDothingMessage> toDothingMessages = filteringByTime(toDoThings, updated_at);*/
+                        if (itemList != null) {
+                            Collections.sort(itemList, new ToDoThingComparator());
+                            toDoFragment.remindersChange(itemList);
                             toDoFragment.constraintLayout_not.setVisibility(View.GONE);
                         } else {
                             toDoFragment.constraintLayout_not.setVisibility(View.VISIBLE);
-                            toDoFragment.remindersChange(toDothingMessages);
+                            toDoFragment.remindersChange(itemList);
                         }
                     }
                 });
                 return null;
             }
-
             @Override
             public Boolean onFailure(IOException e) {
                 toDoFragment.sendToast("获取数据失败");
@@ -85,6 +97,7 @@ public class ToDoFragmentPresenter {
         toDoFragmentModule.markWhetherTheTaskIsCompletedOrNot(id, isFinish, new ToDoFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
+                Log.d(TAG, "标记成功" + response);
                 getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), toDoFragment.textView_data.getText().toString());
                 return null;
             }
