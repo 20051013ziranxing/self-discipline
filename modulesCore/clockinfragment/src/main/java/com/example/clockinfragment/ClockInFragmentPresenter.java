@@ -86,7 +86,7 @@ public class ClockInFragmentPresenter {
                         Log.d(TAG, String.valueOf(checkinData.getDecodedCheckinCount().get(date)));
                     }*/
                     if (checkinDataList != null) {
-                        clockInFragment1.updateThePunchList(checkinDataList);
+                        clockInFragment1.updateThePunchList(checkinDataList, date);
                     }
                 }
                 return null;

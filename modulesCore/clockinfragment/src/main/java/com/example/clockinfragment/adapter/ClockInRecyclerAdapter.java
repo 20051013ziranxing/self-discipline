@@ -40,6 +40,10 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
         this.checkinBeanList = checkinBeanList;
     }
 
+    public void setData(String data) {
+        this.data = data;
+    }
+
     private ClockInRecyclerAdapter.OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -82,6 +86,8 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
         holder.imageButton.setImageResource(checkinData.getCheckin().getIcon());
         int color = Color.parseColor(StringFinder.getStringFromInt(checkinData.getCheckin().getIcon()));
         holder.rectangleProgressBar.setProgressBarColor(color);
+        Log.d(TAG, data);
+        Log.d(TAG, String.valueOf(checkinData.getDecodedCheckinCount().get(data)));
         holder.rectangleProgressBar.setProgress((float) (((float) (checkinData.getDecodedCheckinCount().get(data))) * 1.0 /
                         (checkinData.getCheckin().getTarget_checkin_count())));
         holder.imageButton.setBackgroundColor(color);

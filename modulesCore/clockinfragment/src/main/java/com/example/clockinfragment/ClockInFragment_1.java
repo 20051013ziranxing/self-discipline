@@ -132,6 +132,8 @@ public class ClockInFragment_1 extends Fragment{
                         floatingButton_backNowDay.setVisibility(View.GONE);
                     }
                 }
+                Log.d(TAG, "要重新获取数据了");
+                clockInFragmentPresenter.getAllThePunchesForAGivenDay(userBaseMessageEventBus.getUserId(), localDate.toString());
             }
         });
         floatingActionButton_floatingButton_add_clockIn = view.findViewById(R.id.floatingButton_add_clockIn);
@@ -270,11 +272,16 @@ public class ClockInFragment_1 extends Fragment{
         this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 
-    public void updateThePunchList(List<CheckInBean.CheckinData> checkinDataList) {
+    public void updateThePunchList(List<CheckInBean.CheckinData> checkinDataList, String data) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 addFounctionAdapter.setCheckinBeanList(checkinDataList);
+                addFounctionAdapter.setData(data);
+                Log.d(TAG, "我要开始更新页面了");
+                for (CheckInBean.CheckinData checkinData : checkinDataList) {
+                    Log.d(TAG, data + checkinData.getCheckin().getTitle() + checkinData.getCheckin().getId());
+                }
                 addFounctionAdapter.notifyDataSetChanged();
             }
         });

@@ -44,12 +44,15 @@ public class ModifyFragmentPresenter {
         modifyFragmentModule.deleteAClockInTask(checkin_id, new ModifyFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
-
+                modifyFragment.sendToast("删除成功");
+                modifyFragment.addFragmentListen.makeAnUpdate();
+                removeAddFragment();
                 return null;
             }
 
             @Override
             public Boolean onFailure(IOException e) {
+                modifyFragment.sendToast("删除失败");
                 return null;
             }
         });

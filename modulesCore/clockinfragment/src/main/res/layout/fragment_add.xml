@@ -34,6 +34,18 @@
             android:background="#00ffffff"
             android:text="取消"/>
 
+        <ImageButton
+            android:id="@+id/imageButton_deleteClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/textView_addHabit_121"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/delete_clock_icon"
+            android:background="#00ffffff"
+            android:layout_marginEnd="8dp"/>
+
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:fillViewport="true"

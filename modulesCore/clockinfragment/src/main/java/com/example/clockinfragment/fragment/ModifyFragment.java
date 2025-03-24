@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class ModifyFragment extends AddFragment{
     TextView textViewSumCount;
     EditText editText_EncouragementWords;
     Button button_habitsForSavingSettings;
+    ImageButton imageButton_deleteClock;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -71,6 +73,7 @@ public class ModifyFragment extends AddFragment{
         editText_EncouragementWords = view.findViewById(R.id.editText_EncouragementWords);
         button_habitsForSavingSettings = view.findViewById(R.id.button_habitsForSavingSettings);
         modifyFragmentPresenter.getAttendanceRecordsBasedOnYourID(String.valueOf(checkInId));
+        imageButton_deleteClock = view.findViewById(R.id.imageButton_deleteClock);
         button_habitsForSavingSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,5 +117,13 @@ public class ModifyFragment extends AddFragment{
         Log.d(TAG, String.valueOf(checkInById.getData().getCheckin().getTarget_checkin_count()));
         textViewSumCount.setText(String.valueOf(checkInById.getData().getCheckin().getTarget_checkin_count()));
         editText_EncouragementWords.setText(checkInById.getData().getCheckin().getMotivation_message());
+        imageButton_deleteClock.setVisibility(View.VISIBLE);
+        imageButton_deleteClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modifyFragmentPresenter.deleteAClockInTask(String.valueOf(checkInById));
+                Log.d(TAG, "删除了");
+            }
+        });
     }
 }
