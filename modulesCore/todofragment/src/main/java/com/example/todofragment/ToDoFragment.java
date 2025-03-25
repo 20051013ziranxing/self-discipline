@@ -188,7 +188,7 @@ public class ToDoFragment extends Fragment{
 
             @Override
             public void modifyTheBinding() {
-                toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());
+                /*toDoFragmentPresenter.getToDoThings(userBaseMessageEventBus.getUserId(), textView_data.getText().toString());*/
                 itemTouchHelper.attachToRecyclerView(recyclerView_ToDoFragment_show);
             }
 

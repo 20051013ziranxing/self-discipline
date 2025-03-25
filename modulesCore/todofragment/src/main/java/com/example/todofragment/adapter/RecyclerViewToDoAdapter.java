@@ -70,6 +70,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Log.d(TAG, String.valueOf(position) + "项目");
         GetToDothingMessage toDoThing = toDoThings.get(position);
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -135,13 +136,16 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
             };
             animation.setDuration(1000);
             holder.lineView.startAnimation(animation);
+        } else if (toDoThing.getStatus().equals("pending")){
+            holder.lineView.setLineLength(0);
         }
+
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "点击了并" + holder.checkBox.isChecked());
                 listener.markComplete(toDoThings.get(position).getId().toString(), holder.checkBox.isChecked());
-                if (holder.checkBox.isChecked()) {
+                /*if (holder.checkBox.isChecked()) {
                     Animation animation = new Animation() {
                         @Override
                         protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -154,7 +158,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
                     holder.lineView.setVisibility(View.VISIBLE);
                 } else {
                     holder.lineView.setVisibility(View.INVISIBLE);
-                }
+                }*/
             }
         });
     }

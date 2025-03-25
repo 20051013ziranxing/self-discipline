@@ -35,6 +35,7 @@ public class FindPasswordPresenter {
             @Override
             public Boolean onSuccess(String response) {
                 Log.d("TestTT_", "验证码验证成功");
+                Log.d("TestTT_", response);
                 findPasswordModule.ResetOfPassword(password, new FindPasswordModule.ModelCallback() {
                     @Override
                     public Boolean onSuccess(String response) {

@@ -117,6 +117,8 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             }
         });
         if (checkinData.getDecodedCheckinCount().get(data) == checkinData.getCheckin().getTarget_checkin_count()) {
+            Log.d(TAG, data + "ifFFF");
+            Log.d(TAG, checkinData.getDecodedCheckinCount().get(data) + "==" + checkinData.getCheckin().getTarget_checkin_count());
             Animation animation = new Animation() {
                 @Override
                 protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -127,6 +129,11 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             animation.setDuration(1000);
             holder.lineView.startAnimation(animation);
             holder.imageButton_finish_once_button.setEnabled(false);
+        } else {
+            Log.d(TAG, data + "else");
+            Log.d(TAG, checkinData.getDecodedCheckinCount().get(data) + "==" + checkinData.getCheckin().getTarget_checkin_count());
+            holder.lineView.setLineLength(0);
+            holder.imageButton_finish_once_button.setEnabled(true);
         }
     }
 
