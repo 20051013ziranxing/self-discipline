@@ -19,7 +19,7 @@ public class AddFragmentModule {
     }
     public void createAPunchInTask(String user_id, String title, String start_date, String end_date,int target_checkin_count, int icon,
                                    String motivation_message, final AddFragmentModule.ModelCallback callback) {
-        String url = "http://101.200.121.142:9999/checkin";
+        String url = "http://116.62.29.172:9999/checkin";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id",user_id);

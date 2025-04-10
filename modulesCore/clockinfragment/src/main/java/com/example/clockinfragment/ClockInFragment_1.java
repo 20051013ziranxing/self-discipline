@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.clockinfragment.adapter.ClockInRecyclerAdapter;
 import com.example.clockinfragment.bean.CheckInBean;
+import com.example.clockinfragment.bean.CheckInBean1;
 import com.example.clockinfragment.bean.TestBead;
 import com.example.clockinfragment.fragment.AddFragment;
 import com.example.clockinfragment.fragment.ModifyFragment;
@@ -272,16 +273,16 @@ public class ClockInFragment_1 extends Fragment{
         this.userBaseMessageEventBus = userBaseMessageEventBus;
     }
 
-    public void updateThePunchList(List<CheckInBean.CheckinData> checkinDataList, String data) {
+    public void updateThePunchList(List<CheckInBean1.CheckinData> checkinDataList, String data) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 addFounctionAdapter.setCheckinBeanList(checkinDataList);
                 addFounctionAdapter.setData(data);
                 Log.d(TAG, "我要开始更新页面了");
-                for (CheckInBean.CheckinData checkinData : checkinDataList) {
+                /*for (CheckInBean1.CheckinData checkinData : checkinDataList) {
                     Log.d(TAG, data + checkinData.getCheckin().getTitle() + checkinData.getCheckin().getId());
-                }
+                }*/
                 addFounctionAdapter.notifyDataSetChanged();
             }
         });

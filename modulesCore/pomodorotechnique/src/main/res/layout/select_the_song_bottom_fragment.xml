@@ -75,6 +75,42 @@
             android:button="@null"
             android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
 
+        <RadioButton
+            android:id="@+id/radio_readingABookInACaf"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="咖啡厅看书"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+        <RadioButton
+            android:id="@+id/radio_smallRiverWater"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="小河流水"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+        <RadioButton
+            android:id="@+id/radio_theWindOutsideTheWindow"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="窗外的风"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
+        <RadioButton
+            android:id="@+id/radio_theRainHitsTheLeaves"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="雨打树叶"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"/>
+
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

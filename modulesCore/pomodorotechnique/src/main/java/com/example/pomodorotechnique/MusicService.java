@@ -24,17 +24,22 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && "CHANGE_MUSIC".equals(intent.getAction())) {
-            Log.d(TAG, "对应上了");
-            int resourceId = intent.getIntExtra("MUSIC_RESOURCE_ID", -1);
-            Log.d(TAG, String.valueOf(resourceId));
-            if (resourceId != -1) {
-                changeMusic(String.valueOf(resourceId));
+        if (intent != null) {
+            String action = intent.getAction();
+            if ("CHANGE_MUSIC".equals(action)) {
+                Log.d(TAG, "对应上了");
+                int resourceId = intent.getIntExtra("MUSIC_RESOURCE_ID", -1);
+                Log.d(TAG, String.valueOf(resourceId));
+                if (resourceId != -1) {
+                    changeMusic(String.valueOf(resourceId));
+                }
+            } else if ("START_MUSIC".equals(action)) {
+                mediaPlayer.start();
             }
-        } else if ("START_MUSIC".equals(intent.getAction())) {
-            mediaPlayer.start();
         } else {
-
+            Log.e(TAG, "Received null Intent in onStartCommand");
+            // 如果 Intent 为 null，可以选择停止服务或执行其他逻辑
+            // stopSelf(startId); // 如果需要停止服务
         }
         return START_STICKY;
     }

@@ -266,12 +266,15 @@ public class ToDoFragment extends Fragment{
     }
 
     public void sendToast(String message) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (isAdded()) {
+            // 现在可以安全地访问 Activity 和 Context
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     //接口回调使其执行刷新操作

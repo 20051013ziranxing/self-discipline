@@ -97,17 +97,24 @@ public class MyFragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_1, container, false);
+        textView_UserName = view.findViewById(R.id.textView_UserName);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         imageView_headPicture = view.findViewById(R.id.imageView_headPicture);
         /*Log.d(TAG, userBaseMessageEventBus.getUserPictureURL());*/
-        Glide.with(this)
-                .load(userBaseMessageEventBus.getUserPictureURL())
-                //.load("https://mmbiz.qpic.cn/mmbiz_jpg/50flWREUFnHqHqia20eqULiczW6UPOolbIucpDClrcnOc50C5zqRq9dfY7uzzTNNS46VUicibdMrkibgvXwzcRR4jWg/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1&wx_co=1")
-                .into(imageView_headPicture);
-        textView_UserName = view.findViewById(R.id.textView_UserName);
-        textView_UserName.setText(userBaseMessageEventBus.getUserName());
+        if (userBaseMessageEventBus != null) {
+            Glide.with(this)
+                    .load(userBaseMessageEventBus.getUserPictureURL())
+                    .into(imageView_headPicture);
+        } else {
+            Log.e("MyFragment_1", "UserBaseMessageEventBus is null");
+        }
+        if (userBaseMessageEventBus != null) {
+            textView_UserName.setText(userBaseMessageEventBus.getUserName());
+        } else {
+            Log.e("MyFragment_1", "UserBaseMessageEventBus is null");
+        }
         //进行数据的初始化
         initData();
         constraintLayout = view.findViewById(R.id.constraint);

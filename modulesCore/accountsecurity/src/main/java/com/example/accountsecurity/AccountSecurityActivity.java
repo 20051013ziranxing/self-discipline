@@ -178,6 +178,9 @@ public class AccountSecurityActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 accountSecurityPresenter.signOut();
+                finish();
+                ARouter.getInstance().build("/login/LoginUpActivity").navigation();
+                ActivityManager.getInstance().finishAllActivities();
             }
         });
     }
@@ -330,6 +333,12 @@ public class AccountSecurityActivity extends AppCompatActivity {
                 Toast.makeText(AccountSecurityActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityManager.getInstance().removeActivity(this);
     }
 
     @Override

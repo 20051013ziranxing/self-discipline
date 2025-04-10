@@ -23,8 +23,34 @@ public class ModifyFragmentModule extends AddFragmentModule{
 
     //删除打卡任务
     public void deleteAClockInTask(String checkin_id, final ModelCallback callback) {
-        String url = "http://101.200.121.142:9999/delete-todo/" + checkin_id;
+        String url = "http://116.62.29.172:9999/delete-todo/" + checkin_id;
         networkClient.deleteTask(url, new NetworkClient.NetworkCallback() {
+            @Override
+            public void onSuccess(String response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(IOException e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+
+    public void delete(String checkin_id, final ModelCallback callback) {
+        Log.d(TAG, checkin_id);
+        String url = "http://116.62.29.172:9999/checkin/delete";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("checkin_id", checkin_id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String json = jsonObject.toString();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(
+                JSON, json);
+        networkClient.deleteTaskRe(url, requestBody, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
                 callback.onSuccess(response);
@@ -41,7 +67,7 @@ public class ModifyFragmentModule extends AddFragmentModule{
     public void modifyTheClockInInformation(int id, String title, String start_date, String end_date,
                                             int icon, int target_checkin_count, String motivation_message,
                                             final ModifyFragmentModule.ModelCallback callback) {
-        String url = "http://101.200.121.142:9999/checkin/update";
+        String url = "http://116.62.29.172:9999/checkin/update";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -73,11 +99,11 @@ public class ModifyFragmentModule extends AddFragmentModule{
 
     //根据checkin_id获取打卡信息
     public void getAttendanceRecordsBasedOnYourID(String checkin_id, final ModifyFragmentModule.ModelCallback callback) {
-        String url = "http://101.200.121.142:9999/get-checkin";
-        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse("http://101.200.121.142:9999/get-checkin").newBuilder();
+        String url = "http://116.62.29.172:9999/get-checkin";
+        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse("http://116.62.29.172:9999/get-checkin").newBuilder();
         httpUrlBuilder.addQueryParameter("checkin_id", checkin_id);
         httpUrlBuilder.addQueryParameter("checkin_id", checkin_id);
-        publicGetNetworkRequestMethod("http://101.200.121.142:9999/get-todo", httpUrlBuilder, callback);
+        publicGetNetworkRequestMethod("http://116.62.29.172:9999/get-todo", httpUrlBuilder, callback);
     }
 
 

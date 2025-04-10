@@ -61,6 +61,7 @@ public class SignOutPromptActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build("/cancelyouraccount/LogOutPageActivity").navigation();
+                finish();
                 /*Intent intent = new Intent(SignOutPromptActivity.this, LogOutPageActivity.class);
                 startActivity(intent);*/
             }

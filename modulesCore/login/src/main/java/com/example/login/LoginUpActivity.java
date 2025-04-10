@@ -69,7 +69,7 @@ public class LoginUpActivity extends AppCompatActivity {
             return insets;
         });
         //进行活动的添加
-        ActivityManager.getInstance().addActivity(this);
+        /*ActivityManager.getInstance().addActivity(this);*/
         textView_loginUp = findViewById(R.id.button_loginUp);
         textView_signIn = findViewById(R.id.button_registered);
         view_signIn = findViewById(R.id.include_sign_in);
@@ -237,7 +237,8 @@ public class LoginUpActivity extends AppCompatActivity {
     }
 
     public Boolean CheckEmailRight(String s) {
-        return s != null && s.matches(EMAIL_REGEX);
+        return true;
+//        return s != null && s.matches(EMAIL_REGEX);
     }
 
     public Boolean CheckPasswordRight(String s) {

@@ -61,6 +61,7 @@ public class MainActivity1 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });*/
+        ActivityManager.getInstance().addActivity(this);
         //进行侧面导航栏的设置
         drawableLayout = findViewById(R.id.DrawableLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -176,7 +177,7 @@ public class MainActivity1 extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ActivityManager.getInstance().finishAllActivities();
+        ActivityManager.getInstance().removeActivity(this);
     }
 
     public void upDataRecyclerViewListing(List<UserTables.UserListing> userListings) {

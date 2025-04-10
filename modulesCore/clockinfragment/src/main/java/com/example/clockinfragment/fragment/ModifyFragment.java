@@ -121,8 +121,8 @@ public class ModifyFragment extends AddFragment{
         imageButton_deleteClock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modifyFragmentPresenter.deleteAClockInTask(String.valueOf(checkInById));
-                Log.d(TAG, "删除了");
+                modifyFragmentPresenter.deleteAClockInTask(String.valueOf(checkInById.getData().getCheckin().getId()));
+                Log.d(TAG, "删除了" + checkInById.getData().getCheckin().getId());
             }
         });
     }

@@ -31,7 +31,7 @@ public class PublishModel implements IPublishContract.Model {
     public static final String TAG = "PublishFunctionTAG";
 
     private PublishPresenter presenter;
-    private final static String BASE_URL = "http://101.200.121.142:9999";
+    private final static String BASE_URL = "http://116.62.29.172:9999";
 
     private final static String POST_URL = BASE_URL + "/community/post";
 

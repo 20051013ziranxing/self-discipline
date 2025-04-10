@@ -93,9 +93,35 @@ public class NetworkClient {
         });
     }
 
-    public void deleteTask(String url, final NetworkCallback callback) {
-        /*String url = "http://101.200.121.142:9999/delete-todo/" + taskId;*/
+    public void deleteTaskRe(String url,RequestBody requestBody, final NetworkCallback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .delete(requestBody)
+                .build();
 
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+                Log.e(TAG, "请求失败: " + e.getMessage());
+                Log.e(TAG, "请求信息: " + call.request().url());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess("Task deleted successfully");
+                    Log.d(TAG, "成功");
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    Log.e(TAG, "请求失败: " + response.code() + " - " + response.message() + "\n" + errorResponse);
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                }
+            }
+        });
+    }
+
+    public void deleteTask(String url, final NetworkCallback callback) {
         Request request = new Request.Builder()
                 .url(url)
                 .delete()

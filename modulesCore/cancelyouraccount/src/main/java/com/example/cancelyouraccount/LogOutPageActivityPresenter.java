@@ -22,6 +22,7 @@ public class LogOutPageActivityPresenter {
             public Boolean onSuccess(String response) {
                 logOutPageActivityModule.deleteUserLocalMessage();
                 logOutPageActivity.sendToast("注销成功");
+                logOutPageActivity.finish();
                 return null;
             }
 

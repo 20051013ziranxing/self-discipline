@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.clockinfragment.R;
 import com.example.clockinfragment.StringFinder;
 import com.example.clockinfragment.bean.CheckInBean;
+import com.example.clockinfragment.bean.CheckInBean1;
 import com.example.clockinfragment.myview.LineView;
 import com.example.clockinfragment.myview.RectangleProgressBar;
 import com.example.clockinfragment.singleton.DateSingleton;
@@ -33,10 +34,10 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
 
     }*/
     //对象的引用，以后要与后端对接转为后端获取的数据对象
-    List<CheckInBean.CheckinData> checkinBeanList;
+    List<CheckInBean1.CheckinData> checkinBeanList;
     String data;
 
-    public void setCheckinBeanList(List<CheckInBean.CheckinData> checkinBeanList) {
+    public void setCheckinBeanList(List<CheckInBean1.CheckinData> checkinBeanList) {
         this.checkinBeanList = checkinBeanList;
     }
 
@@ -55,7 +56,7 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
     }
 
 
-    public ClockInRecyclerAdapter(List<CheckInBean.CheckinData> testBeads, String data, ClockInRecyclerAdapter.OnItemClickListener listener) {
+    public ClockInRecyclerAdapter(List<CheckInBean1.CheckinData> testBeads, String data, ClockInRecyclerAdapter.OnItemClickListener listener) {
         this.checkinBeanList = testBeads;
         this.listener = listener;
         this.data = data;
@@ -71,7 +72,8 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ClockInRecyclerAdapter.ViewHolder holder, int position) {
-        CheckInBean.CheckinData checkinData = checkinBeanList.get(position);
+        Log.d(TAG + "ppp", data);
+        CheckInBean1.CheckinData checkinData = checkinBeanList.get(position);
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String formattedDate = dateFormat.format(calendar.getTime());
@@ -82,14 +84,17 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             holder.textView_finish_tect.setText("删除");
         }
         holder.textView_Name.setText(checkinData.getCheckin().getTitle());
-        holder.textView_progress.setText("已完成 " + checkinData.getDecodedCheckinCount().get(data) + "/" + checkinData.getCheckin().getTarget_checkin_count());
+        if (checkinData.getDecodedCheckinCount() != null) {
+            holder.textView_progress.setText("已完成 " + checkinData.getDecodedCheckinCount().get(data) + "/" + checkinData.getCheckin().getTarget_checkin_count());
+        }
         holder.imageButton.setImageResource(checkinData.getCheckin().getIcon());
         int color = Color.parseColor(StringFinder.getStringFromInt(checkinData.getCheckin().getIcon()));
         holder.rectangleProgressBar.setProgressBarColor(color);
         Log.d(TAG, data);
-        Log.d(TAG, String.valueOf(checkinData.getDecodedCheckinCount().get(data)));
-        holder.rectangleProgressBar.setProgress((float) (((float) (checkinData.getDecodedCheckinCount().get(data))) * 1.0 /
-                        (checkinData.getCheckin().getTarget_checkin_count())));
+        if (checkinData.getDecodedCheckinCount() != null) {
+            holder.rectangleProgressBar.setProgress((float) (((float) (checkinData.getDecodedCheckinCount().get(data))) * 1.0 /
+                    (checkinData.getCheckin().getTarget_checkin_count())));
+        }
         holder.imageButton.setBackgroundColor(color);
         holder.imageButton_finish_once_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +121,7 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
                 listener.modifyTheAttendanceInformationByID(checkinData.getCheckin().getId());
             }
         });
-        if (checkinData.getDecodedCheckinCount().get(data) == checkinData.getCheckin().getTarget_checkin_count()) {
+        if (checkinData.getDecodedCheckinCount()!= null && checkinData.getDecodedCheckinCount().get(data) == checkinData.getCheckin().getTarget_checkin_count()) {
             Log.d(TAG, data + "ifFFF");
             Log.d(TAG, checkinData.getDecodedCheckinCount().get(data) + "==" + checkinData.getCheckin().getTarget_checkin_count());
             Animation animation = new Animation() {
@@ -131,7 +136,7 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
             holder.imageButton_finish_once_button.setEnabled(false);
         } else {
             Log.d(TAG, data + "else");
-            Log.d(TAG, checkinData.getDecodedCheckinCount().get(data) + "==" + checkinData.getCheckin().getTarget_checkin_count());
+//            Log.d(TAG, checkinData.getDecodedCheckinCount().get(data) + "==" + checkinData.getCheckin().getTarget_checkin_count());
             holder.lineView.setLineLength(0);
             holder.imageButton_finish_once_button.setEnabled(true);
         }
@@ -175,16 +180,22 @@ public class ClockInRecyclerAdapter extends RecyclerView.Adapter<ClockInRecycler
     //存储的时候应存储对应的图标，根据图标选择背景图的颜色
     public String ChoiceBackgroundColor(int type) {
         if (type == R.drawable.walter) {
+            Log.d(TAG, String.valueOf(R.drawable.walter));
             return "#ADD8E6";
         } else if (type == R.drawable.morning) {
+            Log.d(TAG, String.valueOf(R.drawable.morning));
             return "#FFFBEA";
         } else if (type == R.drawable.night) {
+            Log.d(TAG, String.valueOf(R.drawable.night));
             return "#D8BFD8";
         } else if (type == R.drawable.firut) {
+            Log.d(TAG, String.valueOf(R.drawable.firut));
             return "#CAD1B7";
         } else if (type == R.drawable.exercise) {
+            Log.d(TAG, String.valueOf(R.drawable.exercise));
             return "#ADD8E6";
         } else if (type == R.drawable.word) {
+            Log.d(TAG, String.valueOf(R.drawable.word));
             return "#D2D2E6";
         }
         return "#ADD8E6";

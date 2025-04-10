@@ -47,6 +47,7 @@ public class AddHabitRecyclerViewAdapter extends RecyclerView.Adapter<AddHabitRe
                 Log.d(TAG, "点击了开始判空");
                 if (listener != null) {
                     Log.d(TAG, "点击了hhh");
+                    Log.d(TAG, String.valueOf(icon.getIconIn()));
                     listener.onItemClick(color, icon.getIconIn());
                 }
             }

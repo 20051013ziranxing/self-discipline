@@ -114,6 +114,7 @@ public class RecyclerViewToDoAdapter extends RecyclerView.Adapter<RecyclerViewTo
         }
         if (ThingNeedTime(result[1])) {
             holder.imageButton_ThingTime.setImageResource(R.drawable.fanqie);
+            Log.d(TAG, String.valueOf(R.drawable.fanqie));
         } else {
             holder.imageButton_ThingTime.setVisibility(View.GONE);
         }

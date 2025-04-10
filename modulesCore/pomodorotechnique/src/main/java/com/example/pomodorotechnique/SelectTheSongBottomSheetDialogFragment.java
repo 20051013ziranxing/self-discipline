@@ -48,6 +48,18 @@ public class SelectTheSongBottomSheetDialogFragment extends BottomSheetDialogFra
                 } else if (ID == R.id.radio_summerRains) {
                     listener.onSongSelected(String.valueOf(R.raw.music1));
                     Log.d(TAG, "我点击了，并执行了");
+                } else if (ID == R.id.radio_readingABookInACaf) {
+                    listener.onSongSelected(String.valueOf(R.raw.raading_book));
+                    Log.d(TAG, "我点击了，并执行了");
+                } else if (ID == R.id.radio_smallRiverWater) {
+                    listener.onSongSelected(String.valueOf(R.raw.rain));
+                    Log.d(TAG, "我点击了，并执行了");
+                } else if (ID == R.id.radio_theWindOutsideTheWindow) {
+                    listener.onSongSelected(String.valueOf(R.raw.window));
+                    Log.d(TAG, "我点击了，并执行了");
+                } else if (ID == R.id.radio_theRainHitsTheLeaves) {
+                    listener.onSongSelected(String.valueOf(R.raw.river_water));
+                    Log.d(TAG, "我点击了，并执行了");
                 } else {
                     listener.onSongSelected("123");
                 }

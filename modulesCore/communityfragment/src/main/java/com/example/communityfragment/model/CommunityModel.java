@@ -33,7 +33,7 @@ public class CommunityModel implements ICommunityContract.Model {
     public static final String TAG = "CommunityModelTAG";
     private CommunityPresenter mPresenter;
 
-    private final static String BASE_URL = "http://101.200.121.142:9999";
+    private final static String BASE_URL = "http://116.62.29.172:9999";
 
     private final static String ALLLIST_URL = BASE_URL + "/community/all-list";
     private final static String LIST_URL = BASE_URL + "/community/list";

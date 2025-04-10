@@ -41,10 +41,11 @@ public class ModifyFragmentPresenter {
     }
 
     public void deleteAClockInTask(String checkin_id) {
-        modifyFragmentModule.deleteAClockInTask(checkin_id, new ModifyFragmentModule.ModelCallback() {
+        modifyFragmentModule.delete(checkin_id, new ModifyFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
                 modifyFragment.sendToast("删除成功");
+                Log.d(TAG, response);
                 modifyFragment.addFragmentListen.makeAnUpdate();
                 removeAddFragment();
                 return null;

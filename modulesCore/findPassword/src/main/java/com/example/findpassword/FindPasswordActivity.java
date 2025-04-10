@@ -137,7 +137,8 @@ public class FindPasswordActivity extends AppCompatActivity {
         });
     }
     public Boolean CheckEmailRight(String s) {
-        return s != null && s.matches(EMAIL_REGEX);
+        return true;
+//        return s != null && s.matches(EMAIL_REGEX);
     }
     public Boolean CheckPasswordRight(String s) {
         return s != null && s.matches(PASSWORD_PATTERN);

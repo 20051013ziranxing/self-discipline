@@ -30,7 +30,7 @@ public class PostModel implements IPostContract.Model {
 
     private PostPresenter mPresenter;
     private Context mContext;
-    private final static String BASE_URL = "http://101.200.121.142:9999";
+    private final static String BASE_URL = "http://116.62.29.172:9999";
 
     private final static String COMMENT_URL = BASE_URL + "/comment";
     private final static String COMMENTS_URL = BASE_URL + "/comments";

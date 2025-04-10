@@ -37,7 +37,9 @@ public class PomodoroTimerActivityPresenter {
         if (CountDownTimer != null) {
             CountDownTimer.cancel();
         }
-        pomodoroTimerActivity.countDownTimer.cancel();
+        if (pomodoroTimerActivity.countDownTimer != null) {
+            pomodoroTimerActivity.countDownTimer.cancel();
+        }
         CountDownTimer = new CountDownTimer(min * 60000L, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
