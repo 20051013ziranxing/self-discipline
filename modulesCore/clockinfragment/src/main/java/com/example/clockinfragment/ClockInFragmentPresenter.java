@@ -115,10 +115,8 @@ public class ClockInFragmentPresenter {
         clockInFragmentModule.createAPunchInTask(user_id, status, title, target_checkin_count, new ClockInFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
-
                 return null;
             }
-
             @Override
             public Boolean onFailure(IOException e) {
                 return null;

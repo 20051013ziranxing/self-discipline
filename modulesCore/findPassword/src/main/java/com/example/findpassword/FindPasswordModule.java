@@ -19,12 +19,12 @@ public class FindPasswordModule {
 
     //发送验证码
     public void sendEmailVerificationCode(String email, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/reset-email";
+        String url = "reset-email";
         String jsonBody = "{\"email\":\"" + email + "\"}";
         PublicNetworkRequestMethod(url, jsonBody, callback);
     }
     public void VerificationOfTheVerificationCode(String emailNumber, String code, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/VerifyCode-email";
+        String url = "VerifyCode-email";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", emailNumber);
@@ -36,7 +36,7 @@ public class FindPasswordModule {
         PublicNetworkRequestMethod(url, jsonString, callback);
     }
     public void ResetOfPassword(String password, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/reset-password";
+        String url = "reset-password";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("password", password);

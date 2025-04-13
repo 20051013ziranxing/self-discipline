@@ -55,13 +55,13 @@ public class LoginUpModel {
 
     //发送验证码
     public void sendEmailVerificationCode(String email, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/register-email";
+        String url = "register-email";
         String jsonBody = "{\"email\":\"" + email + "\"}";
         PublicNetworkRequestMethod(url, jsonBody, callback);
     }
     //验证码的验证
     public void VerificationOfTheVerificationCode(String emailNumber, String code, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/VerifyCode-email";
+        String url = "VerifyCode-email";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", emailNumber);
@@ -73,7 +73,7 @@ public class LoginUpModel {
         PublicNetworkRequestMethod(url, jsonString, callback);
     }
     public void LogInWithYourPassword(String email, String password, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/login";
+        String url = "login";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", email);
@@ -87,7 +87,7 @@ public class LoginUpModel {
 
     //进行注册操作
     public void Registration(String userName, String userPassword, String userEmail, String userCode, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/register";
+        String url = "register";
         String jsonBody = "{\"username\":\"" + userName + "\",\"password\":\"" + userPassword + "\",\"email\":\"" + userEmail + "\",\"code\":\"" + userCode + "\"}";
         PublicNetworkRequestMethod(url, jsonBody, callback);
     }

@@ -27,7 +27,7 @@ public class ToDoFragmentModule {
     }
 
     public void deleteToDoThing(String Id, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/delete-todo/" + Id;
+        String url = "delete-todo/" + Id;
         networkClient.deleteTask(url, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
@@ -45,7 +45,7 @@ public class ToDoFragmentModule {
         httpUrlBuilder.addQueryParameter("user_id", user_id);
         httpUrlBuilder.addQueryParameter("updated_at", updated_at);
         publicGetNetworkRequestMethod("http://101.200.121.142:9999/get-todo", httpUrlBuilder, callback);*/
-        String url = "http://116.62.29.172:9999/get-todo";
+        String url = "get-todo";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id", user_id);
@@ -58,7 +58,7 @@ public class ToDoFragmentModule {
     }
 
     public void modifyTheAgencyInformation(String id, String title, String description, String status, String updated_at, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/reset-todo";
+        String url = "reset-todo";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -74,7 +74,7 @@ public class ToDoFragmentModule {
     }
 
     public void modifyTheTaskCompletionStatus(String id,String status, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/reset-todo";
+        String url = "reset-todo";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -87,7 +87,7 @@ public class ToDoFragmentModule {
     }
 
     public void markWhetherTheTaskIsCompletedOrNot(String id, Boolean isFinish, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/complete";
+        String url = "complete";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);

@@ -35,7 +35,7 @@ public class AccountSecurityModule {
         userMessageHelper.updateUniqueUserToken(null);
     }
     public void modifyTheUserSAvatar(String id, String username, File file, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/profile";
+        String url = "profile";
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("id", id);
         builder.addFormDataPart("username", username);

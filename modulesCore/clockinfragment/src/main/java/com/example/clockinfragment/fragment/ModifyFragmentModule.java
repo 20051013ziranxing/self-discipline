@@ -23,7 +23,7 @@ public class ModifyFragmentModule extends AddFragmentModule{
 
     //删除打卡任务
     public void deleteAClockInTask(String checkin_id, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/delete-todo/" + checkin_id;
+        String url = "delete-todo/" + checkin_id;
         networkClient.deleteTask(url, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
@@ -39,7 +39,7 @@ public class ModifyFragmentModule extends AddFragmentModule{
 
     public void delete(String checkin_id, final ModelCallback callback) {
         Log.d(TAG, checkin_id);
-        String url = "http://116.62.29.172:9999/checkin/delete";
+        String url = "checkin/delete";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("checkin_id", checkin_id);
@@ -67,7 +67,7 @@ public class ModifyFragmentModule extends AddFragmentModule{
     public void modifyTheClockInInformation(int id, String title, String start_date, String end_date,
                                             int icon, int target_checkin_count, String motivation_message,
                                             final ModifyFragmentModule.ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/checkin/update";
+        String url = "checkin/update";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -99,7 +99,7 @@ public class ModifyFragmentModule extends AddFragmentModule{
 
     //根据checkin_id获取打卡信息
     public void getAttendanceRecordsBasedOnYourID(String checkin_id, final ModifyFragmentModule.ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/get-checkin";
+        String url = "get-checkin";
         HttpUrl.Builder httpUrlBuilder = HttpUrl.parse("http://116.62.29.172:9999/get-checkin").newBuilder();
         httpUrlBuilder.addQueryParameter("checkin_id", checkin_id);
         httpUrlBuilder.addQueryParameter("checkin_id", checkin_id);

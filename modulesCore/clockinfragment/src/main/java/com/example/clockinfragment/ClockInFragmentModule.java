@@ -24,7 +24,7 @@ public class ClockInFragmentModule {
 
     //提前结束打卡
     public void modifyTheClockInInformationToEndEarly(int id, String start_date,String end_date, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/checkin/update";
+        String url = "checkin/update";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -38,7 +38,7 @@ public class ClockInFragmentModule {
     }
     //标记打卡一次
     public void createAPunchInTask(String user_id, String status, String title, String target_checkin_count, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/profile";
+        String url = "profile";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id",user_id);
@@ -54,7 +54,7 @@ public class ClockInFragmentModule {
 
     //打卡次数完成加1
     public void add1ToTheNumberOfCheckInsCompleted(int checkin_id, String date, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/IncrementCheckinCount";
+        String url = "IncrementCheckinCount";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("checkin_id", checkin_id);
@@ -68,7 +68,7 @@ public class ClockInFragmentModule {
 
     //删除打卡任务
     public void deleteAClockInTask(String checkin_id, final ModifyFragmentModule.ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/delete-todo/" + checkin_id;
+        String url = "delete-todo/" + checkin_id;
         networkClient.deleteTask(url, new NetworkClient.NetworkCallback() {
             @Override
             public void onSuccess(String response) {
@@ -84,7 +84,7 @@ public class ClockInFragmentModule {
 
     //获取当天的所有打卡记录
     public void getAllThePunchesForAGivenDay(String user_id, String date, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/get-checkinsByUserAndDate";
+        String url = "get-checkinsByUserAndDate";
         HttpUrl.Builder httpUrlBuilder = HttpUrl.parse("http://116.62.29.172:9999/get-checkinsByUserAndDate").newBuilder();
         httpUrlBuilder.addQueryParameter("user_id", user_id);
         httpUrlBuilder.addQueryParameter("date", date);

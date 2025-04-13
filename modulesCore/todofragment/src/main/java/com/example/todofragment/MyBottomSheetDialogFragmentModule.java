@@ -18,7 +18,7 @@ public class MyBottomSheetDialogFragmentModule {
     }
 
     public void modifyTheAgencyInformation(String id, String title, String description, String status, String updated_at, final ToDoFragmentModule.ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/reset-todo";
+        String url = "reset-todo";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -34,7 +34,7 @@ public class MyBottomSheetDialogFragmentModule {
     }
 
     public void addToDoThing(String title, String description, String status, String user_id, String updated_at, final ModelCallback callback) {
-        String url = "http://116.62.29.172:9999/create-todo";
+        String url = "create-todo";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("title", title);

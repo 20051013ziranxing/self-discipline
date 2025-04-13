@@ -18,20 +18,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class NetworkClient {
+    private static final String URLStart = "http://116.62.29.172:9999/";
     private static final String TAG = "TestTT_NetworkClient";
     private final OkHttpClient client = new OkHttpClient();
 
-
-
     public void post(String url, RequestBody requestBody, final NetworkCallback callback) {
-        /*MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody requestBody = RequestBody.create(
-                JSON, Json);*/
         Request request = new Request.Builder()
-                .url(url)
+                .url(URLStart + url)
                 .post(requestBody)
                 .build();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -95,7 +90,7 @@ public class NetworkClient {
 
     public void deleteTaskRe(String url,RequestBody requestBody, final NetworkCallback callback) {
         Request request = new Request.Builder()
-                .url(url)
+                .url(URLStart + url)
                 .delete(requestBody)
                 .build();
 
@@ -123,7 +118,7 @@ public class NetworkClient {
 
     public void deleteTask(String url, final NetworkCallback callback) {
         Request request = new Request.Builder()
-                .url(url)
+                .url(URLStart + url)
                 .delete()
                 .build();
 
@@ -154,7 +149,7 @@ public class NetworkClient {
         RequestBody requestBody = RequestBody.create(
                 JSON, Json);*/
         Request request = new Request.Builder()
-                .url(url)
+                .url(URLStart + url)
                 .put(requestBody)
                 .build();
 

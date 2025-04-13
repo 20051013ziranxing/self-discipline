@@ -24,7 +24,7 @@ public class LogOutPageActivityModule {
     }
 
     public void logOutOfTheOperation(String username,String password, final ModelCallback modelCallback) {
-        String url = "http://116.62.29.172:9999/deactivate";
+        String url = "deactivate";
         JSONObject jsonObject = new JSONObject();
         try {
             Log.d(TAG, "username"+ username + "password"+ password);
