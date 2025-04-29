@@ -168,7 +168,7 @@ public class ToDoFragment extends Fragment{
                 MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(id,title, new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
                     @Override
                     public void modifyTheToDoInformation(String id, String title, String description, String status, String updated_at) {
-                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at);
+                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at, userBaseMessageEventBus.getUserId());
                     }
 
                     @Override
@@ -223,7 +223,7 @@ public class ToDoFragment extends Fragment{
                 MyBottomSheetDialogFragment bottomSheetDialogFragment = new MyBottomSheetDialogFragment(new MyBottomSheetDialogFragment.OnFragmentInteractionListener() {
                     @Override
                     public void modifyTheToDoInformation(String id, String title, String description, String status, String updated_at) {
-                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at);
+                        toDoFragmentPresenter.modifyTheAgencyInformation(id, title, description, status, updated_at, userBaseMessageEventBus.getUserId());
                     }
 
                     @Override

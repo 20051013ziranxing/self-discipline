@@ -22,6 +22,7 @@ public class MyBottomSheetDialogFragmentPresenter {
             @Override
             public Boolean onSuccess(String response) {
                 myBottomSheetDialogFragment.sendToast("修改成功");
+                myBottomSheetDialogFragment.refetchTheDataAndRefreshTheInterface();
                 myBottomSheetDialogFragment.dismiss();
                 return null;
             }
@@ -34,6 +35,7 @@ public class MyBottomSheetDialogFragmentPresenter {
         });
     }
     public void addToDoThing(String title, String description, String status, String user_id, String updated_at) {
+        Log.d(TAG, "addData" + updated_at);
         myBottomSheetDialogFragmentModule.addToDoThing(title, description, status, user_id, updated_at, new MyBottomSheetDialogFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {

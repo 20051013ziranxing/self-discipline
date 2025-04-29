@@ -112,7 +112,7 @@ public class ToDoFragmentPresenter {
             }
         });
     }
-    public void modifyTheAgencyInformation(String id, String title, String description, String status, String updated_at) {
+    public void modifyTheAgencyInformation(String id, String title, String description, String status, String updated_at, String user_id) {
         toDoFragmentModule.modifyTheAgencyInformation(id, title, description, status, updated_at, new ToDoFragmentModule.ModelCallback() {
             @Override
             public Boolean onSuccess(String response) {
@@ -120,6 +120,7 @@ public class ToDoFragmentPresenter {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 String formattedDate = dateFormat.format(calendar.getTime());
                 getToDoThings(toDoFragment.userBaseMessageEventBus.getUserId(), formattedDate);*/
+                getToDoThings(user_id, updated_at);
                 toDoFragment.sendToast("修改成功");
                 return null;
             }
